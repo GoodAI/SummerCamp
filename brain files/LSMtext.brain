@@ -9,8 +9,8 @@
         <Children>
           <TextImageInput LoadOnStart="False" SaveOnStop="False" Id="10" Name="Node_10" yaxlib:realtype="LSMModule.TextImageInput">
             <Structure>
-              <LettersDirectory>C:\Users\Cuda\Desktop\150902\letters</LettersDirectory>
-              <InputFile>C:\Users\Cuda\Desktop\150902\243.txt</InputFile>
+              <LettersDirectory>C:\Users\Cuda\Documents\GitHub\LSMModule\letters</LettersDirectory>
+              <InputFile>C:\Users\Cuda\Documents\GitHub\LSMModule\inputs\243.txt</InputFile>
             </Structure>
             <Width>5</Width>
             <Height>7</Height>
@@ -49,7 +49,7 @@
             <Spikes>True</Spikes>
             <OutputColumnHint>20</OutputColumnHint>
             <DataFolder></DataFolder>
-            <Location X="12" Y="-461" />
+            <Location X="12" Y="-462" />
             <Tasks>
               <Task Enabled="True" PropertyName="RandomInitTask" yaxlib:realtype="LSMModule.LSM.Tasks.LSMRandomInitTask">
                 <NeuronType>IF</NeuronType>
@@ -112,14 +112,14 @@
           </Reduction>
           <BenchmarkFileSaver LoadOnStart="False" SaveOnStop="False" Id="17" Name="Node_17" yaxlib:realtype="LSMModule.BenchmarkFileSaver">
             <Structure>
-              <OutputDirectory>C:\Users\Cuda\Desktop\150902\outputs</OutputDirectory>
-              <OutputFile>l7.csv</OutputFile>
+              <OutputDirectory>C:\Users\Cuda\Documents\GitHub\LSMModule\outputs</OutputDirectory>
+              <OutputFile>test1.csv</OutputFile>
               <Headers>trainrate;neurons;inputs;connectivity;threshold;spikes;A;B;blocksize</Headers>
               <InputSize>1</InputSize>
               <InputWidth>1</InputWidth>
               <InputHeight>1</InputHeight>
             </Structure>
-            <WriteMethod>Append</WriteMethod>
+            <WriteMethod>Overwrite</WriteMethod>
             <BlockSize>243</BlockSize>
             <Trainrate>0.005</Trainrate>
             <Neurons>140</Neurons>
@@ -135,6 +135,20 @@
               <Task Enabled="True" PropertyName="SpTask" yaxlib:realtype="LSMModule.BenchmarkFileSaver+MyWriterTask" />
             </Tasks>
           </BenchmarkFileSaver>
+          <MyHiddenLayer LoadOnStart="False" SaveOnStop="False" Id="18" Name="Node_18" yaxlib:realtype="GoodAI.Modules.NeuralNetwork.Layers.MyHiddenLayer">
+            <ActivationFunction>SIGMOID</ActivationFunction>
+            <Neurons>64</Neurons>
+            <OutputColumnHint>1</OutputColumnHint>
+            <DataFolder></DataFolder>
+            <Location X="275" Y="-379" />
+            <Tasks>
+              <Task Enabled="True" PropertyName="UpdateWeights" yaxlib:realtype="GoodAI.Modules.NeuralNetwork.Tasks.MyFCUpdateWeightsTask" />
+              <Task Enabled="True" PropertyName="InitWeights" yaxlib:realtype="GoodAI.Modules.NeuralNetwork.Tasks.MyInitWeightsTask" />
+              <Task Enabled="True" PropertyName="CreateDropoutMask" yaxlib:realtype="GoodAI.Modules.NeuralNetwork.Tasks.MyCreateDropoutMaskTask" />
+              <Task Enabled="True" PropertyName="ForwardTask" yaxlib:realtype="GoodAI.Modules.NeuralNetwork.Tasks.MyFCForwardTask" />
+              <Task Enabled="True" PropertyName="DeltaBackTask" yaxlib:realtype="GoodAI.Modules.NeuralNetwork.Tasks.MyFCBackDeltaTask" />
+            </Tasks>
+          </MyHiddenLayer>
         </Children>
         <LayoutProperties Zoom="0.7071066">
           <Translation X="179" Y="339" />
@@ -192,13 +206,14 @@
       <Connection From="4" To="6" FromIndex="0" ToIndex="1" />
       <Connection From="10" To="11" FromIndex="0" ToIndex="0" />
       <Connection From="11" To="12" FromIndex="0" ToIndex="0" />
-      <Connection From="12" To="13" FromIndex="0" ToIndex="0" />
+      <Connection From="18" To="13" FromIndex="0" ToIndex="0" />
       <Connection From="10" To="13" FromIndex="0" ToIndex="1" />
       <Connection From="10" To="14" FromIndex="0" ToIndex="0" />
       <Connection From="13" To="14" FromIndex="0" ToIndex="1" />
       <Connection From="14" To="15" FromIndex="0" ToIndex="0" />
       <Connection From="15" To="16" FromIndex="0" ToIndex="0" />
       <Connection From="16" To="17" FromIndex="0" ToIndex="0" />
+      <Connection From="12" To="18" FromIndex="0" ToIndex="0" />
     </Connections>
     <Tasks />
   </Network>

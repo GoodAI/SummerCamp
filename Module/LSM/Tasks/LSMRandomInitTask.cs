@@ -34,7 +34,6 @@ namespace LSMModule.LSM.Tasks {
                 }
                 Owner.ImageInput.Host[i] = 0;
                 Owner.InnerStates.Host[i] = 0;
-                Owner.IsInput.Host[i] = 0;
             }
 
             random();
@@ -44,7 +43,6 @@ namespace LSMModule.LSM.Tasks {
             Owner.EdgeInputs.SafeCopyToDevice();
             Owner.Weights.SafeCopyToDevice();
             Owner.InnerStates.SafeCopyToDevice();
-            Owner.IsInput.SafeCopyToDevice();
         }
 
         private void random() {
@@ -60,7 +58,6 @@ namespace LSMModule.LSM.Tasks {
 
                 tempSet.Add(temp);
                 Owner.ImageOutput.Host[i] = temp;
-                Owner.IsInput.Host[temp] = 1;
             }
 
             //Edges

@@ -75,7 +75,6 @@ namespace LSMModule {
         public MyMemoryBlock<float> InnerStates { get; set; }
         public MyMemoryBlock<float> NeuronOutputs { get; set; }
         public MyMemoryBlock<float> ImageSpikeProbabilities { get; set; }
-        public MyMemoryBlock<int> IsInput { get; set; }
 
         #endregion
 
@@ -100,7 +99,7 @@ namespace LSMModule {
                 Neurons = 0;
             }
 
-            Output.Count = Neurons-Inputs;
+            Output.Count = Neurons;
             Output.ColumnHint = OutputColumnHint;
 
             FileHeader.Count = 7;
@@ -123,8 +122,6 @@ namespace LSMModule {
 
             ImageSpikeProbabilities.Count = Inputs;
             ImageSpikeProbabilities.ColumnHint = 24;
-
-            IsInput.Count = Neurons;
 
         }
 

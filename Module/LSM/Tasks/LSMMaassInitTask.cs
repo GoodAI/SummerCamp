@@ -44,7 +44,6 @@ namespace LSMModule.LSM.Tasks {
                 }
                 Owner.ImageInput.Host[i] = 0;
                 Owner.InnerStates.Host[i] = 0;
-                Owner.IsInput.Host[i] = 0;
             }
 
             maass();
@@ -54,7 +53,6 @@ namespace LSMModule.LSM.Tasks {
             Owner.EdgeInputs.SafeCopyToDevice();
             Owner.Weights.SafeCopyToDevice();
             Owner.InnerStates.SafeCopyToDevice();
-            Owner.IsInput.SafeCopyToDevice();
         }
 
 
@@ -70,7 +68,6 @@ namespace LSMModule.LSM.Tasks {
             List<int> tempSet = new List<int>();
             for (int i = 0; i < this.Owner.Input.Count; i++) {
                 Owner.ImageOutput.Host[i] = i;
-                Owner.IsInput.Host[i] = 1;
             }
 
             // Edges
