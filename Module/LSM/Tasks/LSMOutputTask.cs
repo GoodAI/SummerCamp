@@ -25,7 +25,7 @@ namespace LSMModule.LSM.Tasks {
 
         public override void Execute() {
             m_LSMoutputKernel.SetupExecution(Owner.Neurons);
-            m_LSMoutputKernel.Run(Owner.InnerStates, Owner.NeuronOutputs, Owner.Output, Owner.Threshhold, Owner.Neurons);
+            m_LSMoutputKernel.Run(Owner.InnerStates, Owner.NeuronOutputs, Owner.Output, Owner.Neurons);
 
 
             Owner.Output.SafeCopyToHost();

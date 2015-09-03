@@ -4,7 +4,15 @@
 
 extern "C"{
 
-	__global__ void LSMOutputKernel(float* states, float* outputs, float* nodeOutput, float threshold, int count){
+	// Kernel for calculation of external output of neurons of LSM
+
+	__global__ void LSMOutputKernel(
+		float* states, // inner states of neurons
+		float* outputs, // outputs of neurons
+		float* nodeOutput, // output of LSM
+		int count // number of neurons
+		)
+	{
 
 		int id = blockDim.x*blockIdx.y*gridDim.x
 			+ blockDim.x*blockIdx.x
