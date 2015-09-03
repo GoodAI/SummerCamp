@@ -119,7 +119,7 @@
               <InputWidth>1</InputWidth>
               <InputHeight>1</InputHeight>
             </Structure>
-            <WriteMethod>Overwrite</WriteMethod>
+            <WriteMethod>Append</WriteMethod>
             <BlockSize>243</BlockSize>
             <Trainrate>0.005</Trainrate>
             <Neurons>140</Neurons>
