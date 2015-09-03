@@ -9,6 +9,11 @@ using System.Threading.Tasks;
 using YAXLib;
 
 namespace LSMModule.LSM.Tasks {
+    /// <author>Adr33</author>
+    /// <meta>ok</meta>
+    /// <status>Work in progress</status>
+    /// <summary>Task for initialization of network with a topology according to prof. Maass</summary>
+    /// <description>TBA</description>
     [Description("Init Maass network"), MyTaskInfo(OneShot = true)]
     class LSMMaassInitTask : MyTask<LiquidStateMachine> {
 

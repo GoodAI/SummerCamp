@@ -18,7 +18,7 @@ using System.Globalization;
 
 namespace LSMModule {
     /// <author>Adr33</author>
-    /// <meta>mv</meta>
+    /// <meta>ok</meta>
     /// <status>Work in progress</status>
     /// <summary>LSM Benchmark File Saver node</summary>
     /// <description>TBA</description>

@@ -13,11 +13,12 @@ using YAXLib;
 
 namespace LSMModule {
     /// <author>Adr33</author>
-    /// <meta>mv</meta>
+    /// <meta>ok</meta>
     /// <status>Work in progress</status>
     /// <summary>Liquid State Machine node</summary>
     /// <description>TBA</description>
     class LiquidStateMachine : MyWorkingNode {
+
 
         public const float SPIKE_SIZE = 1;
         public const int INNER_CYCLE = 1;
@@ -62,12 +63,6 @@ namespace LSMModule {
             set { SetOutput(0, value); }
         }
 
-        [MyOutputBlock(1)]
-        public MyMemoryBlock<float> FileHeader {
-            get { return GetOutput(1); }
-            set { SetOutput(1, value); }
-        }
-
         public MyMemoryBlock<float> Weights { get; set; } //done
         public MyMemoryBlock<float> EdgeInputs { get; set; }
         public MyMemoryBlock<float> ImageInput { get; set; }
@@ -101,8 +96,6 @@ namespace LSMModule {
 
             Output.Count = Neurons;
             Output.ColumnHint = OutputColumnHint;
-
-            FileHeader.Count = 7;
 
             Weights.Count = Neurons*Neurons;
             Weights.ColumnHint = Neurons;

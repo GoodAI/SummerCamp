@@ -15,7 +15,7 @@ using YAXLib;
 
 namespace LSMModule {
     /// <author>Adr33</author>
-    /// <meta>mv</meta>
+    /// <meta>ok</meta>
     /// <status>Work in progress</status>
     /// <summary>Text image input node node</summary>
     /// <description>TBA</description>

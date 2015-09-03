@@ -2,7 +2,6 @@
 <Configuration  RootNamespace="LSMModule">
   <KnownNodes>
     <Node type="LSMModule.LiquidStateMachine" CanBeAdded="true" />
-    <Node type="LSMModule.lsmFileSaver" CanBeAdded="true" />
     <Node type="LSMModule.BenchmarkFileSaver" CanBeAdded="true" />
     <Node type="LSMModule.TextImageInput" CanBeAdded="true" />
   </KnownNodes>

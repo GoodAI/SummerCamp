@@ -9,6 +9,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace LSMModule.LSM.Tasks {
+    /// <author>Adr33</author>
+    /// <meta>ok</meta>
+    /// <status>Work in progress</status>
+    /// <summary>Task for inner computing</summary>
+    /// <description>TBA</description>
     [Description("Compute inner state")]
     class LSMComputeTask : MyTask<LiquidStateMachine> {
 

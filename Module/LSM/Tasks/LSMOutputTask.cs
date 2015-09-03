@@ -9,6 +9,11 @@ using System.Threading.Tasks;
 using ManagedCuda;
 
 namespace LSMModule.LSM.Tasks {
+    /// <author>Adr33</author>
+    /// <meta>ok</meta>
+    /// <status>Work in progress</status>
+    /// <summary>Task for sending of output</summary>
+    /// <description>TBA</description>
     [Description("Create output")]
     class LSMOutputTask : MyTask<LiquidStateMachine> {
 
@@ -22,19 +27,7 @@ namespace LSMModule.LSM.Tasks {
             m_LSMoutputKernel.SetupExecution(Owner.Neurons);
             m_LSMoutputKernel.Run(Owner.InnerStates, Owner.NeuronOutputs, Owner.Output, Owner.Threshhold, Owner.Neurons);
 
-            Owner.FileHeader.Host[0] = Owner.Neurons;
-            Owner.FileHeader.Host[1] = Owner.Input.Count;
-            Owner.FileHeader.Host[2]=Owner.Connectivity;
-            Owner.FileHeader.Host[3]=Owner.Threshhold;
-            if(Owner.Spikes){
-                Owner.FileHeader.Host[4]=1;
-            } else {
-                Owner.FileHeader.Host[4]=0;
-            }
-            Owner.FileHeader.Host[5] = Owner.A;
-            Owner.FileHeader.Host[6] = Owner.B;
 
-            Owner.FileHeader.SafeCopyToDevice();
             Owner.Output.SafeCopyToHost();
 
             //MyLog.DEBUG.WriteLine("--------------------------------------------------------------------------------------");

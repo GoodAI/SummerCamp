@@ -9,6 +9,11 @@ using System.Threading.Tasks;
 using YAXLib;
 
 namespace LSMModule.LSM.Tasks {
+    /// <author>Adr33</author>
+    /// <meta>ok</meta>
+    /// <status>Work in progress</status>
+    /// <summary>Task for initialization of network with Random topology</summary>
+    /// <description>TBA</description>
     [Description("Init random network"), MyTaskInfo(OneShot = true)]
     class LSMRandomInitTask : MyTask<LiquidStateMachine> {
 
