@@ -1,2 +1,2 @@
-# ClockworkNNModule
-Almost minimal GoodAI Brain Simulator module that can be used as a starting point for a new module.
+# ClockworkRNNModule
+Module for clockwork recurent neural network learned by RTRL.
