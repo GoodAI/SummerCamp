@@ -85,7 +85,7 @@ extern "C"
 		int x = weightId % (unitID - 1);
 
 		if (weightId < D_HIDDEN_UNITS * D_HIDDEN_UNITS && (contextByActivations || simulationStep % periods[unitID] == 0)
-			&& x > (group * neuronsPerGroup))
+			&& (!contextByActivations || x > (group * neuronsPerGroup)))
 			
 		{
 			float gradient = 0;

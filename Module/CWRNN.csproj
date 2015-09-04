@@ -35,6 +35,14 @@
     <Reference Include="CudaRand">
       <HintPath>..\..\BrainSimulator-master\BinaryLibs\GoodAiPlatformLibs\ManagedCuda\CudaRand.dll</HintPath>
     </Reference>
+    <Reference Include="GoodAI.BasicNodes, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\BrainSimulator-master\Sources\Modules\BasicNodes\Module\bin\Debug\GoodAI.BasicNodes.dll</HintPath>
+    </Reference>
+    <Reference Include="GoodAI.Platform.Core, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\BrainSimulator-master\Sources\Modules\BasicNodes\Module\bin\Debug\GoodAI.Platform.Core.dll</HintPath>
+    </Reference>
     <Reference Include="ManagedCuda">
       <HintPath>..\..\BrainSimulator-master\BinaryLibs\GoodAiPlatformLibs\ManagedCuda\ManagedCuda.dll</HintPath>
     </Reference>
@@ -64,16 +72,6 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\BrainSimulator-master\Sources\Modules\BasicNodes\Module\BasicNodes.csproj">
-      <Project>{c8a4992f-f2cb-40e7-92aa-7d4239653517}</Project>
-      <Name>BasicNodes</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\BrainSimulator-master\Sources\Platform\Core\Core.csproj">
-      <Project>{91324e64-9b84-4312-9e55-5a77df07da1b}</Project>
-      <Name>Core</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
