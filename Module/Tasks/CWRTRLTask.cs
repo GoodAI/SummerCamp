@@ -62,21 +62,21 @@ namespace CWRNN.Tasks
             m_changeInputWeightsKernel.SetConstantVariable("D_INPUT_UNITS", Owner.INPUT_UNITS);
             m_changeInputWeightsKernel.SetConstantVariable("D_HIDDEN_UNITS", Owner.HIDDEN_UNITS);
             m_changeInputWeightsKernel.SetConstantVariable("D_OUTPUT_UNITS", Owner.OUTPUT_UNITS);
-            //m_changeInputWeightsKernel.SetConstantVariable("neuronsPerGroup", Owner.NeuronsPerGroup);
+            m_changeInputWeightsKernel.SetConstantVariable("neuronsPerGroup", Owner.NeuronsPerGroup);
 
             m_changeRecurrentWeightsKernel = MyKernelFactory.Instance.Kernel(nGPU, @"\CWChangeWeightsKernel", "CWChangeRecurrentWeightsKernel");
             m_changeRecurrentWeightsKernel.SetupExecution(Owner.HIDDEN_UNITS * Owner.HIDDEN_UNITS);
             m_changeRecurrentWeightsKernel.SetConstantVariable("D_INPUT_UNITS", Owner.INPUT_UNITS);
             m_changeRecurrentWeightsKernel.SetConstantVariable("D_HIDDEN_UNITS", Owner.HIDDEN_UNITS);
             m_changeRecurrentWeightsKernel.SetConstantVariable("D_OUTPUT_UNITS", Owner.OUTPUT_UNITS);
-            //m_changeRecurrentWeightsKernel.SetConstantVariable("neuronsPerGroup", Owner.NeuronsPerGroup);
+            m_changeRecurrentWeightsKernel.SetConstantVariable("neuronsPerGroup", Owner.NeuronsPerGroup);
 
             m_changeOutputWeightsKernel = MyKernelFactory.Instance.Kernel(nGPU, @"\CWChangeWeightsKernel", "CWChangeOutputWeightsKernel");
             m_changeOutputWeightsKernel.SetupExecution(Owner.OUTPUT_UNITS * Owner.HIDDEN_UNITS);
             m_changeOutputWeightsKernel.SetConstantVariable("D_INPUT_UNITS", Owner.INPUT_UNITS);
             m_changeOutputWeightsKernel.SetConstantVariable("D_HIDDEN_UNITS", Owner.HIDDEN_UNITS);
             m_changeOutputWeightsKernel.SetConstantVariable("D_OUTPUT_UNITS", Owner.OUTPUT_UNITS);
-            //m_changeOutputWeightsKernel.SetConstantVariable("neuronsPerGroup", Owner.NeuronsPerGroup);
+            m_changeOutputWeightsKernel.SetConstantVariable("neuronsPerGroup", Owner.NeuronsPerGroup);
 
 
         }
@@ -152,22 +152,22 @@ namespace CWRNN.Tasks
 
             // Setting lower triangle back to zero.
 
-            if (Owner.contextByActivations == 0)
-            {
-                Owner.RecurrentWeights.SafeCopyToHost();
-                for (int i = 0; i < Owner.NeuronGroups; i++)
-                {
-                    for (int j = 0; j < Owner.NeuronsPerGroup; j++)
-                    {
-                        for (int k = 0; k < i * Owner.NeuronsPerGroup; k++)
-                        {
-                            Owner.RecurrentWeights.Host[i * Owner.HIDDEN_UNITS * Owner.NeuronsPerGroup
-                                + j * Owner.HIDDEN_UNITS + k] = 0;
-                        }
-                    }
-                }
-                Owner.RecurrentWeights.SafeCopyToDevice();
-            }
+            //if (Owner.contextByActivations == 0)
+            //{
+            //    Owner.RecurrentWeights.SafeCopyToHost();
+            //    for (int i = 0; i < Owner.NeuronGroups; i++)
+            //    {
+            //        for (int j = 0; j < Owner.NeuronsPerGroup; j++)
+            //        {
+            //            for (int k = 0; k < i * Owner.NeuronsPerGroup; k++)
+            //            {
+            //                Owner.RecurrentWeights.Host[i * Owner.HIDDEN_UNITS * Owner.NeuronsPerGroup
+            //                    + j * Owner.HIDDEN_UNITS + k] = 0;
+            //            }
+            //        }
+            //    }
+            //    Owner.RecurrentWeights.SafeCopyToDevice();
+            //}
             Owner.MySimulationSteps++;
         }
     }

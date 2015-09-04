@@ -16,7 +16,7 @@ extern "C"
 	__constant__ int D_INPUT_UNITS;
 	__constant__ int D_HIDDEN_UNITS;
 	__constant__ int D_OUTPUT_UNITS;
-	//__constant__ int neuronsPerGroup;
+	__constant__ int neuronsPerGroup;
 	//__device__ double log(double x);
 
 	__global__ void CWChangeInputWeightsKernel(
@@ -81,8 +81,11 @@ extern "C"
 			+ threadIdx.x;
 
 		int unitID = weightId / D_HIDDEN_UNITS;
-		if (weightId < D_HIDDEN_UNITS * D_HIDDEN_UNITS && (contextByActivations || simulationStep % periods[unitID] == 0))
-			//&& weightId >= log((double)periods[unitID])* neuronsPerGroup)
+		int group = unitID / neuronsPerGroup;
+		int x = weightId % (unitID - 1);
+
+		if (weightId < D_HIDDEN_UNITS * D_HIDDEN_UNITS && (contextByActivations || simulationStep % periods[unitID] == 0)
+			&& x > (group * neuronsPerGroup))
 			
 		{
 			float gradient = 0;
