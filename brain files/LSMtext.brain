@@ -9,13 +9,13 @@
         <Children>
           <TextImageInput LoadOnStart="False" SaveOnStop="False" Id="10" Name="Node_10" yaxlib:realtype="LSMModule.TextImageInput">
             <Structure>
-              <LettersDirectory>C:\Users\Cuda\Documents\GitHub\LSMModule\letters</LettersDirectory>
-              <InputFile>C:\Users\Cuda\Documents\GitHub\LSMModule\inputs\243.txt</InputFile>
+              <LettersDirectory>C:\Users\Ondra\Documents\GitHub\LSMModule\letters</LettersDirectory>
+              <InputFile>C:\Users\Ondra\Documents\GitHub\LSMModule\inputs\243.txt</InputFile>
             </Structure>
             <Width>5</Width>
             <Height>7</Height>
             <DataFolder></DataFolder>
-            <Location X="-430" Y="-243" />
+            <Location X="-468" Y="-245" />
             <Tasks>
               <Task Enabled="True" PropertyName="MainTask" yaxlib:realtype="LSMModule.TextImageInput+MyTextImageInputTask" />
             </Tasks>
@@ -23,7 +23,7 @@
           <Accumulator LoadOnStart="False" SaveOnStop="False" Id="11" Name="Node_11" yaxlib:realtype="GoodAI.Modules.Transforms.MyAccumulator">
             <DelayMemorySize>1</DelayMemorySize>
             <DataFolder></DataFolder>
-            <Location X="-192" Y="-458" />
+            <Location X="-266" Y="-427" />
             <Tasks>
               <Task Enabled="True" PropertyName="ShiftData" yaxlib:realtype="GoodAI.Modules.Transforms.MyAccumulator+MyShiftDataTask">
                 <UseFirstInput>True</UseFirstInput>
@@ -49,7 +49,7 @@
             <Spikes>True</Spikes>
             <OutputColumnHint>20</OutputColumnHint>
             <DataFolder></DataFolder>
-            <Location X="12" Y="-462" />
+            <Location X="-95" Y="-431" />
             <Tasks>
               <Task Enabled="True" PropertyName="RandomInitTask" yaxlib:realtype="LSMModule.LSM.Tasks.LSMRandomInitTask">
                 <NeuronType>IF</NeuronType>
@@ -70,7 +70,7 @@
             <ActivationFunction>SIGMOID</ActivationFunction>
             <OutputColumnHint>5</OutputColumnHint>
             <DataFolder></DataFolder>
-            <Location X="471" Y="-256" />
+            <Location X="330" Y="-279" />
             <Tasks>
               <Task Enabled="True" PropertyName="SquaredLoss" yaxlib:realtype="GoodAI.Modules.NeuralNetwork.Tasks.MySquaredLossTask" />
               <Task Enabled="True" PropertyName="UpdateWeights" yaxlib:realtype="GoodAI.Modules.NeuralNetwork.Tasks.MyFCUpdateWeightsTask" />
@@ -85,7 +85,7 @@
               <Operation>Substraction</Operation>
             </Behavior>
             <DataFolder></DataFolder>
-            <Location X="622" Y="-2" />
+            <Location X="310" Y="41" />
             <Tasks>
               <Task Enabled="True" PropertyName="Execute" yaxlib:realtype="GoodAI.Modules.Matrix.MyMatrixNode+MyExecuteTask">
                 <DataInput0>NaN</DataInput0>
@@ -94,7 +94,7 @@
           </MyMatrixNode>
           <AbsoluteValue LoadOnStart="False" SaveOnStop="False" Id="15" Name="Node_15" yaxlib:realtype="GoodAI.Modules.Transforms.MyAbsoluteValue">
             <DataFolder></DataFolder>
-            <Location X="786" Y="-148" />
+            <Location X="551" Y="13" />
             <Tasks>
               <Task Enabled="True" PropertyName="DoTransform" yaxlib:realtype="GoodAI.Modules.Transforms.MyAbsoluteValue+MyAbsoluteValueTask">
                 <VectorNormalization>False</VectorNormalization>
@@ -105,21 +105,21 @@
           <Reduction LoadOnStart="False" SaveOnStop="False" Id="16" Name="Node_16" yaxlib:realtype="GoodAI.Modules.Transforms.MyReduction">
             <Mode>f_Sum_f</Mode>
             <DataFolder></DataFolder>
-            <Location X="952" Y="-153" />
+            <Location X="705" Y="10" />
             <Tasks>
               <Task Enabled="True" PropertyName="DoTransform" yaxlib:realtype="GoodAI.Modules.Transforms.MyReduction+MyReductionTask" />
             </Tasks>
           </Reduction>
           <BenchmarkFileSaver LoadOnStart="False" SaveOnStop="False" Id="17" Name="Node_17" yaxlib:realtype="LSMModule.BenchmarkFileSaver">
             <Structure>
-              <OutputDirectory>C:\Users\Cuda\Documents\GitHub\LSMModule\outputs</OutputDirectory>
-              <OutputFile>test1.csv</OutputFile>
+              <OutputDirectory>C:\Users\Ondra\Desktop\CLISolution\ouput</OutputDirectory>
+              <OutputFile>hl32.csv</OutputFile>
               <Headers>trainrate;neurons;inputs;connectivity;threshold;spikes;A;B;blocksize</Headers>
               <InputSize>1</InputSize>
               <InputWidth>1</InputWidth>
               <InputHeight>1</InputHeight>
             </Structure>
-            <WriteMethod>Append</WriteMethod>
+            <WriteMethod>Overwrite</WriteMethod>
             <BlockSize>243</BlockSize>
             <Trainrate>0.005</Trainrate>
             <Neurons>140</Neurons>
@@ -130,17 +130,17 @@
             <B>1</B>
             <Spikes>True</Spikes>
             <DataFolder></DataFolder>
-            <Location X="1147" Y="-155" />
+            <Location X="767" Y="-249" />
             <Tasks>
               <Task Enabled="True" PropertyName="SpTask" yaxlib:realtype="LSMModule.BenchmarkFileSaver+MyWriterTask" />
             </Tasks>
           </BenchmarkFileSaver>
           <MyHiddenLayer LoadOnStart="False" SaveOnStop="False" Id="18" Name="Node_18" yaxlib:realtype="GoodAI.Modules.NeuralNetwork.Layers.MyHiddenLayer">
             <ActivationFunction>SIGMOID</ActivationFunction>
-            <Neurons>64</Neurons>
+            <Neurons>32</Neurons>
             <OutputColumnHint>1</OutputColumnHint>
             <DataFolder></DataFolder>
-            <Location X="275" Y="-379" />
+            <Location X="131" Y="-392" />
             <Tasks>
               <Task Enabled="True" PropertyName="UpdateWeights" yaxlib:realtype="GoodAI.Modules.NeuralNetwork.Tasks.MyFCUpdateWeightsTask" />
               <Task Enabled="True" PropertyName="InitWeights" yaxlib:realtype="GoodAI.Modules.NeuralNetwork.Tasks.MyInitWeightsTask" />
@@ -151,7 +151,7 @@
           </MyHiddenLayer>
         </Children>
         <LayoutProperties Zoom="0.7071066">
-          <Translation X="179" Y="339" />
+          <Translation X="250" Y="312" />
         </LayoutProperties>
         <GroupInputNodes>
           <MyParentInput ParentInputIndex="0" Id="7" Name="Input 1">

@@ -4,7 +4,18 @@
 
 extern "C"{
 
-	__global__ void LSMComputeEdgesKernel(float* edgeInputs, float* weights, float* neuronOutputs, int spikes, float spikeSize, int neurons, int count){
+	// Kernel for calculation the I/O of edges between neurons
+
+	__global__ void LSMComputeEdgesKernel(
+		float* edgeInputs, // edge I/O
+		float* weights, // weights of edges
+		float* neuronOutputs, // output of neuron
+		int spikes, // boolean, whether there are spikes or not
+		float spikeSize, // size of a spike
+		int neurons, // number of neurons
+		int count // number of edges
+		)
+	{
 		int id = blockDim.x*blockIdx.y*gridDim.x
 			+ blockDim.x*blockIdx.x
 			+ threadIdx.x;

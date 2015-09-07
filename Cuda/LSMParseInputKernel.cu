@@ -12,14 +12,27 @@
 
 extern "C"{
 
-	__global__ void LSMParseInputKernel(float* probabilities, float* input, int* imageOutput, float* imageInput, int spikes, float spikeSize, int count){
+	// Kernel to parse the input of LSM
+	// In spiking environment the pixel will spike if its value is bigger than the random generated value
+	// In non-spiking environment the pixel spikes its value
+
+	__global__ void LSMParseInputKernel(
+		float* probabilities, // probabilities, whether pixel of an image will spike
+		float* input, // output of an image
+		int* imageTargets, // target neurons of an image input
+		float* imageInput, // image input for neurons
+		int spikes, // spiking with probability/non-spiking of float input value
+		float spikeSize, // size of a spike
+		int count // size of an input
+		)
+	{
 
 		int id = blockDim.x*blockIdx.y*gridDim.x
 			+ blockDim.x*blockIdx.x
 			+ threadIdx.x;
 
 		if (id < count){
-			int target = imageOutput[id];
+			int target = imageTargets[id];
 			imageInput[target] = spikes * (input[id] > probabilities[id]) * spikeSize + (!spikes) * input[id];
 		}
 	}
