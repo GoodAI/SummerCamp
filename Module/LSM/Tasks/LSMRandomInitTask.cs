@@ -13,7 +13,12 @@ namespace LSMModule.LSM.Tasks {
     /// <meta>ok</meta>
     /// <status>Work in progress</status>
     /// <summary>Task for initialization of network with Random topology</summary>
-    /// <description>TBA</description>
+    /// <description>
+    /// Starting initialization for LSM with Random topology:<br></br>
+    /// - inputs are selected randomly<br></br>
+    /// - each node has c% of all output/input edges, randomly selected with random weights, where c is connectivity of the graph<br></br>
+    ///   - whether it is output or input edges can be changed in Brain Simulator
+    /// </description>
     [Description("Init random network"), MyTaskInfo(OneShot = true)]
     class LSMRandomInitTask : MyTask<LiquidStateMachine> {
 
@@ -21,9 +26,18 @@ namespace LSMModule.LSM.Tasks {
             IF
         }
 
+        public enum IOEnum {
+            input,
+            output
+        }
+
         [YAXSerializableField(DefaultValue = NeuronTypeEnum.IF)]
         [MyBrowsable, Category("\tLayer")]
         public virtual NeuronTypeEnum NeuronType { get; set; }
+
+        [YAXSerializableField(DefaultValue = IOEnum.output)]
+        [MyBrowsable, Category("\tLayer")]
+        public virtual IOEnum ConnectivityType { get; set; }
 
         [YAXSerializableField(DefaultValue = 400)]
         [MyBrowsable, Category("\tLayer")]
@@ -53,6 +67,8 @@ namespace LSMModule.LSM.Tasks {
         private void random() {
             Random rand = new Random();
 
+            // Image input randomization
+
             List<int> tempSet = new List<int>();
             for (int i = 0; i < this.Owner.Input.Count; i++) {
                 int temp = rand.Next(0, Owner.Neurons);
@@ -65,7 +81,7 @@ namespace LSMModule.LSM.Tasks {
                 Owner.ImageOutput.Host[i] = temp;
             }
 
-            //Edges
+            // Edges randomization
 
             int neighbours = Convert.ToInt32(Owner.Neurons * Owner.Connectivity);
 
@@ -88,7 +104,14 @@ namespace LSMModule.LSM.Tasks {
 
                     float weight = rand.Next(1, 100) / 100.0f;
 
-                    Owner.Weights.Host[i * Owner.Neurons + temp] = weight;
+                    switch (ConnectivityType) {
+                        case IOEnum.input:
+                            Owner.Weights.Host[temp * Owner.Neurons + i] = weight;
+                            break;
+                        default:
+                            Owner.Weights.Host[i * Owner.Neurons + temp] = weight;
+                            break;
+                    }
                 }
             }
         }

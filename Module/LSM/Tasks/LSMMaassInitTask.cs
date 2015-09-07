@@ -13,11 +13,18 @@ namespace LSMModule.LSM.Tasks {
     /// <meta>ok</meta>
     /// <status>Work in progress</status>
     /// <summary>Task for initialization of network with a topology according to prof. Maass</summary>
-    /// <description>TBA</description>
+    /// <description>
+    /// Starting initialization for LSM with topology according to prof. Maass:<br></br>
+    /// - 3D topology with the first depth layer used as input
+    /// - neighbours generated randomly with favouring of close neighbours
+    /// </description>
     [Description("Init Maass network"), MyTaskInfo(OneShot = true)]
     class LSMMaassInitTask : MyTask<LiquidStateMachine> {
 
-        public const float MAASS_LAMBDA = 2; // Maass parameters are 0,2,4,8
+        // constant for calculating of close neighbours
+        public const float MAASS_LAMBDA = 2;
+
+        public const double LAMBDA = 0.00000001;
 
         public enum NeuronTypeEnum {
             IF
@@ -63,19 +70,19 @@ namespace LSMModule.LSM.Tasks {
 
         private void maass() {
             int[] dimensions = new int[3];
-            int[] tempDim = new int[] { 12, 12 }; //method to compute sides of rectangle of #inputs neurons
+            int[] tempDim = getRectangle(Owner.Input.Count);
 
             dimensions[0] = tempDim[0];
             dimensions[1] = tempDim[1];
             dimensions[2] = this.MaassDepth;
 
-            // Input
+            // Setting of input neurons
             List<int> tempSet = new List<int>();
             for (int i = 0; i < this.Owner.Input.Count; i++) {
                 Owner.ImageOutput.Host[i] = i;
             }
 
-            // Edges
+            // Edges randomization
             for (int i = 0; i < Owner.Neurons; i++) {
                 for (int j = 0; j < Owner.Neurons; j++) {
                     Owner.Weights.Host[i * Owner.Neurons + j] = 0;
@@ -117,6 +124,16 @@ namespace LSMModule.LSM.Tasks {
             }
         }
 
+        //Compute sides of rectangle of n neurons
+        private int[] getRectangle(int n) {
+            int a = Convert.ToInt32(Math.Floor(Math.Sqrt(n)+LAMBDA));
+            while (n % a != 0) {
+                a--;
+            }
+            return new int[] {n/a, a};
+        }
+
+        // Generating permutation of int array 0..n-1
         private int[] getPermutation(int n) {
             int[] permutation = new int[n];
             for (int i = 0; i < n; i++) {
@@ -136,6 +153,7 @@ namespace LSMModule.LSM.Tasks {
             return permutation;
         }
 
+        // Calculating enclidean distance of neurons
         private double euclideanDistance(int[] a, int[] b) {
             double dist = 0;
 

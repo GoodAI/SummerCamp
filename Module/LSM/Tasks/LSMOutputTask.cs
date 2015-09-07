@@ -13,7 +13,9 @@ namespace LSMModule.LSM.Tasks {
     /// <meta>ok</meta>
     /// <status>Work in progress</status>
     /// <summary>Task for sending of output</summary>
-    /// <description>TBA</description>
+    /// <description>
+    /// Generates the external output of LSM from internal output and inner state of neurons.
+    /// </description>
     [Description("Create output")]
     class LSMOutputTask : MyTask<LiquidStateMachine> {
 
@@ -29,16 +31,6 @@ namespace LSMModule.LSM.Tasks {
 
 
             Owner.Output.SafeCopyToHost();
-
-            //MyLog.DEBUG.WriteLine("--------------------------------------------------------------------------------------");
-            //for (int i = 0; i < 28; i++) {
-            //    string s = "";
-            //    for (int j = 0; j < 28; j++) {
-            //        s += outputs[i * 28 + j] + " ";
-            //    }
-            //    MyLog.DEBUG.WriteLine(s);
-            //}
-            //MyLog.DEBUG.WriteLine("--------------------------------------------------------------------------------------");
         }
     }
 }
