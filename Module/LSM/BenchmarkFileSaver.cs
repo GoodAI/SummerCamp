@@ -88,7 +88,7 @@ namespace LSMModule {
 
         [YAXSerializableField(DefaultValue = 0.5f)]
         [MyBrowsable, Category("\tLayer")]
-        public virtual float Threshhold { get; set; }
+        public virtual float Threshold { get; set; }
 
         [YAXSerializableField(DefaultValue = 1.0f)]
         [MyBrowsable, Category("\tLayer")]
@@ -176,7 +176,7 @@ namespace LSMModule {
                 sb2.Append(Owner.Connectivity.ToString("0.000"));
                 sb2.Append(';');
 
-                sb2.Append(Owner.Threshhold.ToString("0.00"));
+                sb2.Append(Owner.Threshold.ToString("0.00"));
                 sb2.Append(';');
 
                 sb2.Append(Owner.Spikes.ToString());

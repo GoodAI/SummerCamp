@@ -52,7 +52,7 @@ namespace LSMModule.LSM.Tasks {
                 m_LSMParseInputKernel.Run(Owner.ImageSpikeProbabilities, Owner.Input, Owner.ImageOutput, Owner.ImageInput, spikes, spikeSize, Owner.Input.Count);
 
                 // compute inner states and internal output of neurons
-                float thresh = Owner.Threshhold;
+                float thresh = Owner.Threshold;
                 m_LSMComputeStateKernel.SetupExecution(Owner.Neurons);
                 m_LSMComputeStateKernel.Run(Owner.A, Owner.B, Owner.EdgeInputs, Owner.ImageInput, Owner.NeuronOutputs, Owner.InnerStates, thresh, Owner.Connectivity, Owner.Neurons);
 

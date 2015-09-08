@@ -45,7 +45,7 @@ namespace LSMModule {
 
         [YAXSerializableField(DefaultValue = 0.5f)]
         [MyBrowsable, Category("\tLayer")]
-        public virtual float Threshhold { get; set; }
+        public virtual float Threshold { get; set; }
 
         [YAXSerializableField(DefaultValue = 1.0f)]
         [MyBrowsable, Category("\tLayer")]
@@ -100,13 +100,10 @@ namespace LSMModule {
             // Not sure whether this approach is correct, but it works
 
             if (RandomInitTask != null && RandomInitTask.Enabled) {
-                MyLog.DEBUG.WriteLine("random");
                 Neurons = RandomInitTask.getNeurons();
             } else if (MaassInitTask != null && MaassInitTask.Enabled) {
-                MyLog.DEBUG.WriteLine("maass");
                 Neurons = MaassInitTask.getNeurons();
             } else {
-                MyLog.DEBUG.WriteLine("wtf");
                 Neurons = 0;
             }
 
