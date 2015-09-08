@@ -16,11 +16,23 @@ namespace LSMModule {
     /// <meta>ok</meta>
     /// <status>Work in progress</status>
     /// <summary>Liquid State Machine node</summary>
-    /// <description>TBA</description>
+    /// <description>
+    /// Liquid State Machine node - the key node of this module<br></br>
+    /// - tranfers binary input into an output, which also takes into account last few elements of the sequence
+    /// - edges of the network are generated randomly with constrains put by different topologies
+    /// - neurons are of type integrate-and-fire(IF)
+    /// - recommended connectivity of LSM is said to be between 5-10% based on used topology
+    /// - LSM can be either spiking or non-spiking
+    /// - inner state and output of neurons are computed used equations discribed in LSMOutputTask
+    /// - this implementation also allows you to make LSM spike internally more than once in one step
+    /// - as output of this LSM we take current state of all the neurons in current step
+    /// </description>
     class LiquidStateMachine : MyWorkingNode {
 
 
         public const float SPIKE_SIZE = 1;
+
+        // Number of internal spiking steps in one external step
         public const int INNER_CYCLE = 1;
 
         [YAXSerializableField(DefaultValue = 0.1f)]
@@ -83,6 +95,10 @@ namespace LSMModule {
         public int Neurons;
 
         public override void UpdateMemoryBlocks() {
+
+            // Calculates number of neurons based on used topology
+            // Not sure whether this approach is correct, but it works
+
             if (RandomInitTask != null && RandomInitTask.Enabled) {
                 MyLog.DEBUG.WriteLine("random");
                 Neurons = RandomInitTask.getNeurons();
@@ -117,12 +133,6 @@ namespace LSMModule {
             ImageSpikeProbabilities.ColumnHint = 24;
 
         }
-
-        //public override void Validate(MyValidator validator) {
-        //    base.Validate(validator);
-        //    validator.AssertError(Neurons > 0, this, "Number of neurons should be > 0");
-        //    //validator.AssertWarning(Connection != ConnectionType.NOT_SET, this, "ConnectionType not set for " + this);
-        //}
 
     }
 }
