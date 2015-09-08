@@ -17,8 +17,15 @@ namespace LSMModule {
     /// <author>Adr33</author>
     /// <meta>ok</meta>
     /// <status>Work in progress</status>
-    /// <summary>Text image input node node</summary>
-    /// <description>TBA</description>
+    /// <summary>Text image input node</summary>
+    /// <description>
+    /// Node for sending text input read from a file in a form of letter "images":<br></br>
+    /// - letters directory needs to be set in Brain Simulator, basic one is included in VS project folder<br></br>
+    /// - default letter size is 5x7, but can be change based on letter "image" files<br></br>
+    /// - basic input files are included in VS project folder<br></br>
+    /// - each step one letter is send, in case of EOF it starts again from the beginning<br></br>
+    /// - as label binary representation is send in from of ' '=0, 'a'=1, 'b'=2 ... 
+    /// </description>
     class TextImageInput : MyWorkingNode {
 
         public const int LABEL = 5;
@@ -78,6 +85,8 @@ namespace LSMModule {
             public override void Init(int nGPU) {
                 outputs = new float[27, Owner.Height, Owner.Width];
 
+                // Loading of letter files
+
                 using (TextReader reader = File.OpenText(Owner.LettersDirectory + '\\' + "space.txt")) {
                     for (int j = 0; j < Owner.Height; j++) {
                         string text = reader.ReadLine();
@@ -101,6 +110,8 @@ namespace LSMModule {
                     }
                 }
 
+                // Opening of input file stream
+
                 if (Owner.m_stream != null) {
                     Owner.m_stream.Close();
                 }
@@ -112,6 +123,8 @@ namespace LSMModule {
                 space = false;
             }
 
+            // Returning next valid letter, skipping more that one non-basic alphabet character
+            // All non-basic alphabet characters are translated as ' '
             private char getNext() {
                 if (m_stream.EndOfStream) {
                     Owner.m_stream.Close();
@@ -129,6 +142,7 @@ namespace LSMModule {
                 return c;
             }
 
+            // Reads next character and generates output and label
             public override void Execute() {
                 char c = getNext();
 

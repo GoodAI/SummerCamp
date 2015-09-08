@@ -21,7 +21,14 @@ namespace LSMModule {
     /// <meta>ok</meta>
     /// <status>Work in progress</status>
     /// <summary>LSM Benchmark File Saver node</summary>
-    /// <description>TBA</description>
+    /// <description>
+    /// Modification of MyCsvFileWriterNode, which serves for benchmark testing of performance of LSM<br></br>
+    /// - the value which is tracked is fault of output, which is difference between label and output
+    ///   - the fault is calculated as sum over the elements of absolute value of substraction between output and label matrices
+    ///   - the fault is always calculated over the whole input block(whole file, input set)
+    /// - the basic setting of LSM and the environment is also saved alongside the fault
+    /// - this node serves purely for testing purpose, it is not needed for the run of LSM
+    /// </description>
     class BenchmarkFileSaver : MyWorkingNode {
 
         public enum FileWriteMethod {
@@ -107,7 +114,7 @@ namespace LSMModule {
         #endregion
 
 
-        public MyWriterTask SpTask { get; protected set; }
+        public MyWriterTask MainTask { get; protected set; }
 
 
 
@@ -134,7 +141,7 @@ namespace LSMModule {
                 m_iter = 0;
                 m_sum = 0;
 
-                // when appending, dont add the headers
+                // When appending, dont add the headers
                 if (!String.IsNullOrEmpty(Owner.Headers) && (Owner.WriteMethod == FileWriteMethod.Overwrite)) {
                     StringBuilder sb = new StringBuilder();
                     if (Owner.Headers.EndsWith(Environment.NewLine)) {
@@ -152,6 +159,9 @@ namespace LSMModule {
                 }
 
                 m_stream.WriteLine();
+
+                // Writing of basic LSM info
+
                 StringBuilder sb2 = new StringBuilder();
 
                 sb2.Append(Owner.Trainrate.ToString("0.0000"));
@@ -186,6 +196,8 @@ namespace LSMModule {
             }
 
             public override void Execute() {
+                // Saves the fault of current step to temporary memory
+                // If end of block is reached saves the average fault over the block to the file
                 if ((Owner.Fault != null)) {
                     Owner.Fault.SafeCopyToHost();
 
