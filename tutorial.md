@@ -4,11 +4,22 @@ Clockwork recurrent neural network **CWRNN** is a specific version of recurrent 
 
 ### <a name="qlearningNode"></a>Recurrent neural network (RNN)
 
-The RNN is implemented in the `RNN` node. -- description of RNN --
+The RNN is implemented in the `RNN` node. 
+-- description of RNN --
+RNN are neural networks with the ability to classify and predict **temporarily dependent data**. Within those 
 
- * observing states
- * producing actions
- * observing new states and rewards.
+RNN is partitioned into 3 layers:
+
+ * input layer
+ * hidden layer
+ * output layer.
+
+Those 
+
+### <a name="qlearningNode"></a>Recurrent neural network (RNN)
+
+The RNN is implemented in the `CWRNN` node. It is basically only a **small modification of the RNN**, the hidden layer of CW-RNN is divided into separate blocks and each block processes input at different time periods. That means that **not all units at every time step change their activation upon the actual input**. The not updated units retain this way some **information about the past** which they provide to the newly updated units, they provide **context** from more deep history.
+
 
 The RL algorithm **learns how to obtain the reward and while avoiding the punishment** (negative reward).
 The Q-Learning is named after the Q function, which computes Quantity of state-action combination: $\mathbf{Q} : \mathbf{S} \times \mathbf{A} \rightarrow \mathbb{R}$, where $\mathbf{S}$ is set of states and $\mathbf{A}$ set of actions. For each state, the $\mathbf{Q}(s_i,a_j)$ tells the system *how good particular actions* $a_j \in \mathbf{A}$ *are*.
