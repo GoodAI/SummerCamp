@@ -47,3 +47,6 @@ It is suitable to use this Node if the problem:
 
  * **Has time dependency:** delay the input from `MnistWorld` (or any other repeating serie) and use the same as target to the network. This way you make the network predict future steps.  
  * **You want to generate series** If your network is already trained on some series (text, music etc.), you can try to generate your own. Just use the output of the network as the input to the same.
+
+
+![Comparison with LSTM](graph.PNG)
