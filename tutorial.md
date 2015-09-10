@@ -17,7 +17,7 @@ Input layer only provides new data to every unit in the hidden layer. Hidden lay
 
 ### <a name="qlearningNode"></a>Clockwork recurrent neural network (CWRNN)
 
-The RNN is implemented in the `CWRNN` node. It is basically only a **small modification of the RNN**, the hidden layer of CWRNN is divided into separate blocks and each block processes input at different time periods. That means that **not all units at every time step change their activation upon the actual input**. The not updated units retain this way some **information about the past** which they provide to the newly updated units, they provide **context** from more deep history.
+The CWRNN is implemented in the `CWRNN` node. It has the same basic architecture with only a small modification in the hidden layer. The **hidden layer of CWRNN is divided into separate blocks** and each block processes input at different time periods. That means that **not all units at every time step change their activation upon the actual input**. The not updated units retain this way some **information about the past** which they provide to the newly updated units, they provide **context** from more deep history. There are only connections from the units with bigger periods to the units with the smaller periods and each group is fully connected.
 
 ADD SOME MORE MATH!!!
 
@@ -34,11 +34,7 @@ add drawing??
 
 ### <a name="qlearningNode"></a>How to use the Node
 
-any input
-
-has its own Real time recurrent learner
-
-output corresponding to the size of the target
+The CWRNN node can take any vector input. The network uses Real time recurrent learning algorithm, which is implemented inside the node. The size of the output of the node corresponds to the size of the target.
 
 TADY NEJAKY OBRAZEK ZAPOJENI
 
