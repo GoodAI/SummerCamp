@@ -22,18 +22,10 @@ namespace LSMModule.LSM.Tasks {
     [Description("Init random network"), MyTaskInfo(OneShot = true)]
     class LSMRandomInitTask : MyTask<LiquidStateMachine> {
 
-        public enum NeuronTypeEnum {
-            IF
-        }
-
         public enum IOEnum {
             input,
             output
         }
-
-        [YAXSerializableField(DefaultValue = NeuronTypeEnum.IF)]
-        [MyBrowsable, Category("\tLayer")]
-        public virtual NeuronTypeEnum NeuronType { get; set; }
 
         [YAXSerializableField(DefaultValue = IOEnum.output)]
         [MyBrowsable, Category("\tLayer")]

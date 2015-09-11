@@ -9,7 +9,7 @@ extern "C"{
 	// innerState[X, T] = (innerState[X, T-1] + A * imageInput + B * 1/N * sum(all edge inputs for X) / (A + B + Threshold),
 	// where N is number of input neurons for neuron X and A/B are constants changeable in BrainSimulator
 
-	__global__ void LSMComputeStateKernel(
+	__global__ void IFComputeStateKernel(
 		float a, // A constant of the main equation
 		float b, // B constant of the main equation
 		float* edgeInputs, // edge inputs
@@ -27,28 +27,31 @@ extern "C"{
 			+ threadIdx.x;
 
 		if (id < count){
-			float totalInput = 0;
-
-			for (int i = 0; i < count; i++) {
-				totalInput += edgeInputs[i * count + id];
-			}
-
-			totalInput = (totalInput * b) / (connectivity * count);
-
-			totalInput += imageInput[id] * a;
-			imageInput[id] = 0;
-
-			neuronOutputs[id] = 0;
-
-			innerStates[id] += totalInput;
-
-			innerStates[id] /= (a + b + threshold);
-
 			int c1 = (innerStates[id] >= threshold);
 			int c2 = (innerStates[id] < threshold);
 
-			neuronOutputs[id] = innerStates[id] * c1;
-			innerStates[id] = innerStates[id] * c2;
+			neuronOutputs[id] = c1 * innerStates[id];
+			innerStates[id] = c2 * innerStates[id] + c1 * -130;
+
+			int c3 = (innerStates[id] >= 0);
+			int c4 = (innerStates[id] < 0);
+			
+			innerStates[id] = c3 * innerStates[id] + c4 * (innerStates[id] / 1.3f);
+
+			if (c2 && c3){
+				float totalInput = 0;
+
+				for (int i = 0; i < count; i++) {
+					totalInput += edgeInputs[i * count + id];
+				}
+
+				totalInput += imageInput[id];
+
+				int c5 = (totalInput > 0);
+				innerStates[id] += c5 * totalInput;
+			}
+
+			imageInput[id] = 0;
 		}
 
 	}

@@ -26,9 +26,10 @@ namespace LSMModule.LSM.Tasks {
         }
 
         public override void Execute() {
-            m_LSMoutputKernel.SetupExecution(Owner.Neurons);
-            m_LSMoutputKernel.Run(Owner.InnerStates, Owner.NeuronOutputs, Owner.Output, Owner.Neurons);
+            float spikeSize = LiquidStateMachine.SPIKE_SIZE;
 
+            m_LSMoutputKernel.SetupExecution(Owner.Neurons);
+            m_LSMoutputKernel.Run(Owner.InnerStates, Owner.Output, Owner.Threshold, spikeSize, Owner.Neurons);
 
             Owner.Output.SafeCopyToHost();
         }

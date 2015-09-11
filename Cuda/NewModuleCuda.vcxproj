@@ -19,8 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <CudaCompile Include="IFComputeStateKernel.cu" />
     <CudaCompile Include="LSMComputeEdgesKernel.cu" />
-    <CudaCompile Include="LSMComputeStateKernel.cu" />
+    <CudaCompile Include="MPComputeStateKernel.cu" />
     <CudaCompile Include="LSMOutputKernel.cu" />
     <CudaCompile Include="LSMParseInputKernel.cu" />
   </ItemGroup>

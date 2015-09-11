@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using YAXLib;
 
 namespace LSMModule.LSM.Tasks {
     /// <author>Adr33</author>
@@ -22,13 +23,31 @@ namespace LSMModule.LSM.Tasks {
     [Description("Compute inner state")]
     class LSMComputeTask : MyTask<LiquidStateMachine> {
 
+        public enum NeuronTypeEnum {
+            IF,
+            MP
+        }
+
+        [YAXSerializableField(DefaultValue = NeuronTypeEnum.IF)]
+        [MyBrowsable, Category("\tLayer")]
+        public virtual NeuronTypeEnum NeuronType { get; set; }
+
         private MyCudaKernel m_LSMParseInputKernel;
         private MyCudaKernel m_LSMComputeStateKernel;
         private MyCudaKernel m_LSMComputeEdgesKernel;
 
         public override void Init(int nGPU) {
             m_LSMParseInputKernel = MyKernelFactory.Instance.Kernel(@"LSMParseInputKernel");
-            m_LSMComputeStateKernel = MyKernelFactory.Instance.Kernel(@"LSMComputeStateKernel");
+
+            switch (NeuronType) {
+                case NeuronTypeEnum.MP:
+                    m_LSMComputeStateKernel = MyKernelFactory.Instance.Kernel(@"MPComputeStateKernel");
+                    break;
+                default:
+                    m_LSMComputeStateKernel = MyKernelFactory.Instance.Kernel(@"IFComputeStateKernel");
+                    break;
+            }
+
             m_LSMComputeEdgesKernel = MyKernelFactory.Instance.Kernel(@"LSMComputeEdgesKernel");
         }
 
@@ -44,12 +63,9 @@ namespace LSMModule.LSM.Tasks {
 
             for (int i = 0; i < LiquidStateMachine.INNER_CYCLE; i++) {
 
-                // fill with random numbers 0..1
-                MyKernelFactory.Instance.GetRandDevice(Owner).GenerateUniform(Owner.ImageSpikeProbabilities.GetDevice(Owner));
-
                 // compute image input
                 m_LSMParseInputKernel.SetupExecution(Owner.Input.Count);
-                m_LSMParseInputKernel.Run(Owner.ImageSpikeProbabilities, Owner.Input, Owner.ImageOutput, Owner.ImageInput, spikes, spikeSize, Owner.Input.Count);
+                m_LSMParseInputKernel.Run(Owner.Input, Owner.ImageOutput, Owner.ImageInput, spikes, spikeSize, Owner.Input.Count);
 
                 // compute inner states and internal output of neurons
                 float thresh = Owner.Threshold;

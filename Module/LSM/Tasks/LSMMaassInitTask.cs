@@ -26,14 +26,6 @@ namespace LSMModule.LSM.Tasks {
 
         public const double LAMBDA = 0.00000001;
 
-        public enum NeuronTypeEnum {
-            IF
-        }
-
-        [YAXSerializableField(DefaultValue = NeuronTypeEnum.IF)]
-        [MyBrowsable, Category("\tLayer")]
-        public virtual NeuronTypeEnum NeuronType { get; set; }
-
         [YAXSerializableField(DefaultValue = 3)]
         [MyBrowsable, Category("\tLayer")]
         public virtual int MaassDepth { get; set; }
@@ -42,9 +34,6 @@ namespace LSMModule.LSM.Tasks {
         [MyBrowsable, Category("\tLayer")]
         public virtual float maassC { get; set; }
 
-        [YAXSerializableField(DefaultValue = false)]
-        [MyBrowsable, Category("\tLayer")]
-        public virtual bool maassBackDepthEdges { get; set; }
 
         public override void Init(int nGPU) {
         }
@@ -77,9 +66,18 @@ namespace LSMModule.LSM.Tasks {
             dimensions[2] = this.MaassDepth;
 
             // Setting of input neurons
+            Random rand = new Random();
+
             List<int> tempSet = new List<int>();
             for (int i = 0; i < this.Owner.Input.Count; i++) {
-                Owner.ImageOutput.Host[i] = i;
+                int temp = rand.Next(0, Owner.Neurons);
+
+                while (tempSet.Contains(temp)) {
+                    temp = rand.Next(0, Owner.Neurons);
+                }
+
+                tempSet.Add(temp);
+                Owner.ImageOutput.Host[i] = temp;
             }
 
             // Edges randomization
@@ -89,8 +87,6 @@ namespace LSMModule.LSM.Tasks {
                 }
             }
 
-
-            Random rand = new Random();
             for (int i = 0; i < Owner.Neurons; i++) {
                 int[] aDim = new int[] { i % dimensions[1], i / dimensions[1], i / Owner.Inputs };
                 int neighbours = Convert.ToInt32((Owner.Neurons - aDim[2] * Owner.Inputs) * Owner.Connectivity);
@@ -107,17 +103,15 @@ namespace LSMModule.LSM.Tasks {
                     if (i != j && !tempSet.Contains(j)) {
                         int[] bDim = new int[] { j % dimensions[1], j / dimensions[1], j / Owner.Inputs };
 
-                        if (this.maassBackDepthEdges || aDim[2] <= bDim[2]) {
-                            double probability = euclideanDistance(aDim, bDim);
-                            probability = this.maassC * Math.Exp(-Math.Pow(probability / LSMMaassInitTask.MAASS_LAMBDA, 2));
+                        double probability = euclideanDistance(aDim, bDim);
+                        probability = this.maassC * Math.Exp(-Math.Pow(probability / LSMMaassInitTask.MAASS_LAMBDA, 2));
 
-                            if (probability < 1 && probability >= rand.NextDouble()) {
-                                float weight = rand.Next(1, 100) / 100.0f;
-                                Owner.Weights.Host[i * Owner.Neurons + j] = weight;
+                        if (probability < 1 && probability >= rand.NextDouble()) {
+                            float weight = rand.Next(1, 100) / 100.0f;
+                            Owner.Weights.Host[i * Owner.Neurons + j] = weight;
 
-                                tempSet.Add(j);
-                                nCount++;
-                            }
+                            tempSet.Add(j);
+                            nCount++;
                         }
                     }
                 }

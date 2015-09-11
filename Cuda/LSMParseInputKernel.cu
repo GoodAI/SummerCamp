@@ -17,7 +17,6 @@ extern "C"{
 	// In non-spiking environment the pixel spikes its value
 
 	__global__ void LSMParseInputKernel(
-		float* probabilities, // probabilities, whether pixel of an image will spike
 		float* input, // output of an image
 		int* imageTargets, // target neurons of an image input
 		float* imageInput, // image input for neurons
@@ -33,7 +32,7 @@ extern "C"{
 
 		if (id < count){
 			int target = imageTargets[id];
-			imageInput[target] = spikes * (input[id] > probabilities[id]) * spikeSize + (!spikes) * input[id];
+			imageInput[target] = spikes * spikeSize + (!spikes) * input[id];
 		}
 	}
 
