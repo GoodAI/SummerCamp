@@ -27,18 +27,16 @@ $$ \mathbf{y}_H^t = f_H (\mathbf{W}_H * \mathbf{y}^(t-1) + \mathbf{W}_I * \mathb
 
 $$ \mathbf{y}_O^t = f_O (\mathbf{W}_O * \mathbf{y}_H^(t)) $$
 
-describe matrixes
+$ W_H_i = W_H_i, for (t mod T_i) = 0
 
-add drawing??
+W_H_i = 0, otherwise $
 
 
 ### <a name="qlearningNode"></a>How to use the Node
 
 The CWRNN node can take any vector input. The network uses Real time recurrent learning algorithm, which is implemented inside the node. The size of the output of the node corresponds to the size of the target.
 
-TADY NEJAKY OBRAZEK ZAPOJENI
-
-![Q-Learning Node](discreteqlearning/discrete-Qlearning.PNG)
+![Clockwork RNN Node](setting.PNG)
 
 
 #### <a name="qlearningHowToUse"></a>When to Use the Node
@@ -47,6 +45,3 @@ It is suitable to use this Node if the problem:
 
  * **Has time dependency:** delay the input from `MnistWorld` (or any other repeating serie) and use the same as target to the network. This way you make the network predict future steps.  
  * **You want to generate series** If your network is already trained on some series (text, music etc.), you can try to generate your own. Just use the output of the network as the input to the same.
-
-
-![Comparison with LSTM](graph.PNG)
