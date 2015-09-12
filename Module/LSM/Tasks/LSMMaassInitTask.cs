@@ -83,11 +83,11 @@ namespace LSMModule.LSM.Tasks {
 
             // Outputs
 
-            int index = 0;
-            for (int i = 0; i < this.Owner.Neurons; i++) {
-                if (tempSet.Contains(i)) continue;
-                Owner.OutputsIndex.Host[index] = i;
-                index++;
+            int index2 = 0;
+            for (int j = 0; j < this.Owner.Neurons; j++) {
+                if (tempSet.Contains(j)) continue;
+                Owner.OutputsIndex.Host[index2] = j;
+                index2++;
             }
 
             // Edges randomization
