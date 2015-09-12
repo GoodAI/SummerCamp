@@ -54,6 +54,7 @@ namespace LSMModule.LSM.Tasks {
             Owner.EdgeInputs.SafeCopyToDevice();
             Owner.Weights.SafeCopyToDevice();
             Owner.InnerStates.SafeCopyToDevice();
+            Owner.OutputsIndex.SafeCopyToDevice();
         }
 
 
@@ -78,6 +79,15 @@ namespace LSMModule.LSM.Tasks {
 
                 tempSet.Add(temp);
                 Owner.ImageOutput.Host[i] = temp;
+            }
+
+            // Outputs
+
+            int index = 0;
+            for (int i = 0; i < this.Owner.Neurons; i++) {
+                if (tempSet.Contains(i)) continue;
+                Owner.OutputsIndex.Host[index] = i;
+                index++;
             }
 
             // Edges randomization

@@ -9,6 +9,7 @@ extern "C"{
 	__global__ void LSMOutputKernel(
 		float* states, // inner states of neurons
 		float* nodeOutput, // output of LSM
+		int* outputs, // indexes of output neurons
 		float threshold, // threshold for sending of output
 		float spikeSize, // size of a spike
 		int count // number of neurons
@@ -20,7 +21,9 @@ extern "C"{
 			+ threadIdx.x;
 
 		if (id < count){
-			int c1 = (states[id] >= threshold);
+			int index = outputs[id];
+
+			int c1 = (states[index] >= threshold);
 
 			nodeOutput[id] = c1 * spikeSize;
 		}

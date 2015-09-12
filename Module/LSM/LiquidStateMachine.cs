@@ -81,6 +81,7 @@ namespace LSMModule {
         public MyMemoryBlock<int> ImageOutput { get; set; }
         public MyMemoryBlock<float> InnerStates { get; set; }
         public MyMemoryBlock<float> NeuronOutputs { get; set; }
+        public MyMemoryBlock<int> OutputsIndex { get; set; }
 
         #endregion
 
@@ -106,8 +107,9 @@ namespace LSMModule {
                 Neurons = 0;
             }
 
-            Output.Count = Neurons;
+            Output.Count = Neurons - Inputs;
             Output.ColumnHint = OutputColumnHint;
+            OutputsIndex.Count = Neurons - Inputs;
 
             Weights.Count = Neurons*Neurons;
             Weights.ColumnHint = Neurons;
