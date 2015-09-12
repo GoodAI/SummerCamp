@@ -30,38 +30,53 @@ namespace LSMModule {
     class LiquidStateMachine : MyWorkingNode {
 
 
-        public const float SPIKE_SIZE = 1;
-
         // Number of internal spiking steps in one external step
         public const int INNER_CYCLE = 1;
 
         [YAXSerializableField(DefaultValue = 0.1f)]
-        [MyBrowsable, Category("\tLayer")]
+        [MyBrowsable, Category("\tNetwork")]
         public virtual float Connectivity { get; set; }
 
         [YAXSerializableField(DefaultValue = 144)]
-        [MyBrowsable, Category("\tLayer")]
+        [MyBrowsable, Category("\tNetwork")]
         public virtual int Inputs { get; set; }
 
         [YAXSerializableField(DefaultValue = 0.5f)]
-        [MyBrowsable, Category("\tLayer")]
+        [MyBrowsable, Category("\tNetwork")]
         public virtual float Threshold { get; set; }
 
-        [YAXSerializableField(DefaultValue = 1.0f)]
-        [MyBrowsable, Category("\tLayer")]
-        public virtual float A { get; set; }
+        [YAXSerializableField(DefaultValue = -65)]
+        [MyBrowsable, Category("\tNeurons")]
+        public virtual int InitState { get; set; }
 
-        [YAXSerializableField(DefaultValue = 1.0f)]
-        [MyBrowsable, Category("\tLayer")]
-        public virtual float B { get; set; }
+        [YAXSerializableField(DefaultValue = -130)]
+        [MyBrowsable, Category("\tNeurons")]
+        public virtual int RefractoryState { get; set; }
+
+        [YAXSerializableField(DefaultValue = 1.3f)]
+        [MyBrowsable, Category("\tNeurons")]
+        public virtual float Refractory { get; set; }
 
         [YAXSerializableField(DefaultValue = true)]
-        [MyBrowsable, Category("\tLayer")]
+        [MyBrowsable, Category("\tSpike")]
         public virtual bool Spikes { get; set; }
+
+        [YAXSerializableField(DefaultValue = 80)]
+        [MyBrowsable, Category("\tSpike")]
+        public virtual int SpikeSize { get; set; }
 
         [YAXSerializableField(DefaultValue = 20)]
         [MyBrowsable, Category("Misc")]
         public int OutputColumnHint { get; set; }
+
+        public enum NeuronTypeEnum {
+            IF,
+            IF2
+        }
+
+        [YAXSerializableField(DefaultValue = NeuronTypeEnum.IF)]
+        [MyBrowsable, Category("\tLayer")]
+        public virtual NeuronTypeEnum NeuronType { get; set; }
 
         #region Memory blocks
         [MyInputBlock(0)]

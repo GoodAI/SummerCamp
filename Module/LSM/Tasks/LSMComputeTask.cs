@@ -23,15 +23,6 @@ namespace LSMModule.LSM.Tasks {
     [Description("Compute inner state")]
     class LSMComputeTask : MyTask<LiquidStateMachine> {
 
-        public enum NeuronTypeEnum {
-            IF,
-            MP
-        }
-
-        [YAXSerializableField(DefaultValue = NeuronTypeEnum.IF)]
-        [MyBrowsable, Category("\tLayer")]
-        public virtual NeuronTypeEnum NeuronType { get; set; }
-
         private MyCudaKernel m_LSMParseInputKernel;
         private MyCudaKernel m_LSMComputeStateKernel;
         private MyCudaKernel m_LSMComputeEdgesKernel;
@@ -39,9 +30,9 @@ namespace LSMModule.LSM.Tasks {
         public override void Init(int nGPU) {
             m_LSMParseInputKernel = MyKernelFactory.Instance.Kernel(@"LSMParseInputKernel");
 
-            switch (NeuronType) {
-                case NeuronTypeEnum.MP:
-                    m_LSMComputeStateKernel = MyKernelFactory.Instance.Kernel(@"MPComputeStateKernel");
+            switch (Owner.NeuronType) {
+                case LiquidStateMachine.NeuronTypeEnum.IF2:
+                    m_LSMComputeStateKernel = MyKernelFactory.Instance.Kernel(@"IF2ComputeStateKernel");
                     break;
                 default:
                     m_LSMComputeStateKernel = MyKernelFactory.Instance.Kernel(@"IFComputeStateKernel");
@@ -53,7 +44,7 @@ namespace LSMModule.LSM.Tasks {
 
         public override void Execute() {
 
-            float spikeSize = LiquidStateMachine.SPIKE_SIZE;
+            float spikeSize = Owner.SpikeSize;
             int spikes;
             if (Owner.Spikes) {
                 spikes = 1;
@@ -70,7 +61,7 @@ namespace LSMModule.LSM.Tasks {
                 // compute inner states and internal output of neurons
                 float thresh = Owner.Threshold;
                 m_LSMComputeStateKernel.SetupExecution(Owner.Neurons);
-                m_LSMComputeStateKernel.Run(Owner.A, Owner.B, Owner.EdgeInputs, Owner.ImageInput, Owner.NeuronOutputs, Owner.InnerStates, thresh, Owner.Connectivity, Owner.Neurons);
+                m_LSMComputeStateKernel.Run(Owner.InitState, Owner.RefractoryState, Owner.Refractory, Owner.EdgeInputs, Owner.ImageInput, Owner.NeuronOutputs, Owner.InnerStates, thresh, Owner.Connectivity, Owner.Neurons);
 
                 // compute value of edges between neurons
                 m_LSMComputeEdgesKernel.SetupExecution(Owner.Neurons * Owner.Neurons);

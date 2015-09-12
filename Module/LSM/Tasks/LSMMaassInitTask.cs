@@ -44,7 +44,7 @@ namespace LSMModule.LSM.Tasks {
                     Owner.EdgeInputs.Host[i * Owner.Neurons + j] = 0;
                 }
                 Owner.ImageInput.Host[i] = 0;
-                Owner.InnerStates.Host[i] = 0;
+                Owner.InnerStates.Host[i] = Owner.InitState;
             }
 
             maass();
@@ -62,9 +62,9 @@ namespace LSMModule.LSM.Tasks {
             int[] dimensions = new int[3];
             int[] tempDim = getRectangle(Owner.Input.Count);
 
-            dimensions[0] = tempDim[0];
-            dimensions[1] = tempDim[1];
-            dimensions[2] = this.MaassDepth;
+            dimensions[0] = 3;
+            dimensions[1] = 3;
+            dimensions[2] = 13;
 
             // Setting of input neurons
             Random rand = new Random();
@@ -98,8 +98,8 @@ namespace LSMModule.LSM.Tasks {
             }
 
             for (int i = 0; i < Owner.Neurons; i++) {
-                int[] aDim = new int[] { i % dimensions[1], i / dimensions[1], i / Owner.Inputs };
-                int neighbours = Convert.ToInt32((Owner.Neurons - aDim[2] * Owner.Inputs) * Owner.Connectivity);
+                int[] aDim = new int[] { i % dimensions[1], i / dimensions[1], i / (dimensions[0] * dimensions[1]) };
+                int neighbours = Convert.ToInt32((Owner.Neurons - 1) * Owner.Connectivity);
                 int[] nPerm = getPermutation(Owner.Neurons);
                 int nCount = 0;
                 int index = 0;
@@ -111,7 +111,7 @@ namespace LSMModule.LSM.Tasks {
                     int j = nPerm[index++];
 
                     if (i != j && !tempSet.Contains(j)) {
-                        int[] bDim = new int[] { j % dimensions[1], j / dimensions[1], j / Owner.Inputs };
+                        int[] bDim = new int[] { j % dimensions[1], j / dimensions[1], j / (dimensions[0] * dimensions[1]) };
 
                         double probability = euclideanDistance(aDim, bDim);
                         probability = this.maassC * Math.Exp(-Math.Pow(probability / LSMMaassInitTask.MAASS_LAMBDA, 2));
@@ -170,7 +170,7 @@ namespace LSMModule.LSM.Tasks {
         }
 
         public int getNeurons() {
-            return Owner.Neurons = Owner.Inputs * this.MaassDepth;
+            return Owner.Neurons = 3*3*13;
         }
     }
 

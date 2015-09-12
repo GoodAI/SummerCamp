@@ -11,7 +11,6 @@ extern "C"{
 		float* nodeOutput, // output of LSM
 		int* outputs, // indexes of output neurons
 		float threshold, // threshold for sending of output
-		float spikeSize, // size of a spike
 		int count // number of neurons
 		)
 	{
@@ -25,7 +24,7 @@ extern "C"{
 
 			int c1 = (states[index] >= threshold);
 
-			nodeOutput[id] = c1 * spikeSize;
+			nodeOutput[id] = c1;
 		}
 
 	}

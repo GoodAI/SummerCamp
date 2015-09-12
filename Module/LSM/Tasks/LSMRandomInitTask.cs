@@ -39,12 +39,13 @@ namespace LSMModule.LSM.Tasks {
         }
 
         public override void Execute() {
+
             for (int i = 0; i < Owner.Neurons; i++) {
                 for (int j = 0; j < Owner.Neurons; j++) {
                     Owner.EdgeInputs.Host[i * Owner.Neurons + j] = 0;
                 }
                 Owner.ImageInput.Host[i] = 0;
-                Owner.InnerStates.Host[i] = 0;
+                Owner.InnerStates.Host[i] = Owner.InitState;
             }
 
             random();
