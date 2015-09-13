@@ -24,6 +24,7 @@
     <CudaCompile Include="LSMComputeEdgesKernel.cu" />
     <CudaCompile Include="LSMOutputKernel.cu" />
     <CudaCompile Include="LSMParseInputKernel.cu" />
+    <CudaCompile Include="LSMResetKernel.cu" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{BFCFA346-8A89-4329-994D-AEA04CE62F69}</ProjectGuid>

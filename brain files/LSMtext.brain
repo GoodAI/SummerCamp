@@ -9,8 +9,8 @@
         <Children>
           <TextImageInput LoadOnStart="False" SaveOnStop="False" Id="10" Name="Node_10" yaxlib:realtype="LSMModule.TextImageInput">
             <Structure>
-              <LettersDirectory>C:\Users\Cuda\Documents\GitHub\LSMModule\letters</LettersDirectory>
-              <InputFile>C:\Users\Cuda\Documents\GitHub\LSMModule\inputs\243.txt</InputFile>
+              <LettersDirectory>C:\Users\Ondra\Documents\GitHub\LSMModule\letters</LettersDirectory>
+              <InputFile>C:\Users\Ondra\Documents\GitHub\LSMModule\inputs\243.txt</InputFile>
             </Structure>
             <Width>5</Width>
             <Height>7</Height>
@@ -37,31 +37,32 @@
               </Task>
               <Task Enabled="False" PropertyName="CopyInput" yaxlib:realtype="GoodAI.Modules.Transforms.MyAccumulator+MyQuantizedCopyTask">
                 <TimePeriod>10</TimePeriod>
-                <TimeOffset>0</TimeOffset>
               </Task>
             </Tasks>
           </Accumulator>
           <LiquidStateMachine LoadOnStart="False" SaveOnStop="False" Id="12" Name="Node_12" yaxlib:realtype="LSMModule.LiquidStateMachine">
             <Connectivity>0.1</Connectivity>
             <Inputs>35</Inputs>
-            <Threshhold>0.5</Threshhold>
-            <A>1</A>
-            <B>1</B>
+            <Threshold>30</Threshold>
+            <InnerCycle>1</InnerCycle>
+            <InitState>-65</InitState>
+            <RefractoryState>-130</RefractoryState>
+            <Refractory>1.3</Refractory>
             <Spikes>True</Spikes>
+            <SpikeSize>80</SpikeSize>
             <OutputColumnHint>20</OutputColumnHint>
+            <NeuronType>IF</NeuronType>
             <DataFolder></DataFolder>
             <Location X="-95" Y="-431" />
             <Tasks>
               <Task Enabled="True" PropertyName="RandomInitTask" yaxlib:realtype="LSMModule.LSM.Tasks.LSMRandomInitTask">
-                <NeuronType>IF</NeuronType>
                 <ConnectivityType>output</ConnectivityType>
                 <Neurons>140</Neurons>
               </Task>
               <Task Enabled="False" PropertyName="MaassInitTask" yaxlib:realtype="LSMModule.LSM.Tasks.LSMMaassInitTask">
-                <NeuronType>IF</NeuronType>
-                <MaassDepth>3</MaassDepth>
-                <maassC>1</maassC>
-                <maassBackDepthEdges>False</maassBackDepthEdges>
+                <Depth>27</Depth>
+                <Height>3</Height>
+                <Width>3</Width>
               </Task>
               <Task Enabled="True" PropertyName="ComputeTask" yaxlib:realtype="LSMModule.LSM.Tasks.LSMComputeTask" />
               <Task Enabled="True" PropertyName="OutputTask" yaxlib:realtype="LSMModule.LSM.Tasks.LSMOutputTask" />
@@ -80,7 +81,6 @@
               <Task Enabled="True" PropertyName="CreateDropoutMask" yaxlib:realtype="GoodAI.Modules.NeuralNetwork.Tasks.MyCreateDropoutMaskTask" />
               <Task Enabled="True" PropertyName="ForwardTask" yaxlib:realtype="GoodAI.Modules.NeuralNetwork.Tasks.MyFCForwardTask" />
               <Task Enabled="True" PropertyName="DeltaBackTask" yaxlib:realtype="GoodAI.Modules.NeuralNetwork.Tasks.MyFCBackDeltaTask" />
-              <Task Enabled="False" PropertyName="CrossEntropy" yaxlib:realtype="GoodAI.Modules.NeuralNetwork.Tasks.MyCrossEntropyLossTask" />
             </Tasks>
           </MyOutputLayer>
           <MyMatrixNode LoadOnStart="False" SaveOnStop="False" Id="14" Name="Node_14" yaxlib:realtype="GoodAI.Modules.Matrix.MyMatrixNode">
@@ -129,8 +129,8 @@
           </MyHiddenLayer>
           <BenchmarkFileSaver LoadOnStart="False" SaveOnStop="False" Id="19" Name="Node_19" yaxlib:realtype="LSMModule.BenchmarkFileSaver">
             <Structure>
-              <OutputDirectory>C:\Users\Cuda\Desktop\CLISolution\ouput</OutputDirectory>
-              <OutputFile>outputFile.csv</OutputFile>
+              <OutputDirectory>C:\Users\Ondra\Desktop\CLISolution\ouput</OutputDirectory>
+              <OutputFile>test123.csv</OutputFile>
               <Headers>trainrate;neurons;inputs;connectivity;threshold;spikes;A;B;blocksize</Headers>
               <InputSize>1</InputSize>
               <InputWidth>1</InputWidth>
@@ -142,7 +142,7 @@
             <Neurons>400</Neurons>
             <Connectivity>0.1</Connectivity>
             <Inputs>144</Inputs>
-            <Threshhold>0.5</Threshhold>
+            <Threshold>0.5</Threshold>
             <A>1</A>
             <B>1</B>
             <Spikes>True</Spikes>
@@ -175,13 +175,11 @@
           <Task Enabled="False" PropertyName="SGD" yaxlib:realtype="GoodAI.Modules.NeuralNetwork.Group.MySGDTask">
             <TrainingRate>0.25</TrainingRate>
             <Momentum>0</Momentum>
-            <BatchSize>1</BatchSize>
           </Task>
           <Task Enabled="True" PropertyName="RMS" yaxlib:realtype="GoodAI.Modules.NeuralNetwork.Group.MyRMSTask">
             <TrainingRate>0.005</TrainingRate>
             <Momentum>0</Momentum>
             <SmoothingFactor>0.9</SmoothingFactor>
-            <BatchSize>1</BatchSize>
           </Task>
           <Task Enabled="True" PropertyName="InitGroup" yaxlib:realtype="GoodAI.Modules.NeuralNetwork.Group.MyInitNNGroupTask" />
           <Task Enabled="False" PropertyName="GradientCheck" yaxlib:realtype="GoodAI.Modules.NeuralNetwork.Group.MyGradientCheckTask">
@@ -189,11 +187,6 @@
             <SamplesPerTimestep>1</SamplesPerTimestep>
             <ThresholdRelative>0.001</ThresholdRelative>
             <ThresholdAbsolute>0.0001</ThresholdAbsolute>
-          </Task>
-          <Task Enabled="False" PropertyName="Adadelta" yaxlib:realtype="GoodAI.Modules.NeuralNetwork.Group.MyAdadeltaTask">
-            <Epsilon>1E-06</Epsilon>
-            <Ro>0.95</Ro>
-            <BatchSize>1</BatchSize>
           </Task>
         </Tasks>
       </Group>
@@ -244,7 +237,7 @@
   </World>
   <Observers />
   <UsedModules>
-    <Module Name="GoodAI.BasicNodes.dll" Version="6" />
+    <Module Name="GoodAI.BasicNodes.dll" Version="4" />
     <Module Name="LSMModule.dll" Version="1" />
     <Module Name="GoodAI.Platform.Core.dll" Version="9" />
   </UsedModules>

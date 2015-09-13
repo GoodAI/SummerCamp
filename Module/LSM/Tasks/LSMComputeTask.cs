@@ -23,11 +23,14 @@ namespace LSMModule.LSM.Tasks {
     [Description("Compute inner state")]
     class LSMComputeTask : MyTask<LiquidStateMachine> {
 
+        private MyCudaKernel m_LSMResetKernel;
         private MyCudaKernel m_LSMParseInputKernel;
         private MyCudaKernel m_LSMComputeStateKernel;
         private MyCudaKernel m_LSMComputeEdgesKernel;
 
         public override void Init(int nGPU) {
+            m_LSMResetKernel = MyKernelFactory.Instance.Kernel(@"LSMResetKernel");
+
             m_LSMParseInputKernel = MyKernelFactory.Instance.Kernel(@"LSMParseInputKernel");
 
             switch (Owner.NeuronType) {
@@ -52,7 +55,11 @@ namespace LSMModule.LSM.Tasks {
                 spikes = 0;
             }
 
-            for (int i = 0; i < LiquidStateMachine.INNER_CYCLE; i++) {
+            // reset
+            m_LSMResetKernel.SetupExecution(Owner.Neurons);
+            m_LSMResetKernel.Run(Owner.InitState, Owner.InnerStates, Owner.EdgeInputs, Owner.ImageInput, Owner.Neurons);
+
+            for (int i = 0; i < Owner.InnerCycle; i++) {
 
                 // compute image input
                 m_LSMParseInputKernel.SetupExecution(Owner.Input.Count);

@@ -26,13 +26,21 @@ namespace LSMModule.LSM.Tasks {
 
         public const double LAMBDA = 0.00000001;
 
+        [YAXSerializableField(DefaultValue = 27)]
+        [MyBrowsable, Category("\tLayer")]
+        public virtual int Depth { get; set; }
+
         [YAXSerializableField(DefaultValue = 3)]
         [MyBrowsable, Category("\tLayer")]
-        public virtual int MaassDepth { get; set; }
+        public virtual int Height { get; set; }
 
-        [YAXSerializableField(DefaultValue = 1.0f)]
+        [YAXSerializableField(DefaultValue = 3)]
         [MyBrowsable, Category("\tLayer")]
-        public virtual float maassC { get; set; }
+        public virtual int Width { get; set; }
+
+        //[YAXSerializableField(DefaultValue = 1.0f)]
+        //[MyBrowsable, Category("\tLayer")]
+        //public virtual float maassC { get; set; }
 
 
         public override void Init(int nGPU) {
@@ -62,9 +70,9 @@ namespace LSMModule.LSM.Tasks {
             int[] dimensions = new int[3];
             int[] tempDim = getRectangle(Owner.Input.Count);
 
-            dimensions[0] = 3;
-            dimensions[1] = 3;
-            dimensions[2] = 13;
+            dimensions[0] = Height;
+            dimensions[1] = Width;
+            dimensions[2] = Depth;
 
             // Setting of input neurons
             Random rand = new Random();
@@ -114,7 +122,7 @@ namespace LSMModule.LSM.Tasks {
                         int[] bDim = new int[] { j % dimensions[1], j / dimensions[1], j / (dimensions[0] * dimensions[1]) };
 
                         double probability = euclideanDistance(aDim, bDim);
-                        probability = this.maassC * Math.Exp(-Math.Pow(probability / LSMMaassInitTask.MAASS_LAMBDA, 2));
+                        probability = Math.Exp(-Math.Pow(probability / LSMMaassInitTask.MAASS_LAMBDA, 2));// *this.maassC;
 
                         if (probability < 1 && probability >= rand.NextDouble()) {
                             float weight = rand.Next(1, 100) / 100.0f;
@@ -170,7 +178,7 @@ namespace LSMModule.LSM.Tasks {
         }
 
         public int getNeurons() {
-            return Owner.Neurons = 3*3*13;
+            return Owner.Neurons = Height * Width * Depth;
         }
     }
 

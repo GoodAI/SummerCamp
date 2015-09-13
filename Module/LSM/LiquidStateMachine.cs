@@ -29,10 +29,6 @@ namespace LSMModule {
     /// </description>
     class LiquidStateMachine : MyWorkingNode {
 
-
-        // Number of internal spiking steps in one external step
-        public const int INNER_CYCLE = 1;
-
         [YAXSerializableField(DefaultValue = 0.1f)]
         [MyBrowsable, Category("\tNetwork")]
         public virtual float Connectivity { get; set; }
@@ -44,6 +40,10 @@ namespace LSMModule {
         [YAXSerializableField(DefaultValue = 0.5f)]
         [MyBrowsable, Category("\tNetwork")]
         public virtual float Threshold { get; set; }
+
+        [YAXSerializableField(DefaultValue = 10)]
+        [MyBrowsable, Category("\tNetwork")]
+        public virtual int InnerCycle { get; set; }
 
         [YAXSerializableField(DefaultValue = -65)]
         [MyBrowsable, Category("\tNeurons")]

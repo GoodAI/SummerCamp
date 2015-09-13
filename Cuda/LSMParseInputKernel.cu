@@ -32,7 +32,7 @@ extern "C"{
 
 		if (id < count){
 			int target = imageTargets[id];
-			imageInput[target] = spikes * spikeSize + (!spikes) * input[id];
+			imageInput[target] = spikes * spikeSize * input[id] + (!spikes) * input[id];
 		}
 	}
 
