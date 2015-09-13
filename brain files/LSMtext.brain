@@ -43,15 +43,15 @@
           <LiquidStateMachine LoadOnStart="False" SaveOnStop="False" Id="12" Name="Node_12" yaxlib:realtype="LSMModule.LiquidStateMachine">
             <Connectivity>0.1</Connectivity>
             <Inputs>35</Inputs>
-            <Threshold>30</Threshold>
+            <Threshold>8</Threshold>
             <InnerCycle>1</InnerCycle>
-            <InitState>-65</InitState>
-            <RefractoryState>-130</RefractoryState>
+            <InitState>0</InitState>
+            <RefractoryState>0</RefractoryState>
             <Refractory>1.3</Refractory>
             <Spikes>True</Spikes>
-            <SpikeSize>80</SpikeSize>
+            <SpikeSize>1</SpikeSize>
             <OutputColumnHint>20</OutputColumnHint>
-            <NeuronType>IF</NeuronType>
+            <NeuronType>IF2</NeuronType>
             <DataFolder></DataFolder>
             <Location X="-95" Y="-431" />
             <Tasks>
@@ -136,7 +136,7 @@
               <InputWidth>1</InputWidth>
               <InputHeight>1</InputHeight>
             </Structure>
-            <WriteMethod>Overwrite</WriteMethod>
+            <WriteMethod>Append</WriteMethod>
             <BlockSize>100</BlockSize>
             <Trainrate>0.0025</Trainrate>
             <Neurons>400</Neurons>
@@ -147,7 +147,7 @@
             <B>1</B>
             <Spikes>True</Spikes>
             <DataFolder></DataFolder>
-            <Location X="782" Y="-271" />
+            <Location X="784" Y="-272" />
             <Tasks>
               <Task Enabled="True" PropertyName="MainTask" yaxlib:realtype="LSMModule.BenchmarkFileSaver+MyWriterTask" />
             </Tasks>
@@ -235,7 +235,42 @@
       </Task>
     </Tasks>
   </World>
-  <Observers />
+  <Observers>
+    <MemoryBlockObserver yaxlib:realtype="GoodAI.Core.Observers.MyMemoryBlockObserver">
+      <Method>RedGreenScale</Method>
+      <Scale>Linear</Scale>
+      <Elements>2</Elements>
+      <ViewMode>Fit_2D</ViewMode>
+      <KeepRatio>True</KeepRatio>
+      <Window>
+        <Location X="178" Y="288" />
+        <Size Width="777" Height="518" />
+      </Window>
+      <AutosaveSnapshop>False</AutosaveSnapshop>
+      <BilinearFiltering>False</BilinearFiltering>
+      <TargetIdentifier>12#Output</TargetIdentifier>
+      <m_boundPolicy>MANUAL</m_boundPolicy>
+      <m_minValue>0</m_minValue>
+      <m_maxValue>1</m_maxValue>
+    </MemoryBlockObserver>
+    <MemoryBlockObserver yaxlib:realtype="GoodAI.Core.Observers.MyMemoryBlockObserver">
+      <Method>RedGreenScale</Method>
+      <Scale>Linear</Scale>
+      <Elements>2</Elements>
+      <ViewMode>Fit_2D</ViewMode>
+      <KeepRatio>True</KeepRatio>
+      <Window>
+        <Location X="407" Y="138" />
+        <Size Width="300" Height="300" />
+      </Window>
+      <AutosaveSnapshop>False</AutosaveSnapshop>
+      <BilinearFiltering>False</BilinearFiltering>
+      <TargetIdentifier>12#InnerStates</TargetIdentifier>
+      <m_boundPolicy>MANUAL</m_boundPolicy>
+      <m_minValue>0</m_minValue>
+      <m_maxValue>1</m_maxValue>
+    </MemoryBlockObserver>
+  </Observers>
   <UsedModules>
     <Module Name="GoodAI.BasicNodes.dll" Version="4" />
     <Module Name="LSMModule.dll" Version="1" />

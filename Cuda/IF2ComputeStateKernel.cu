@@ -33,7 +33,7 @@ extern "C"{
 
 			if (innerStates[id] >= threshold){
 				neuronOutputs[id] = innerStates[id];
-				innerStates[id] = -65;
+				innerStates[id] = initState;
 			}
 			else {
 				float totalInput = 0;

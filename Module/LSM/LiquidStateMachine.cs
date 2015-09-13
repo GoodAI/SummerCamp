@@ -90,12 +90,15 @@ namespace LSMModule {
             set { SetOutput(0, value); }
         }
 
+        [MyPersistable]
         public MyMemoryBlock<float> Weights { get; set; } //done
         public MyMemoryBlock<float> EdgeInputs { get; set; }
         public MyMemoryBlock<float> ImageInput { get; set; }
+        [MyPersistable]
         public MyMemoryBlock<int> ImageOutput { get; set; }
         public MyMemoryBlock<float> InnerStates { get; set; }
         public MyMemoryBlock<float> NeuronOutputs { get; set; }
+        [MyPersistable]
         public MyMemoryBlock<int> OutputsIndex { get; set; }
 
         #endregion
