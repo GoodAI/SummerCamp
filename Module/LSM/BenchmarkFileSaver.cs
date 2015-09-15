@@ -58,18 +58,6 @@ namespace LSMModule {
         [EditorAttribute(typeof(MultilineStringEditor), typeof(UITypeEditor))]
         public string Headers { get; set; }
 
-        [MyBrowsable, Category("Input")]
-        [YAXSerializableField(DefaultValue = 1u), YAXElementFor("Structure")]
-        public uint InputSize { get; private set; }
-
-        [MyBrowsable, Category("Input")]
-        [YAXSerializableField(DefaultValue = 1u), YAXElementFor("Structure")]
-        public uint InputWidth { get; private set; }
-
-        [MyBrowsable, Category("Input")]
-        [YAXSerializableField(DefaultValue = 1u), YAXElementFor("Structure")]
-        public uint InputHeight { get; private set; }
-
         [YAXSerializableField(DefaultValue = 0.0025f)]
         [MyBrowsable, Category("\tLayer")]
         public virtual float Trainrate { get; set; }

@@ -22,7 +22,7 @@ namespace LSMModule.LSM.Tasks {
     class LSMMaassInitTask : MyTask<LiquidStateMachine> {
 
         // constant for calculating of close neighbours
-        public const float MAASS_LAMBDA = 2;
+        public const float MAASS_LAMBDA = 8;
 
         public const double LAMBDA = 0.00000001;
 
@@ -124,7 +124,7 @@ namespace LSMModule.LSM.Tasks {
                         double probability = euclideanDistance(aDim, bDim);
                         probability = Math.Exp(-Math.Pow(probability / LSMMaassInitTask.MAASS_LAMBDA, 2));// *this.maassC;
 
-                        if (probability < 1 && probability >= rand.NextDouble()) {
+                        if (probability >= rand.NextDouble()) {
                             float weight = rand.Next(1, 100) / 100.0f;
                             Owner.Weights.Host[i * Owner.Neurons + j] = weight;
 
