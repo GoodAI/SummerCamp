@@ -65,6 +65,10 @@ namespace LSMModule {
         [MyBrowsable, Category("\tSpike")]
         public virtual int SpikeSize { get; set; }
 
+        [YAXSerializableField(DefaultValue = 28)]
+        [MyBrowsable, Category("\tPattern")]
+        public virtual int PatternLength { get; set; }
+
         [YAXSerializableField(DefaultValue = 20)]
         [MyBrowsable, Category("Misc")]
         public int OutputColumnHint { get; set; }

@@ -9,27 +9,28 @@
         <Children>
           <LiquidStateMachine LoadOnStart="False" SaveOnStop="False" Id="11" Name="Node_11" yaxlib:realtype="LSMModule.LiquidStateMachine">
             <Connectivity>0.1</Connectivity>
-            <Inputs>144</Inputs>
+            <Inputs>24</Inputs>
             <Threshold>30</Threshold>
-            <InnerCycle>25</InnerCycle>
+            <InnerCycle>49</InnerCycle>
             <InitState>-65</InitState>
             <RefractoryState>-130</RefractoryState>
             <Refractory>1.3</Refractory>
             <Spikes>True</Spikes>
             <SpikeSize>80</SpikeSize>
+            <PatternLength>24</PatternLength>
             <OutputColumnHint>20</OutputColumnHint>
             <NeuronType>IF</NeuronType>
             <DataFolder></DataFolder>
-            <Location X="459" Y="21" />
+            <Location X="387" Y="23" />
             <Tasks>
-              <Task Enabled="False" PropertyName="RandomInitTask" yaxlib:realtype="LSMModule.LSM.Tasks.LSMRandomInitTask">
+              <Task Enabled="True" PropertyName="RandomInitTask" yaxlib:realtype="LSMModule.LSM.Tasks.LSMRandomInitTask">
                 <ConnectivityType>output</ConnectivityType>
-                <Neurons>400</Neurons>
+                <Neurons>200</Neurons>
               </Task>
-              <Task Enabled="True" PropertyName="MaassInitTask" yaxlib:realtype="LSMModule.LSM.Tasks.LSMMaassInitTask">
-                <Depth>25</Depth>
-                <Height>5</Height>
-                <Width>5</Width>
+              <Task Enabled="False" PropertyName="MaassInitTask" yaxlib:realtype="LSMModule.LSM.Tasks.LSMMaassInitTask">
+                <Depth>27</Depth>
+                <Height>3</Height>
+                <Width>3</Width>
               </Task>
               <Task Enabled="True" PropertyName="ComputeTask" yaxlib:realtype="LSMModule.LSM.Tasks.LSMComputeTask" />
               <Task Enabled="True" PropertyName="OutputTask" yaxlib:realtype="LSMModule.LSM.Tasks.LSMOutputTask" />
@@ -40,7 +41,7 @@
             <ActivationFunction>SIGMOID</ActivationFunction>
             <OutputColumnHint>10</OutputColumnHint>
             <DataFolder></DataFolder>
-            <Location X="856" Y="118" />
+            <Location X="771" Y="117" />
             <Tasks>
               <Task Enabled="True" PropertyName="SquaredLoss" yaxlib:realtype="GoodAI.Modules.NeuralNetwork.Tasks.MySquaredLossTask" />
               <Task Enabled="True" PropertyName="UpdateWeights" yaxlib:realtype="GoodAI.Modules.NeuralNetwork.Tasks.MyFCUpdateWeightsTask" />
@@ -56,7 +57,7 @@
             <Neurons>20</Neurons>
             <OutputColumnHint>1</OutputColumnHint>
             <DataFolder></DataFolder>
-            <Location X="664" Y="85" />
+            <Location X="612" Y="51" />
             <Tasks>
               <Task Enabled="True" PropertyName="UpdateWeights" yaxlib:realtype="GoodAI.Modules.NeuralNetwork.Tasks.MyFCUpdateWeightsTask" />
               <Task Enabled="True" PropertyName="InitWeights" yaxlib:realtype="GoodAI.Modules.NeuralNetwork.Tasks.MyInitWeightsTask" />
@@ -65,36 +66,27 @@
               <Task Enabled="True" PropertyName="DeltaBackTask" yaxlib:realtype="GoodAI.Modules.NeuralNetwork.Tasks.MyFCBackDeltaTask" />
             </Tasks>
           </MyHiddenLayer>
-          <My2DCropNode LoadOnStart="False" SaveOnStop="False" Id="14" Name="Node_14" yaxlib:realtype="GoodAI.Modules.Transforms.My2DCropNode">
+          <My2DCropNode LoadOnStart="False" SaveOnStop="False" Id="17" Name="Node_17" yaxlib:realtype="GoodAI.Modules.Transforms.My2DCropNode">
             <LeftMargin>-2</LeftMargin>
             <RightMargin>-2</RightMargin>
             <TopMargin>-2</TopMargin>
             <BottomMargin>-2</BottomMargin>
             <DataFolder></DataFolder>
-            <Location X="147" Y="94" />
+            <Location X="222" Y="30" />
             <Tasks>
               <Task Enabled="True" PropertyName="ImageCrop" yaxlib:realtype="GoodAI.Modules.Transforms.My2DCropNode+MyImageCropTask">
                 <FillValue>0</FillValue>
               </Task>
             </Tasks>
           </My2DCropNode>
-          <Resize2D LoadOnStart="False" SaveOnStop="False" Id="15" Name="Node_15" yaxlib:realtype="GoodAI.Modules.Transforms.MyResize2D">
-            <Factor>0.5</Factor>
-            <FactorHeight>0</FactorHeight>
-            <DataFolder></DataFolder>
-            <Location X="292" Y="15" />
-            <Tasks>
-              <Task Enabled="True" PropertyName="ImageScale" yaxlib:realtype="GoodAI.Modules.Transforms.MyResize2D+MyImageScaleTask" />
-            </Tasks>
-          </Resize2D>
-          <BenchmarkFileSaver2 LoadOnStart="False" SaveOnStop="False" Id="16" Name="Node_16" yaxlib:realtype="LSMModule.BenchmarkFileSaver2">
+          <BenchmarkFileSaver2 LoadOnStart="False" SaveOnStop="False" Id="18" Name="Node_18" yaxlib:realtype="LSMModule.BenchmarkFileSaver2">
             <Structure>
-              <OutputDirectory>C:\Users\Cuda\Desktop\ouputs</OutputDirectory>
+              <OutputDirectory>C:\Users\Ondra\Desktop\output</OutputDirectory>
               <OutputFile>test1.csv</OutputFile>
             </Structure>
             <BlockSize>50</BlockSize>
             <DataFolder></DataFolder>
-            <Location X="1032" Y="330" />
+            <Location X="927" Y="282" />
             <Tasks>
               <Task Enabled="True" PropertyName="MainTask" yaxlib:realtype="LSMModule.BenchmarkFileSaver2+MyWriterTask2" />
             </Tasks>
@@ -102,10 +94,10 @@
         </Children>
         <GroupInputNodes>
           <MyParentInput ParentInputIndex="0" Id="8" Name="Input 1">
-            <Location X="6" Y="13" />
+            <Location X="38" Y="19" />
           </MyParentInput>
           <MyParentInput ParentInputIndex="1" Id="9" Name="Input 2">
-            <Location X="42" Y="208" />
+            <Location X="33" Y="186" />
           </MyParentInput>
         </GroupInputNodes>
         <GroupOutputNodes>
@@ -122,7 +114,7 @@
             <BatchSize>1</BatchSize>
           </Task>
           <Task Enabled="True" PropertyName="RMS" yaxlib:realtype="GoodAI.Modules.NeuralNetwork.Group.MyRMSTask">
-            <TrainingRate>0.0025</TrainingRate>
+            <TrainingRate>0.005</TrainingRate>
             <Momentum>0</Momentum>
             <SmoothingFactor>0.9</SmoothingFactor>
             <BatchSize>1</BatchSize>
@@ -155,14 +147,13 @@
     <Connections>
       <Connection From="1" To="7" FromIndex="0" ToIndex="0" />
       <Connection From="4" To="7" FromIndex="0" ToIndex="1" />
-      <Connection From="15" To="11" FromIndex="0" ToIndex="0" />
+      <Connection From="17" To="11" FromIndex="0" ToIndex="0" />
       <Connection From="13" To="12" FromIndex="0" ToIndex="0" />
       <Connection From="9" To="12" FromIndex="0" ToIndex="1" />
       <Connection From="11" To="13" FromIndex="0" ToIndex="0" />
-      <Connection From="8" To="14" FromIndex="0" ToIndex="0" />
-      <Connection From="14" To="15" FromIndex="0" ToIndex="0" />
-      <Connection From="9" To="16" FromIndex="0" ToIndex="0" />
-      <Connection From="12" To="16" FromIndex="0" ToIndex="1" />
+      <Connection From="8" To="17" FromIndex="0" ToIndex="0" />
+      <Connection From="9" To="18" FromIndex="0" ToIndex="0" />
+      <Connection From="12" To="18" FromIndex="0" ToIndex="1" />
     </Connections>
     <Tasks />
   </Network>
@@ -183,7 +174,59 @@
       </Task>
     </Tasks>
   </World>
-  <Observers />
+  <Observers>
+    <MemoryBlockObserver yaxlib:realtype="GoodAI.Core.Observers.MyMemoryBlockObserver">
+      <Method>RedGreenScale</Method>
+      <Scale>Linear</Scale>
+      <Elements>2</Elements>
+      <ViewMode>Fit_2D</ViewMode>
+      <KeepRatio>True</KeepRatio>
+      <Window>
+        <Location X="549" Y="519" />
+        <Size Width="300" Height="300" />
+      </Window>
+      <AutosaveSnapshop>False</AutosaveSnapshop>
+      <BilinearFiltering>False</BilinearFiltering>
+      <TargetIdentifier>12#Output</TargetIdentifier>
+      <m_boundPolicy>MANUAL</m_boundPolicy>
+      <m_minValue>0</m_minValue>
+      <m_maxValue>1</m_maxValue>
+    </MemoryBlockObserver>
+    <MemoryBlockObserver yaxlib:realtype="GoodAI.Core.Observers.MyMemoryBlockObserver">
+      <Method>RedGreenScale</Method>
+      <Scale>Linear</Scale>
+      <Elements>2</Elements>
+      <ViewMode>Fit_2D</ViewMode>
+      <KeepRatio>True</KeepRatio>
+      <Window>
+        <Location X="229" Y="517" />
+        <Size Width="300" Height="300" />
+      </Window>
+      <AutosaveSnapshop>False</AutosaveSnapshop>
+      <BilinearFiltering>False</BilinearFiltering>
+      <TargetIdentifier>17#Output</TargetIdentifier>
+      <m_boundPolicy>MANUAL</m_boundPolicy>
+      <m_minValue>0</m_minValue>
+      <m_maxValue>1</m_maxValue>
+    </MemoryBlockObserver>
+    <MemoryBlockObserver yaxlib:realtype="GoodAI.Core.Observers.MyMemoryBlockObserver">
+      <Method>RedGreenScale</Method>
+      <Scale>Linear</Scale>
+      <Elements>2</Elements>
+      <ViewMode>Fit_2D</ViewMode>
+      <KeepRatio>True</KeepRatio>
+      <Window>
+        <Location X="549" Y="519" />
+        <Size Width="300" Height="300" />
+      </Window>
+      <AutosaveSnapshop>False</AutosaveSnapshop>
+      <BilinearFiltering>False</BilinearFiltering>
+      <TargetIdentifier>6#Label</TargetIdentifier>
+      <m_boundPolicy>MANUAL</m_boundPolicy>
+      <m_minValue>0</m_minValue>
+      <m_maxValue>1</m_maxValue>
+    </MemoryBlockObserver>
+  </Observers>
   <UsedModules>
     <Module Name="GoodAI.BasicNodes.dll" Version="6" />
     <Module Name="LSMModule.dll" Version="1" />

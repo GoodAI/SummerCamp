@@ -64,7 +64,7 @@ namespace LSMModule.LSM.Tasks {
             // Image input randomization
 
             List<int> tempSet = new List<int>();
-            for (int i = 0; i < this.Owner.Input.Count; i++) {
+            for (int i = 0; i < this.Owner.Inputs; i++) {
                 int temp = rand.Next(0, Owner.Neurons);
 
                 while (tempSet.Contains(temp)) {

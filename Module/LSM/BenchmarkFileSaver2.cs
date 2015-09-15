@@ -110,7 +110,7 @@ namespace LSMModule {
                     float max = Owner.Output.Host[top];
 
                     for (int i = 0; i < 10; i++) {
-                        if (Owner.Output.Host[i] > max) {
+                        if (i != top && Owner.Output.Host[i] > max) {
                             good = false;
                             break;
                         }

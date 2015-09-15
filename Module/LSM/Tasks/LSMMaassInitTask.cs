@@ -68,7 +68,6 @@ namespace LSMModule.LSM.Tasks {
 
         private void maass() {
             int[] dimensions = new int[3];
-            int[] tempDim = getRectangle(Owner.Input.Count);
 
             dimensions[0] = Height;
             dimensions[1] = Width;
@@ -78,7 +77,7 @@ namespace LSMModule.LSM.Tasks {
             Random rand = new Random();
 
             List<int> tempSet = new List<int>();
-            for (int i = 0; i < this.Owner.Input.Count; i++) {
+            for (int i = 0; i < this.Owner.Inputs; i++) {
                 int temp = rand.Next(0, Owner.Neurons);
 
                 while (tempSet.Contains(temp)) {
@@ -134,15 +133,6 @@ namespace LSMModule.LSM.Tasks {
                     }
                 }
             }
-        }
-
-        //Compute sides of rectangle of n neurons
-        private int[] getRectangle(int n) {
-            int a = Convert.ToInt32(Math.Floor(Math.Sqrt(n)+LAMBDA));
-            while (n % a != 0) {
-                a--;
-            }
-            return new int[] {n/a, a};
         }
 
         // Generating permutation of int array 0..n-1

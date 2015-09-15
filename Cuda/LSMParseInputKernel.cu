@@ -22,6 +22,7 @@ extern "C"{
 		float* imageInput, // image input for neurons
 		int spikes, // spiking with probability/non-spiking of float input value
 		float spikeSize, // size of a spike
+		int offset, // input offset
 		int count // size of an input
 		)
 	{
@@ -32,7 +33,8 @@ extern "C"{
 
 		if (id < count){
 			int target = imageTargets[id];
-			imageInput[target] = spikes * spikeSize * input[id] + (!spikes) * input[id];
+			int realIndex = id + offset;
+			imageInput[target] = spikes * spikeSize * input[realIndex] + (!spikes) * input[realIndex];
 		}
 	}
 

@@ -59,11 +59,14 @@ namespace LSMModule.LSM.Tasks {
             m_LSMResetKernel.SetupExecution(Owner.Neurons);
             m_LSMResetKernel.Run(Owner.InitState, Owner.InnerStates, Owner.EdgeInputs, Owner.ImageInput, Owner.Neurons);
 
+            int time = 0;
+            int timePortion = Owner.Input.Count / Owner.PatternLength;
+
             for (int i = 0; i < Owner.InnerCycle; i++) {
 
                 // compute image input
-                m_LSMParseInputKernel.SetupExecution(Owner.Input.Count);
-                m_LSMParseInputKernel.Run(Owner.Input, Owner.ImageOutput, Owner.ImageInput, spikes, spikeSize, Owner.Input.Count);
+                m_LSMParseInputKernel.SetupExecution(Owner.Inputs);
+                m_LSMParseInputKernel.Run(Owner.Input, Owner.ImageOutput, Owner.ImageInput, spikes, spikeSize, time * timePortion, Owner.Inputs);
 
                 // compute inner states and internal output of neurons
                 float thresh = Owner.Threshold;
@@ -73,6 +76,12 @@ namespace LSMModule.LSM.Tasks {
                 // compute value of edges between neurons
                 m_LSMComputeEdgesKernel.SetupExecution(Owner.Neurons * Owner.Neurons);
                 m_LSMComputeEdgesKernel.Run(Owner.EdgeInputs, Owner.Weights, Owner.NeuronOutputs, spikes, spikeSize, Owner.Neurons, Owner.Neurons * Owner.Neurons);
+
+                time++;
+
+                if (time >= Owner.PatternLength) {
+                    time = 0;
+                }
             }
         }
     }
