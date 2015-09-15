@@ -1,4 +1,4 @@
-# BrainSimulatorNewModule
+# AIXIModule
 MC-AIXI-CTW module for reinforcement learning in wide variety of environments, including  POMDP.
 
 It will work in **worst case scenario**:
