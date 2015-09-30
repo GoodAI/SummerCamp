@@ -45,7 +45,7 @@ namespace AIXI
             Int32.TryParse(options["mc-simulations"], out this.McSimulations);
 
 
-            this.reset();
+            this.Reset();
         }
 
         public override int  ModelSize() {
@@ -195,7 +195,7 @@ namespace AIXI
             this.LastUpdate = undoInstance.LastUpdate;
         }
 
-        override public int? Search() {
+        override public int Search() {
             CtwContextTreeUndo undoInstance = new CtwContextTreeUndo(this);
             MonteCarloSearchNode searchTree = new MonteCarloSearchNode(MonteCarloSearchNode.DecisionNode);
             for (int i = 0; i < this.McSimulations; i++) {

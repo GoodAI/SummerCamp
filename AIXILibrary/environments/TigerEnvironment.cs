@@ -82,7 +82,7 @@ namespace AIXI
             rewardText.Add(RListen, "listen");
             rewardText.Add(RGold, "gold!");
 
-            string message = string.Format("action = {0}, observation = {1}, reward = {2} ({3})", actionText[(int)this.Action],
+            string message = string.Format("action = {0}, observation = {1}, reward = {2} ({3})", actionText[this.Action],
                 observationText[this.Observation],
                 rewardText[this.Reward],
                 this.Reward - 100

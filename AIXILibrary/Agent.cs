@@ -96,7 +96,7 @@ namespace AIXI
 
         abstract public double Playout(int horizon);
 
-        abstract public int? Search();
+        abstract public int Search();
 
         public void Reset() {
             //when overriding this method, do not forget to call this base version.

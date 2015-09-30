@@ -28,7 +28,7 @@ namespace AIXI
         public MyTttEnvironment(Dictionary<string, string> options)
             : base(options)
         {
-            this.ValidActions=new int[] {0,1,2,3,4,5,6,7,8};
+            this.ValidActions=new[] {0,1,2,3,4,5,6,7,8};
             int maximumPossibleObservation = 174762;//refact: put into hex
             this.ValidObservations = new int[maximumPossibleObservation+1];
             for (int i = 0; i < maximumPossibleObservation+1; i++) {

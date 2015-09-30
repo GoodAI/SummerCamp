@@ -53,7 +53,7 @@ namespace AIXI
         public MazeEnvironment(Dictionary<string, string> options, string layout, int[,] rewardsNotNormalized)
             : base(options)
         {
-            this.ValidActions = new int[] { this.ALeft, this.AUp, this.ARight, this.ADown };
+            this.ValidActions = new[] { this.ALeft, this.AUp, this.ARight, this.ADown };
             this.ValidObservations= new int[this.max_observation()+1];
             for (int i = 0; i < this.max_observation() + 1; i++)
             {
@@ -62,8 +62,8 @@ namespace AIXI
             //valid_rewards are defined bellow
             
 
-            var rows = layout.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
-            this.Height = rows.Count();
+            var rows = layout.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+            this.Height = rows.Length;
 
             if (Height == 0) {
                 throw new ArgumentException("Layout is empty");

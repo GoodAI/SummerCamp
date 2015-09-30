@@ -54,6 +54,7 @@
     <Compile Include="AgentTest.cs" />
     <Compile Include="ctw_context_tree_node_test.cs" />
     <Compile Include="CoreTests.cs" />
+    <Compile Include="TwoCTWCompare.cs" />
     <Compile Include="UtilsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

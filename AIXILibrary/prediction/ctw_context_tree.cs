@@ -160,7 +160,7 @@ namespace AIXI
             int historyLength = this.History.Count;
             Debug.Assert(historyLength >= symbolCount);
             int newSize = historyLength - symbolCount;
-            this.History = (List<int>)this.History.GetRange(0,newSize);
+            this.History = this.History.GetRange(0,newSize);
         }
 
         public void update_tree_history(int symbol) {

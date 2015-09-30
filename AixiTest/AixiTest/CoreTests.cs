@@ -7,13 +7,7 @@ namespace AIXITests
     [TestClass]
     public class CoreTests
     {
-        public CoreTests()
-        {
 
-
-
-
-        }
         [TestMethod]
         public void revert_history_Test()
         {

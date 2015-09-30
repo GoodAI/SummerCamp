@@ -34,12 +34,11 @@ namespace AIXITests
             for (int i = 0; i < n; i++)
             {
                 this.Agent.ModelUpdatePercept(Env.Observation, Env.Reward);
-                int? action = Agent.Search();
-                if (action != null)
-                {
-                    this.Env.PerformAction((int)action);
-                    this.Agent.ModelUpdateAction((int)action);
-                }
+                int action = Agent.Search();
+                
+                this.Env.PerformAction((int)action);
+                this.Agent.ModelUpdateAction((int)action);
+                
             }
             
         }

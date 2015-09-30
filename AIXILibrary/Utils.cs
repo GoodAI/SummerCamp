@@ -45,7 +45,7 @@ namespace AIXI
             {
                 uint mask = ((uint)1 << log);
                 if ((mask & value) != 0)
-                    return (int)log;
+                    return log;
                 log--;
             }
             return -1;

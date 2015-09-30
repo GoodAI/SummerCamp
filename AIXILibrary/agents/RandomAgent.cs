@@ -35,7 +35,7 @@ namespace AIXI
             return horizon * Utils.RandomDouble((int)this.Environment.minimum_reward(), (int)this.Environment.maximum_reward());//low-todo: remove recasts
         }
 
-        override public int? Search() {
+        override public int Search() {
             return Utils.RandomElement(this.Environment.ValidActions);
         }
     }

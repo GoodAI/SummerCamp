@@ -14,7 +14,7 @@ namespace AIXITests
         {
             var options = new Dictionary<string, string>();
             CoinFlip e = new CoinFlip(options);
-            Assert.AreEqual(null, e.Action);
+
             Assert.AreEqual(false, e.IsFinished);
 
             if (!(e.Observation == e.OHead || e.Observation == e.OTail)){

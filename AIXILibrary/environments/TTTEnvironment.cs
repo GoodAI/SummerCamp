@@ -14,12 +14,12 @@ namespace AIXI
         public TttEnvironment(Dictionary<string, string> options)
             : base(options)
         {
-            this.ValidActions = new int[9] { 0,1,2,3,4,5,6,7,8};
+            this.ValidActions = new[] { 0,1,2,3,4,5,6,7,8};
             this.ValidObservations = new int [174762+1]; // This one may be wrong.
             for (int k = 0; k < ValidObservations.Length; k++) {
                 this.ValidObservations[k] = k;
             }
-                this.ValidRewards = new int[5] { 0, 1, 2, 3, 4 };
+                this.ValidRewards = new[] { 0, 1, 2, 3, 4 };
             this.Reward = 0;
             base.fill_out_bits();
 

@@ -95,12 +95,12 @@ namespace AIXI
             }
             else { //Previously visited decision node
 
-                int? actionNullable = this.SelectAction(agent);
+                int actionNullable = this.SelectAction(agent);
                 if (actionNullable == null)
                 {
                     Debug.Assert(false, "I do not have any action available");
                 }
-                int action = (int)actionNullable.Value;
+                int action = actionNullable;
 
                 agent.ModelUpdateAction(action);
 
@@ -112,19 +112,19 @@ namespace AIXI
                 reward = actionChild.Sample(agent, horizon, level + 1);   //it is not clear if not horizon-1. (asks pyaixi)
             }
 
-            double visitsDouble = (double)this.Visits;
+            double visitsDouble = this.Visits;
             //Console.WriteLine("> {3} - {0}, {1}, {2}", this.mean, reward, (reward + (visitsDouble * this.mean) / (visitsDouble + 1.0)), visitsDouble);
             this.Mean = (reward + (visitsDouble*this.Mean)) / (1.0 + visitsDouble);
             this.Visits = this.Visits+1;
 
             return reward;
         }
-        public int? SelectAction(Agent agent){
+        public int SelectAction(Agent agent){
             Debug.Assert(agent.MaximumReward() != null, "this is weird place, - in selection action");
 
-            double exploreBias = (double)agent.Horizon * agent.MaximumReward().Value;//PROC?
+            double exploreBias = (double)agent.Horizon * agent.MaximumReward().Value;
             double explorationNumerator = this.ExplorationConstant * Math.Log(this.Visits);
-            int? bestAction = null;
+            int bestAction = -1;
             double bestPriority = double.NegativeInfinity;
 
             foreach (int action in agent.Environment.ValidActions) { 

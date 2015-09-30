@@ -535,7 +535,7 @@ namespace AIXI
             Debug.Assert(symbolCount >= 0);
             int historyLength = this.History.Count;
             Debug.Assert(historyLength >= symbolCount);
-            int newSize = historyLength - symbolCount;
+            //int newSize = historyLength - symbolCount;
             //this.history = this.history.GetRange(0, new_size);
             this.History.RemoveRange(historyLength-symbolCount, symbolCount);
         }

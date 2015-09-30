@@ -8,7 +8,7 @@ namespace AIXI
 {
     public abstract class AIXIEnvironment
     {
-        public int? Action; //TODO maybe?: int? -> int
+        public int Action;
         public bool IsFinished=false;
         public int Observation;
         public int Reward;
@@ -101,7 +101,6 @@ namespace AIXI
                 return null;
             }
         }
-
 
         public int? minimum_action() {  //todo: put all minimum_X together
             if (this.ValidActions.Length > 0)
