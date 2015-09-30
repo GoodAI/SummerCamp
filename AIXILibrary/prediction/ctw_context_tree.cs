@@ -7,166 +7,173 @@ using System.Threading.Tasks;
 
 namespace AIXI
 {
-    public class CTWContextTree{
-        public int tree_size;
-        public List<CTWContextTreeNode> context;
-        public int depth;
-        public List<int> history;
-        public CTWContextTreeNode root;
+    public class CTWContextTree : IModel{
+        public int TreeSize;
+        public List<CTWContextTreeNode> Context;
+        public int Depth;//refact: is this final/current depth?
+        public List<int> History { get; set; }
+        public CTWContextTreeNode Root;
         public CTWContextTree(int depth)
         {
-            context = new List<CTWContextTreeNode>();
+            Context = new List<CTWContextTreeNode>();
             Debug.Assert(depth >= 0);
-            this.depth = depth;
-            this.history = new List<int> ();
-            this.root = new CTWContextTreeNode(this);
-            this.tree_size = 1;
+            this.Depth = depth;
+            this.History = new List<int> ();
+            this.Root = new CTWContextTreeNode(this);   //refact: most of this is in clear()
+            this.TreeSize = 1;
+            this.Clear();
         }
 
-        public void clear() { 
-            this.history = new List<int>();
-            this.root.tree = null; //TODO: is this working - will it free memory? Test!
+        public void Clear() { 
+            this.History = new List<int>();
+            this.Root.Tree = null; //TODO: is this working - will it free memory? Test!
             //missing?: del self.root
-            this.root = new CTWContextTreeNode(this);
-            this.tree_size = 1;
-            this.context = new List<CTWContextTreeNode>();
+            this.Root = new CTWContextTreeNode(this);
+            this.TreeSize = 1;
+            this.Context = new List<CTWContextTreeNode>();
         }
 
-        public void GenerateRandomSymbols(int symbol_count) {
-            //TODO, I do not understand this one
+        public void print_tree() {
+            Console.Write("history ({0}): ", this.History.Count);
+            foreach (var symbol in this.History) {
+                Console.Write("{0},", symbol);
+            }
+            Console.WriteLine();
+
+            Console.Write("context ({0}): ", this.Context.Count);
+            foreach (var node in this.Context)
+            {
+                Console.Write("{0},", node.LogProbability);
+            }
+            Console.WriteLine();
+
+            this.Root.Print();
         }
 
-        public int[] GenerateRandomSymbolsAndUpdate(int symbol_count) {
-            int[] symbol_list = new int[symbol_count];
-            for (int i = 0; i < symbol_count; i++) {
+        public void GenerateRandomSymbols(int symbolCount) {
+            //TODO, I do not understand this one - it should not be needed
+            throw new NotImplementedException();
+        }
+
+        public int[] GenerateRandomSymbolsAndUpdate(int symbolCount) {
+            int[] symbolList = new int[symbolCount];
+            for (int i = 0; i < symbolCount; i++) {
                 int symbol;
-                var symbols_to_predict = new int[1];
-                symbols_to_predict[0]=1;
+                var symbolsToPredict = new int[1];
+                symbolsToPredict[0]=1;
 
-                if (Utils.rnd.NextDouble() < this.predict(symbols_to_predict)){
+                if (Utils.Rnd.NextDouble() < this.Predict(symbolsToPredict)){
                     symbol=1;
                 }
                 else{
                     symbol = 0;
                 }
-                symbol_list[i] = symbol;
+                symbolList[i] = symbol;
 
                 var singletonSymbol = new int[1];
                 singletonSymbol[0]=symbol;
-                this.update(singletonSymbol);
+                this.update_tree(singletonSymbol);
             }
-            return symbol_list;
+            return symbolList;
         }
-        public double predict(int[] symbol_list) {
-            int symbol_list_length = symbol_list.Length;
-            if (this.history.Count + symbol_list_length <= this.depth) {
-                return Math.Pow(0.5, symbol_list_length); //note: diff from pyaixi: removing if
+        public double Predict(int[] symbolList) {
+            int symbolListLength = symbolList.Length;
+            if (this.History.Count + symbolListLength <= this.Depth) {
+                return Math.Pow(0.5, symbolListLength); //note: diff from pyaixi: removing if
             }
 
-            double prob_history = this.root.log_probability;
-            this.update(symbol_list);
-            double prob_sequence = this.root.log_probability;
-            this.revert(symbol_list_length);
-            return Math.Exp(prob_sequence - prob_history);
+            double probHistory = this.Root.LogProbability;
+            this.update_tree(symbolList);
+            double probSequence = this.Root.LogProbability;
+            this.revert_tree(symbolListLength);
+            return Math.Exp(probSequence - probHistory);
         }
 
-        public void update(int[] symbol_list) {
-            foreach (int symbol in symbol_list) {
-                if (this.history.Count >= this.depth) {
+        public void update_tree(int[] symbolList) {
+            foreach (int symbol in symbolList) {
+                if (this.History.Count >= this.Depth) {
                     this.update_context();
-                    for (int i = this.depth-1; i >=0; i--)
+                    for (int i = this.Depth-1; i >=0; i--)
                     {
-                        CTWContextTreeNode context_node = this.context[i];
-                        context_node.update(symbol);
-
+                        CTWContextTreeNode contextNode = this.Context[i];
+                        contextNode.Update(symbol);
                     }
-
-                        //foreach (CTWContextTreeNode n in nodes) {
-                        //    Console.WriteLine("|| {0}", n.);
-                        //}
-
-                        //Console.WriteLine("nodes-length: ", nodes.Count);
-                    //foreach(CTWContextTreeNode context_node in nodes){
-                    //    context_node.update(symbol);
-                    //}
                 }
-                this.update_history(symbol);
+                this.update_tree_history(symbol);
             }
-
         }
 
 
         public void update_context()
         {
-            Debug.Assert(this.history.Count >= this.depth, "history is shorter than depth in update_context");
-            this.context = new List<CTWContextTreeNode>();
-            this.context.Add(this.root);
-            CTWContextTreeNode node = this.root;
-            int update_depth = 1;
-            IEnumerable<int> historyIE = history;
-            foreach (int symbol in historyIE.Reverse())
+            Debug.Assert(this.History.Count >= this.Depth, "history is shorter than depth in update_context");
+            this.Context = new List<CTWContextTreeNode>();
+            this.Context.Add(this.Root);
+            CTWContextTreeNode node = this.Root;
+            int updateDepth = 1;
+            IEnumerable<int> historyIe = History;
+            foreach (int symbol in historyIe.Reverse())
             { //TODO: will this save reversed history to this.history?
-                if (node.children.ContainsKey(symbol))
+                if (node.Children.ContainsKey(symbol))
                 {
-                    node = node.children[symbol];
+                    node = node.Children[symbol];
                 }
                 else
                 {
-                    CTWContextTreeNode new_node = new CTWContextTreeNode(this);
-                    node.children[symbol] = new_node;
-                    this.tree_size += 1;
-                    node = new_node;
+                    CTWContextTreeNode newNode = new CTWContextTreeNode(this);
+                    node.Children[symbol] = newNode;
+                    this.TreeSize += 1;
+                    node = newNode;
                 }
-                this.context.Add(node);
-                update_depth += 1;
-                if (update_depth > this.depth)
+                this.Context.Add(node);
+                updateDepth += 1;
+                if (updateDepth > this.Depth)
                 {
                     break;
                 }
             }
-
         }
 
 
-        public void revert(int symbol_count = 1)
+        public void revert_tree(int symbolCount = 1)
         {
-            for (int i = 0; i < symbol_count; i++) {
-                if (this.history.Count == 0) {
+            for (int i = 0; i < symbolCount; i++) {
+                if (this.History.Count == 0) {
                     return;
                 }
-                int symbol = this.history.Last();
-                this.history.RemoveAt(this.history.Count-1);
+                int symbol = this.History.Last();
+                this.History.RemoveAt(this.History.Count-1);
 
-                if (this.history.Count >= this.depth) {
+                if (this.History.Count >= this.Depth) {
                     this.update_context();
                     //refact: We do not need to create variable nodes at all
-                    for (int j = this.depth - 1; j >= 0; j--) {
-                        CTWContextTreeNode node = this.context[j];
-                        node.revert(symbol);
+                    for (int j = this.Depth - 1; j >= 0; j--) {
+                        CTWContextTreeNode node = this.Context[j];
+                        node.Revert(symbol);
                     }
                 }
             }
         }
 
-        public void revert_history(int symbol_count) {
-            Debug.Assert(symbol_count>=0);
-            int history_length = this.history.Count;
-            Debug.Assert(history_length >= symbol_count);
-            int new_size = history_length - symbol_count;
-            this.history = (List<int>)this.history.GetRange(0,new_size);
+        public void revert_tree_history(int symbolCount) {
+            Debug.Assert(symbolCount>=0);
+            int historyLength = this.History.Count;
+            Debug.Assert(historyLength >= symbolCount);
+            int newSize = historyLength - symbolCount;
+            this.History = (List<int>)this.History.GetRange(0,newSize);
         }
 
-        public void update_history(int symbol) {
-            this.history.Add(symbol);
+        public void update_tree_history(int symbol) {
+            this.History.Add(symbol);
         }
-        public void update_history(int[] symbol_list) {
-            foreach (int symbol in symbol_list) {
-                this.update_history(symbol);
+        public void update_tree_history(int[] symbolList) {
+            foreach (int symbol in symbolList) {
+                this.update_tree_history(symbol);
             }
         }
 
-        public int size() {
-            return this.tree_size;
+        public int get_model_size() {
+            return this.TreeSize;
         }
 
     }

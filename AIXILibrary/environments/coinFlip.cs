@@ -7,71 +7,71 @@ namespace AIXI
 {
     public class CoinFlip : AIXIEnvironment
     {
-        enum actions_enum { aTail, aHead };
-        enum observations_enum { oTail, oHead };
+        enum ActionsEnum { ATail, AHead };
+        enum ObservationsEnum { OTail, OHead };
 
-        enum reward_enum { rLose=0, rWin=1 };
+        enum RewardEnum { RLose=0, RWin=1 };
 
         //int aTail = (int) actions_enum.aTail;
         //int aHead = (int)actions_enum.aHead;
 
-        public int oTail = (int)observations_enum.oTail;
-        public int oHead = (int)observations_enum.oHead;
+        public int OTail = (int)ObservationsEnum.OTail;
+        public int OHead = (int)ObservationsEnum.OHead;
 
-        public int rLose = (int)reward_enum.rLose;
-        public int rWin = (int)reward_enum.rWin;
+        public int RLose = (int)RewardEnum.RLose;
+        public int RWin = (int)RewardEnum.RWin;
 
-        double default_probability = 0.05;
-        double probability;
+        double _defaultProbability = 0.05;
+        double _probability;
         
-        Random rnd = new Random();
+        Random _rnd = new Random();
         public CoinFlip(Dictionary<string, string> options)
             : base(options)
         {
-            valid_actions = (int[])Enum.GetValues(typeof(actions_enum));
-            valid_observations = (int[])Enum.GetValues(typeof(observations_enum));
-            valid_rewards = (int[])Enum.GetValues(typeof(reward_enum));
+            ValidActions = (int[])Enum.GetValues(typeof(ActionsEnum));
+            ValidObservations = (int[])Enum.GetValues(typeof(ObservationsEnum));
+            ValidRewards = (int[])Enum.GetValues(typeof(RewardEnum));
+            base.fill_out_bits();
 
             //todo: OPTIONS -> set probability
-            this.probability = default_probability;
+            this._probability = _defaultProbability;
 
-            Debug.Assert(this.probability >= 0 && this.probability <= 1, "probability is set outside [0,1]");
+            Debug.Assert(this._probability >= 0 && this._probability <= 1, "probability is set outside [0,1]");
 
-            if (this.rnd.NextDouble() < this.probability)
+            if (this._rnd.NextDouble() < this._probability)
             {
-                this.observation = this.oHead;
+                this.Observation = this.OHead;
             }
             else
             {
-                this.observation = this.oTail;
+                this.Observation = this.OTail;
             }
 
-            this.reward = 0;
+            this.Reward = 0;
         }
 
-        public override Tuple<int, int> performAction(int action)
+        public override Tuple<int, int> PerformAction(int action)
         {
-            Console.WriteLine("## {0}",action);
-            Debug.Assert(this.isValidAction(action), "non-valid action used");
+            Debug.Assert(this.IsValidAction(action), "non-valid action used");
 
-            this.action = action;
-            if (this.rnd.NextDouble() < this.probability)
+            this.Action = action;
+            if (this._rnd.NextDouble() < this._probability)
             {
-                this.observation = this.oHead;
+                this.Observation = this.OHead;
             }
             else
             {
-                this.observation = this.oTail;
+                this.Observation = this.OTail;
             }
-            if (action == this.observation)
+            if (action == this.Observation)
             {
-                reward = this.rWin;
+                Reward = this.RWin;
             }
             else {
-                reward = this.rLose;
+                Reward = this.RLose;
             }
 
-            return new Tuple<int, int>(this.observation, this.reward);
+            return new Tuple<int, int>(this.Observation, this.Reward);
         }
 
     }

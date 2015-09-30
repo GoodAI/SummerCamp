@@ -6,19 +6,19 @@ using System.Threading.Tasks;
 
 namespace AIXI
 {
-    public class CTWContextTreeUndo
+    public class CtwContextTreeUndo
     {
-        public int age;
-        public double total_reward;
-        public int history_size;
-        public int last_update;
+        public int Age;
+        public double TotalReward;
+        public int HistorySize;
+        public int LastUpdate;
 
-        public CTWContextTreeUndo(MC_AIXI_CTW agent)
+        public CtwContextTreeUndo(MC_AIXI_CTW agent)
         {
-            this.age = agent.age;
-            this.total_reward = agent.total_reward;
-            this.history_size = agent.history_size();
-            this.last_update = agent.last_update;
+            this.Age = agent.Age;
+            this.TotalReward = agent.TotalReward;
+            this.HistorySize = agent.history_size();
+            this.LastUpdate = agent.LastUpdate;
         }
     }
 }

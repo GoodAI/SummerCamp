@@ -9,67 +9,64 @@ namespace AIXI
 {
     public class CTWContextTreeNode
     {
-        public double log_half = Math.Log(0.5);
-        public Dictionary<int, CTWContextTreeNode> children;
-        public CTWContextTree tree;
-        public double log_kt=0.0;
-        public double log_probability = 0.0;//log of prob==0 -> prob ==1. Is this true?
-        public int numberOf0s=0;
-        public int numberOf1s=0;
+        public double LogHalf = Math.Log(0.5);
+        public Dictionary<int, CTWContextTreeNode> Children;
+        public CTWContextTree Tree;
+        public double LogKt=0.0;
+        public double LogProbability = 0.0;//log of prob==0 -> prob ==1. Is this true?
+        public int NumberOf0S=0;
+        public int NumberOf1S=0;
         public CTWContextTreeNode(CTWContextTree tree){
-            this.children = new Dictionary<int, CTWContextTreeNode>();
-            this.tree = tree;
-
+            this.Children = new Dictionary<int, CTWContextTreeNode>();
+            this.Tree = tree;
         }
 
-        public void print(int level = 0) {
+        public void Print(int level = 0) {
             for (int i = 0; i < level; i++) {
                 Console.Write("    ");
-            
             }
-            Console.Write("{0}, {1}, {2}-{3}   ", this.log_kt, this.log_probability, this.SymbolCount(0), this.SymbolCount(1));
-            foreach (KeyValuePair<int, CTWContextTreeNode> item in this.children) {
+            Console.Write("{0}, {1}, {2}-{3}   ", this.LogKt, this.LogProbability, this.SymbolCount(0), this.SymbolCount(1));
+            foreach (KeyValuePair<int, CTWContextTreeNode> item in this.Children) {
                 Console.Write("{0}: {1},  ", item.Key, item.Value);
             }
             Console.WriteLine();
-            foreach (KeyValuePair<int, CTWContextTreeNode> item in this.children)
+            foreach (KeyValuePair<int, CTWContextTreeNode> item in this.Children)
             {
-                item.Value.print(level + 1);
+                item.Value.Print(level + 1);
             }
-        
         }
 
         public bool IsLeaf() {
-            return this.children.Count() == 0;
+            return !this.Children.Any();
         }
         public int SymbolCount(int symbol) { 
             if (symbol == 0){
-                return this.numberOf0s;
+                return this.NumberOf0S;
             }
             else if (symbol == 1) {
-                return this.numberOf1s;
+                return this.NumberOf1S;
             }
             Debug.Assert(false, "Only symbols 0 and 1 are allowed");
             return -1;
         }
 
-        public double LogKTMultiplier(int symbol) {
+        public double LogKtMultiplier(int symbol) {
             double numerator = this.SymbolCount(symbol)+0.5;
-            double denominator = this.visits()+1;
+            double denominator = this.Visits()+1;
             return Math.Log(numerator / denominator);
         }
 
-        public int visits() {
-            return this.numberOf0s + this.numberOf1s;
+        public int Visits() {
+            return this.NumberOf0S + this.NumberOf1S;
         }
 
-        public void setSymbolCount(int symbol, int newValue){
+        public void SetSymbolCount(int symbol, int newValue){
             if (symbol==0){
-                this.numberOf0s=newValue;
+                this.NumberOf0S=newValue;
             }
             else if (symbol == 1)
             {
-                this.numberOf1s = newValue;
+                this.NumberOf1S = newValue;
             }
             else
             {
@@ -78,64 +75,61 @@ namespace AIXI
             }
         }
 
-        public void revert(int symbol) {
-            int this_symbol_count = this.SymbolCount(symbol);
-            if (this_symbol_count > 1)
+        public void Revert(int symbol) {
+            int thisSymbolCount = this.SymbolCount(symbol);
+            if (thisSymbolCount > 1)
             {
-                this.setSymbolCount(symbol, this_symbol_count-1);
-
+                this.SetSymbolCount(symbol, thisSymbolCount-1);
             }
             else {
-                this.setSymbolCount(symbol, 0);
+                this.SetSymbolCount(symbol, 0);
             }
 
-            if (this.children.ContainsKey(symbol) && children[symbol].visits()==0) {    //note: this piece was not tested with rest of class
-                this.tree.tree_size -= children[symbol].size();
-                this.children.Remove(symbol);    //low-todo: check if this truly free memory
-
+            if (this.Children.ContainsKey(symbol) && Children[symbol].Visits()==0) {    //note: this piece was not tested with rest of class
+                this.Tree.TreeSize -= Children[symbol].Size();
+                this.Children.Remove(symbol);    //low-todo: check if this truly free memory
             }
 
-            this.log_kt -= this.LogKTMultiplier(symbol);
+            this.LogKt -= this.LogKtMultiplier(symbol);
             this.UpdateLogProbability();
         }
 
-        public void update(int symbol) {
-
-            this.log_kt += this.LogKTMultiplier(symbol);
+        public void Update(int symbol) {
+            this.LogKt += this.LogKtMultiplier(symbol);
             this.UpdateLogProbability();
             if (symbol == 0) {
-                this.numberOf0s += 1;
+                this.NumberOf0S += 1;
             }
             else if(symbol==1){
-                this.numberOf1s += 1;
+                this.NumberOf1S += 1;
             }
         }
 
         public void UpdateLogProbability() {
             if (this.IsLeaf())
             {
-                this.log_probability = this.log_kt;
+                this.LogProbability = this.LogKt;
             }
             else {
-                double log_child_probability = 0;
-                foreach (CTWContextTreeNode child in this.children.Values) {
-                    //beware: this is not best way of doing summation of doubles. We will see if this will matter...
+                double logChildProbability = 0;
+                foreach (CTWContextTreeNode child in this.Children.Values) {
+                    //note: this is not best way of doing summation of doubles. We will see if this will matter...
                     // (eg: python has math.fsum)
-                    log_child_probability += child.log_probability;
+                    logChildProbability += child.LogProbability;
                 }
 
                 //for better numerical results
-                double a = Math.Max(this.log_kt, log_child_probability);
-                double b = Math.Min(this.log_kt, log_child_probability);
+                double a = Math.Max(this.LogKt, logChildProbability);
+                double b = Math.Min(this.LogKt, logChildProbability);
 
-                this.log_probability = this.log_half + a + Utils.log1p(Math.Exp(b - a));
+                this.LogProbability = this.LogHalf + a + Utils.Log1P(Math.Exp(b - a));
             }
         }
 
-        public int size() {
+        public int Size() {
             int count = 1;
-            foreach (CTWContextTreeNode n in this.children.Values) {
-                count += n.size();
+            foreach (CTWContextTreeNode n in this.Children.Values) {
+                count += n.Size();
             }
             return count;
         }

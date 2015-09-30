@@ -14,26 +14,26 @@ namespace AIXITests
         {
             var options = new Dictionary<string, string>();
             CoinFlip e = new CoinFlip(options);
-            Assert.AreEqual(null, e.action);
-            Assert.AreEqual(false, e.is_finished);
+            Assert.AreEqual(null, e.Action);
+            Assert.AreEqual(false, e.IsFinished);
 
-            if (!(e.observation == e.oHead || e.observation == e.oTail)){
-                  Assert.Fail("invalid observation: {0}", e.observation);
+            if (!(e.Observation == e.OHead || e.Observation == e.OTail)){
+                  Assert.Fail("invalid observation: {0}", e.Observation);
             }
 
-            if (e.reward != e.rLose && e.reward != e.rWin) {
+            if (e.Reward != e.RLose && e.Reward != e.RWin) {
                 Assert.Fail("invalid reward");
             }
 
-            int [] correct_enum = {0,1};    //correct for actions, observations and rewards
-            if (!e.valid_actions.SequenceEqual(correct_enum)) {
+            int [] correctEnum = {0,1};    //correct for actions, observations and rewards
+            if (!e.ValidActions.SequenceEqual(correctEnum)) {
                 Assert.Fail("valid actions are wrong");
             }
-            if (!e.valid_observations.SequenceEqual(correct_enum))
+            if (!e.ValidObservations.SequenceEqual(correctEnum))
             {
                 Assert.Fail("valid actions are wrong");
             }
-            if (!e.valid_rewards.SequenceEqual(correct_enum))
+            if (!e.ValidRewards.SequenceEqual(correctEnum))
             {
                 Assert.Fail("valid actions are wrong");
             }
@@ -44,20 +44,20 @@ namespace AIXITests
             Assert.AreEqual(2, e.perceptBits());
             Assert.AreEqual(1, e.rewardBits());
 
-            Assert.AreEqual(false, e.isValidAction(-1));
-            Assert.AreEqual(true, e.isValidAction(1));
-            Assert.AreEqual(true, e.isValidAction(0));
-            Assert.AreEqual(false, e.isValidAction(2));
+            Assert.AreEqual(false, e.IsValidAction(-1));
+            Assert.AreEqual(true, e.IsValidAction(1));
+            Assert.AreEqual(true, e.IsValidAction(0));
+            Assert.AreEqual(false, e.IsValidAction(2));
 
-            Assert.AreEqual(false, e.isValidObservation(-1));
-            Assert.AreEqual(true, e.isValidObservation(1));
-            Assert.AreEqual(true, e.isValidObservation(0));
-            Assert.AreEqual(false, e.isValidObservation(2));
+            Assert.AreEqual(false, e.IsValidObservation(-1));
+            Assert.AreEqual(true, e.IsValidObservation(1));
+            Assert.AreEqual(true, e.IsValidObservation(0));
+            Assert.AreEqual(false, e.IsValidObservation(2));
 
-            Assert.AreEqual(false, e.isValidReward(-1));
-            Assert.AreEqual(true, e.isValidReward(1));
-            Assert.AreEqual(true, e.isValidReward(0));
-            Assert.AreEqual(false, e.isValidReward(2));
+            Assert.AreEqual(false, e.IsValidReward(-1));
+            Assert.AreEqual(true, e.IsValidReward(1));
+            Assert.AreEqual(true, e.IsValidReward(0));
+            Assert.AreEqual(false, e.IsValidReward(2));
 
             Assert.AreEqual(1, e.maximum_action());
             Assert.AreEqual(1, e.maximum_observation());
@@ -69,20 +69,20 @@ namespace AIXITests
 
             
             //doing all possible actions
-            e.performAction(0);
-            Tuple<int, int> res = e.performAction(1);
+            e.PerformAction(0);
+            Tuple<int, int> res = e.PerformAction(1);
 
-            Assert.AreEqual(1, e.action);//TODO: test other state vars
-            if (e.reward != e.rLose && e.reward != e.rWin)
+            Assert.AreEqual(1, e.Action);//TODO: test other state vars
+            if (e.Reward != e.RLose && e.Reward != e.RWin)
             {
                 Assert.Fail("invalid reward");
             }
-            if (e.observation != e.oHead && e.observation != e.oTail)
+            if (e.Observation != e.OHead && e.Observation != e.OTail)
             {
                 Assert.Fail("invalid reward");
             }
-            Assert.AreEqual(res.Item1, e.observation);
-            Assert.AreEqual(res.Item2, e.reward);
+            Assert.AreEqual(res.Item1, e.Observation);
+            Assert.AreEqual(res.Item2, e.Reward);
 
 
             

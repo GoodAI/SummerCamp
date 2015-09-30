@@ -5,56 +5,56 @@ using AIXI;
 namespace AIXITests
 {
     [TestClass]
-    public class CTWContextTreeNodeTest
+    public class CtwContextTreeNodeTest
     {
         [TestMethod]
-        public void TestCTWContextTreeNode()
+        public void TestCtwContextTreeNode()
         {
 
             var tree = new CTWContextTree(5);
             var n = new CTWContextTreeNode(tree);
 
-            Assert.AreEqual(0.0, n.log_kt, 0.001);
-            Assert.AreEqual(0.0, n.log_probability, 0.001);
+            Assert.AreEqual(0.0, n.LogKt, 0.001);
+            Assert.AreEqual(0.0, n.LogProbability, 0.001);
             Assert.AreEqual(0, n.SymbolCount(0));
             Assert.AreEqual(0, n.SymbolCount(1));
-            Assert.AreEqual(0, n.numberOf0s);
-            Assert.AreEqual(0, n.numberOf1s);
-            Assert.AreEqual(tree, n.tree);
-            Assert.AreEqual(0, n.visits());
+            Assert.AreEqual(0, n.NumberOf0S);
+            Assert.AreEqual(0, n.NumberOf1S);
+            Assert.AreEqual(tree, n.Tree);
+            Assert.AreEqual(0, n.Visits());
             Assert.AreEqual(true, n.IsLeaf());
-            Assert.AreEqual(1, n.size());
+            Assert.AreEqual(1, n.Size());
 
-            n.update(1);
-            n.update(0);
-            n.update(0);
-            n.update(0);
-            n.update(1);
+            n.Update(1);
+            n.Update(0);
+            n.Update(0);
+            n.Update(0);
+            n.Update(1);
 
-            Assert.AreEqual(-4.4465, n.log_kt, 0.001);
-            Assert.AreEqual(-4.44656, n.log_probability, 0.001);
+            Assert.AreEqual(-4.4465, n.LogKt, 0.001);
+            Assert.AreEqual(-4.44656, n.LogProbability, 0.001);
             Assert.AreEqual(3, n.SymbolCount(0));
             Assert.AreEqual(2, n.SymbolCount(1));
-            Assert.AreEqual(3, n.numberOf0s);
-            Assert.AreEqual(2, n.numberOf1s);
-            Assert.AreEqual(tree, n.tree);
-            Assert.AreEqual(5, n.visits());
+            Assert.AreEqual(3, n.NumberOf0S);
+            Assert.AreEqual(2, n.NumberOf1S);
+            Assert.AreEqual(tree, n.Tree);
+            Assert.AreEqual(5, n.Visits());
             Assert.AreEqual(true, n.IsLeaf());
-            Assert.AreEqual(1, n.size());
+            Assert.AreEqual(1, n.Size());
 
 
-            n.revert(1);
+            n.Revert(1);
 
-            Assert.AreEqual(-3.2425, n.log_kt, 0.001);
-            Assert.AreEqual(-3.24259, n.log_probability, 0.001);
+            Assert.AreEqual(-3.2425, n.LogKt, 0.001);
+            Assert.AreEqual(-3.24259, n.LogProbability, 0.001);
             Assert.AreEqual(3, n.SymbolCount(0));
             Assert.AreEqual(1, n.SymbolCount(1));
-            Assert.AreEqual(3, n.numberOf0s);
-            Assert.AreEqual(1, n.numberOf1s);
-            Assert.AreEqual(tree, n.tree);
-            Assert.AreEqual(4, n.visits());
+            Assert.AreEqual(3, n.NumberOf0S);
+            Assert.AreEqual(1, n.NumberOf1S);
+            Assert.AreEqual(tree, n.Tree);
+            Assert.AreEqual(4, n.Visits());
             Assert.AreEqual(true, n.IsLeaf());
-            Assert.AreEqual(1, n.size());
+            Assert.AreEqual(1, n.Size());
 
             //Todo:test non-leaf
         }

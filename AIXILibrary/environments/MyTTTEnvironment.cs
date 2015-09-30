@@ -7,117 +7,119 @@ using System.Threading.Tasks;
 
 namespace AIXI
 {
-    public class MyTTTEnvironment : AIXIEnvironment
+    public class MyTttEnvironment : AIXIEnvironment
     {
-        public enum tictactoe_observation_enum { oEmpty, oAgent, oEnv };    //whose piece is on square
+        public enum TictactoeObservationEnum { OEmpty, OAgent, OEnv };    //whose piece is on square
 
-        public enum tictactoe_reward_enum { rInvalid = 0, rLoss = 1, rNull = 3, rDraw = 4, rWin = 5 };
+        public enum TictactoeRewardEnum { RInvalid = 0, RLoss = 1, RNull = 3, RDraw = 4, RWin = 5 };
 
-        public int oEmpty = (int)tictactoe_observation_enum.oEmpty;
-        public int oAgent = (int)tictactoe_observation_enum.oAgent;
-        public int oEnv = (int)tictactoe_observation_enum.oEnv;
+        public int OEmpty = (int)TictactoeObservationEnum.OEmpty;
+        public int OAgent = (int)TictactoeObservationEnum.OAgent;
+        public int OEnv = (int)TictactoeObservationEnum.OEnv;
 
-        public int rInvalid = (int)tictactoe_reward_enum.rInvalid;
-        public int rLoss = (int)tictactoe_reward_enum.rLoss;
-        public int rNull = (int)tictactoe_reward_enum.rNull;
-        public int rDraw = (int)tictactoe_reward_enum.rDraw;
-        public int rWin = (int)tictactoe_reward_enum.rWin;
+        public int RInvalid = (int)TictactoeRewardEnum.RInvalid;
+        public int RLoss = (int)TictactoeRewardEnum.RLoss;
+        public int RNull = (int)TictactoeRewardEnum.RNull;
+        public int RDraw = (int)TictactoeRewardEnum.RDraw;
+        public int RWin = (int)TictactoeRewardEnum.RWin;
 
-        public int[,] board;
-        private int actions_since_reset;
-        public MyTTTEnvironment(Dictionary<string, string> options)
+        public int[,] Board;
+        private int _actionsSinceReset;
+        public MyTttEnvironment(Dictionary<string, string> options)
             : base(options)
         {
-            this.valid_actions=new int[] {0,1,2,3,4,5,6,7,8};
-            int maximum_possible_observation = 174762;//refact: put into hex
-            this.valid_observations = new int[maximum_possible_observation+1];
-            for (int i = 0; i < maximum_possible_observation+1; i++) {
-                this.valid_observations[i] = i;
+            this.ValidActions=new int[] {0,1,2,3,4,5,6,7,8};
+            int maximumPossibleObservation = 174762;//refact: put into hex
+            this.ValidObservations = new int[maximumPossibleObservation+1];
+            for (int i = 0; i < maximumPossibleObservation+1; i++) {
+                this.ValidObservations[i] = i;
             }
 
             // valid_rewards contains {0,1,3,4,5}
-            this.valid_rewards = (int[])Enum.GetValues(typeof(tictactoe_reward_enum));
+            this.ValidRewards = (int[])Enum.GetValues(typeof(TictactoeRewardEnum));
+            base.fill_out_bits();
 
-            this.reward = 0;
-            this.reset();
+            this.Reward = 0;
+            this.Reset();
+
         }
 
-        public override Tuple<int, int> performAction(int action)
+        public override Tuple<int, int> PerformAction(int action)
         {
-            Debug.Assert(this.isValidAction(action));
+            Debug.Assert(this.IsValidAction(action));
 
-            this.action = action;
+            this.Action = action;
 
-            this.actions_since_reset+=1;
+            this._actionsSinceReset+=1;
             int r = action / 3;
             int c = action % 3;
 
-            if (this.board[r, c] != this.oEmpty) {
-                this.reward = this.rInvalid;
-                this.reset();
-                return new Tuple<int,int>(this.observation, this.reward);
+            if (this.Board[r, c] != this.OEmpty) {
+                this.Reward = this.RInvalid;
+                this.Reset();
+                return new Tuple<int,int>(this.Observation, this.Reward);
             }
 
-            this.board[r, c] = this.oAgent;
+            this.Board[r, c] = this.OAgent;
             if (this.check_win()) {
-                this.reward = this.rWin;
-                this.reset();
-                return new Tuple<int, int>(this.observation, this.reward);
+                this.Reward = this.RWin;
+                this.Reset();
+                return new Tuple<int, int>(this.Observation, this.Reward);
             }
-            else if (this.actions_since_reset == 5) {
-                this.reward = this.rDraw;
-                this.reset();
-                return new Tuple<int, int>(this.observation, this.reward);
-            }
-
-            while (this.board[r, c] != this.oEmpty) {
-                r = Utils.rnd.Next(0, 3);
-                c = Utils.rnd.Next(0, 3);
+            else if (this._actionsSinceReset == 5) {
+                this.Reward = this.RDraw;
+                this.Reset();
+                return new Tuple<int, int>(this.Observation, this.Reward);
             }
 
-            this.board[r, c] = this.oEnv;
+            while (this.Board[r, c] != this.OEmpty) {
+                r = Utils.Rnd.Next(0, 3);
+                c = Utils.Rnd.Next(0, 3);
+            }
+
+            this.Board[r, c] = this.OEnv;
             if (this.check_win()) {
-                this.reward = rLoss;
-                this.reset();
-                return new Tuple<int, int>(this.observation, this.reward);
+                this.Reward = RLoss;
+                this.Reset();
+                return new Tuple<int, int>(this.Observation, this.Reward);
             }
 
-            this.reward = rNull;
+            this.Reward = RNull;
             this.compute_observation();
 
-            return new Tuple<int, int>(this.observation, this.reward);
+            return new Tuple<int, int>(this.Observation, this.Reward);
         }
 
         public bool check_win() {
             //we do not need to recognize who won: it is player who played last
             for (int r = 0; r < 3; r++) {
-                if (this.board[r,0]!=this.oEmpty &&
-                    this.board[r,0]==this.board[r,1] &&
-                    this.board[r,1]==this.board[r,2]
+                if (this.Board[r,0]!=this.OEmpty &&
+                    this.Board[r,0]==this.Board[r,1] &&
+                    this.Board[r,1]==this.Board[r,2]
                     ){
                         return true;
                 }
             }
 
             for (int c = 0; c < 3; c++) {
-                if (this.board[0, c] != this.oEmpty &&
-                    this.board[0,c]==this.board[1,c] &&
-                    this.board[1,c]==this.board[2,c]
+                if (this.Board[0, c] != this.OEmpty &&
+                    this.Board[0,c]==this.Board[1,c] &&
+                    this.Board[1,c]==this.Board[2,c]
                     ){
                         return true;
                 }
             }
 
-            if (this.board[0,0]!=this.oEmpty &&
-                this.board[0,0]==this.board[1,1] &&
-                this.board[1,1]==this.board[2,2]
+            if (this.Board[0,0]!=this.OEmpty &&
+                this.Board[0,0]==this.Board[1,1] &&
+                this.Board[1,1]==this.Board[2,2]
                 ){
                 return true;
             }
 
-            if (this.board[0, 2] != this.oEmpty &&
-                this.board[0, 2] == this.board[1, 1] &&
-                this.board[1, 1] == this.board[2, 0]
+            if (this.Board[0, 2] != this.OEmpty &&
+                this.Board[0, 2] == this.Board[1, 1] &&
+                this.Board[1, 1] == this.Board[2, 0]
                 )
             {
                 return true;
@@ -125,26 +127,26 @@ namespace AIXI
             return false;
         }
 
-        public string print() { 
+        public string Print() { 
             string message = string.Format("action = {0}, observation = {1}, reward = {2} ({3}), board:",
-                this.action,
-                this.observation,
-                this.reward,
-                this.reward-3);
+                this.Action,
+                this.Observation,
+                this.Reward,
+                this.Reward-3);
 
             message = message + Environment.NewLine;
 
             for (int r = 0; r < 3; r++) {
                 for (int c = 0; c < 3; c++) {
                     string b=":-( Fix me";
-                    if (this.board[r, c] == oEmpty)
+                    if (this.Board[r, c] == OEmpty)
                         b = ".";
-                    else if (this.board[r, c] == oEnv)
+                    else if (this.Board[r, c] == OEnv)
                         b = "O";
-                    else if (this.board[r, c] == oAgent)
+                    else if (this.Board[r, c] == OAgent)
                         b = "A";
                     else
-                        Debug.Assert(false, "on position r/c: " + r + "/" + c + " is wrong value:" + this.board[r, c]);
+                        Debug.Assert(false, "on position r/c: " + r + "/" + c + " is wrong value:" + this.Board[r, c]);
                     message += b;
                 }
                 message += Environment.NewLine;
@@ -153,24 +155,24 @@ namespace AIXI
             return message;
         }
 
-        public void reset() { 
-            this.board = new int[3,3];
+        public void Reset() { 
+            this.Board = new int[3,3];
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {
-                    this.board[i, j] = oEmpty;
+                    this.Board[i, j] = OEmpty;
                 }
             }
 
             this.compute_observation();
-            this.actions_since_reset = 0;
+            this._actionsSinceReset = 0;
         }
 
         public void compute_observation()
         {
-            this.observation=0;
+            this.Observation=0;
             for (int r = 0; r < 3; r++) {
                 for (int c = 0; c < 3; c++ ){
-                    this.observation = this.board[r,c]+(4*this.observation);
+                    this.Observation = this.Board[r,c]+(4*this.Observation);
                 }
             }
         }

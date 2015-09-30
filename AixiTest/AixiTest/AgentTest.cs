@@ -9,36 +9,36 @@ namespace AIXITests
     [TestClass]
     public class AgentTest
     {
-        public Dictionary<string, string> options;
-        public MC_AIXI_CTW agent;
-        public CoinFlip env;
+        public Dictionary<string, string> Options;
+        public MC_AIXI_CTW Agent;
+        public CoinFlip Env;
         public AgentTest()
         {
 
-            this.options = new Dictionary<string, string>();
+            this.Options = new Dictionary<string, string>();
 
-            options["ct-depth"] = "4";
-            options["agent-horizon"] = "6";
-            options["mc-simulations"] = "200";
+            Options["ct-depth"] = "4";
+            Options["agent-horizon"] = "6";
+            Options["mc-simulations"] = "200";
 
-            this.env = new CoinFlip(options);
+            this.Env = new CoinFlip(Options);
 
-            this.agent = new MC_AIXI_CTW(env, options);
+            this.Agent = new MC_AIXI_CTW(Env, Options);
         }
 
 
         [TestMethod]
         public void SeveralIterationsTest()
         {//todo there are no asserts here
-            int N = 10;
-            for (int i = 0; i < N; i++)
+            int n = 10;
+            for (int i = 0; i < n; i++)
             {
-                this.agent.ModelUpdatePercept(env.observation, env.reward);
-                int? action = agent.search();
+                this.Agent.ModelUpdatePercept(Env.Observation, Env.Reward);
+                int? action = Agent.Search();
                 if (action != null)
                 {
-                    this.env.performAction((int)action);
-                    this.agent.ModelUpdateAction((int)action);
+                    this.Env.PerformAction((int)action);
+                    this.Agent.ModelUpdateAction((int)action);
                 }
             }
             

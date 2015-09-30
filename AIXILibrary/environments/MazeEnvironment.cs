@@ -9,117 +9,120 @@ namespace AIXI
 {
     public class MazeEnvironment : AIXIEnvironment
     {
-        public enum maze_action_enum { aLeft, aUp, aRight, aDown };
+        public enum MazeActionEnum { ALeft, AUp, ARight, ADown };
 
-        public enum maze_observation_enum { oNull = 0, oLeftWall = 1, oUpWall = 2, oRightWall = 4, oDownWall = 8 };
+        public enum MazeObservationEnum { ONull = 0, OLeftWall = 1, OUpWall = 2, ORightWall = 4, ODownWall = 8 };
 
-        public enum maze_observation_encoding_enum { cUninformative, cWalls, cCoordinates};//not implemented
+        public enum MazeObservationEncodingEnum { CUninformative, CWalls, CCoordinates};//not implemented
 
-        public int aLeft = (int)maze_action_enum.aLeft;
-        public int aUp = (int)maze_action_enum.aUp;
-        public int aRight = (int)maze_action_enum.aRight;
-        public int aDown = (int)maze_action_enum.aDown;
+        public int ALeft = (int)MazeActionEnum.ALeft;
+        public int AUp = (int)MazeActionEnum.AUp;
+        public int ARight = (int)MazeActionEnum.ARight;
+        public int ADown = (int)MazeActionEnum.ADown;
 
-        public int oNull = (int)maze_observation_enum.oNull;
-        public int oLeftWall = (int)maze_observation_enum.oLeftWall;
-        public int oUpWall = (int)maze_observation_enum.oUpWall;
-        public int oRightWall = (int)maze_observation_enum.oRightWall;
-        public int oDownWall = (int)maze_observation_enum.oDownWall;
+        public int ONull = (int)MazeObservationEnum.ONull;
+        public int OLeftWall = (int)MazeObservationEnum.OLeftWall;
+        public int OUpWall = (int)MazeObservationEnum.OUpWall;
+        public int ORightWall = (int)MazeObservationEnum.ORightWall;
+        public int ODownWall = (int)MazeObservationEnum.ODownWall;
 
         //public int cUninformative = (int)maze_observation_encoding_enum.cUninformative;
         //public int cWalls = (int)maze_observation_encoding_enum.cWalls;
         //public int cCoordinates = (int)maze_observation_encoding_enum.cCoordinates;
 
-        public char cWall = '#';
-        public char cEmpty = '.';
+        public char CWall = '#';
+        public char CEmpty = '.';
 
-        public char cTeleportTo = '*'; //not implemented
-        public char cTeleportFrom = '!'; //not implemented
+        public char CTeleportTo = '*'; //not implemented
+        public char CTeleportFrom = '!'; //not implemented
 
-        public int x;
-        public int y;
+        public int X;
+        public int Y;
 
-        public int width;
-        public int height;
+        public int Width;
+        public int Height;
 
-        public char[,] maze;
-        public int[,] rewards;
+        public char[,] Maze;
+        public int[,] Rewards;
 
-        public int min_reward_unnormalized;
-        public int max_reward_unnormalized;
+        public int MinRewardUnnormalized;
+        public int MaxRewardUnnormalized;
 
-        public int outside_maze_reward = 0;    //this is assumed to be already normalized to 0+
+        public int OutsideMazeReward = 0;    //this is assumed to be already normalized to 0+
 
         public MazeEnvironment(Dictionary<string, string> options, string layout, int[,] rewardsNotNormalized)
             : base(options)
         {
-            this.valid_actions = new int[] { this.aLeft, this.aUp, this.aRight, this.aDown };
-            this.valid_observations= new int[this.max_observation()+1];
+            this.ValidActions = new int[] { this.ALeft, this.AUp, this.ARight, this.ADown };
+            this.ValidObservations= new int[this.max_observation()+1];
             for (int i = 0; i < this.max_observation() + 1; i++)
             {
-                this.valid_observations[i] = i;
+                this.ValidObservations[i] = i;
             }
             //valid_rewards are defined bellow
             
 
             var rows = layout.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
-            this.height = rows.Count();
+            this.Height = rows.Count();
 
-            if (height == 0) {
+            if (Height == 0) {
                 throw new ArgumentException("Layout is empty");
             }
 
 
-            this.width = rows[0].Length;
-            this.maze = new char[height, width];
+            this.Width = rows[0].Length;
+            this.Maze = new char[Height, Width];
 
-            if (rewardsNotNormalized.GetLength(0) != height || rewardsNotNormalized.GetLength(1) != width)
+            if (rewardsNotNormalized.GetLength(0) != Height || rewardsNotNormalized.GetLength(1) != Width)
             {
                 throw new ArgumentException("Rewards have different shape than layout");
             }
 
-            this.rewards = rewardsNotNormalized;
+            this.Rewards = rewardsNotNormalized;
 
             //normalizing rewards:
-            this.min_reward_unnormalized=int.MaxValue;
-            this.max_reward_unnormalized = int.MinValue;
+            this.MinRewardUnnormalized=int.MaxValue;
+            this.MaxRewardUnnormalized = int.MinValue;
             foreach (int value in rewardsNotNormalized)
             {
-                min_reward_unnormalized = Math.Min(min_reward_unnormalized, value);
-                max_reward_unnormalized = Math.Max(max_reward_unnormalized, value);
+                MinRewardUnnormalized = Math.Min(MinRewardUnnormalized, value);
+                MaxRewardUnnormalized = Math.Max(MaxRewardUnnormalized, value);
             }
 
-            this.valid_rewards = new int[(this.max_reward_unnormalized-this.min_reward_unnormalized) + 1];
-            for (int i = 0; i < (this.max_reward_unnormalized - this.min_reward_unnormalized) + 1; i++)
+            this.ValidRewards = new int[(this.MaxRewardUnnormalized-this.MinRewardUnnormalized) + 1];
+            for (int i = 0; i < (this.MaxRewardUnnormalized - this.MinRewardUnnormalized) + 1; i++)
             {
-                this.valid_rewards[i] = i;
+                this.ValidRewards[i] = i;
             }
 
-            for (int y = 0; y < height; y++)
+            for (int y = 0; y < Height; y++)
             {
                 string row = rows[y];
-                if (row.Length != width)
+                if (row.Length != Width)
                 {
                     throw new ArgumentException("maze is not rectangular");
                 }
-                for (int x = 0; x < width; x++)
+                for (int x = 0; x < Width; x++)
                 {
-                    this.maze[y, x] = row[x];
+                    this.Maze[y, x] = row[x];
                     //normalizing rewards to being positive
-                    this.rewards[y, x] = rewardsNotNormalized[y,x] - min_reward_unnormalized;
+                    this.Rewards[y, x] = rewardsNotNormalized[y,x] - MinRewardUnnormalized;
                 }
             }
-                    
+            base.fill_out_bits();
+
 
             this.place_agent();
 
             this.calculate_observation();
-            this.reward = 0;
+            this.Reward = 0;
+
+
         }
 
         public bool exists_free_space() {
-            foreach (var ch in this.maze) {
-                if (ch == cEmpty) {
+            foreach (var ch in this.Maze) {
+                if (ch == CEmpty) {
                     return true;
                 }
             }
@@ -131,91 +134,91 @@ namespace AIXI
                 throw new ArgumentException("There is no free spot in maze");
             }
             do {
-                this.x = Utils.rnd.Next(0, width);
-                this.y = Utils.rnd.Next(0, height);
-            } while (!this.accessible(this.x,this.y));
+                this.X = Utils.Rnd.Next(0, Width);
+                this.Y = Utils.Rnd.Next(0, Height);
+            } while (!this.Accessible(this.X,this.Y));
             
         }
 
-        public bool accessible(int x, int y) {
-            return this.getPosition(x,y) == this.cEmpty;
+        public bool Accessible(int x, int y) {
+            return this.GetPosition(x,y) == this.CEmpty;
         }
 
         public int max_observation() {
-            return this.oLeftWall | this.oRightWall | this.oUpWall | this.oDownWall;
+            return this.OLeftWall | this.ORightWall | this.OUpWall | this.ODownWall;
         }
 
         public void calculate_observation() {
-            this.observation = 0;
-            if (this.getPosition(x+1, y) == cWall) {
-                this.observation |= this.oRightWall;
+            this.Observation = 0;
+            if (this.GetPosition(X+1, Y) == CWall) {
+                this.Observation |= this.ORightWall;
             }
-            if (this.getPosition(x - 1, y) == cWall)
+            if (this.GetPosition(X - 1, Y) == CWall)
             {
-                this.observation |= this.oLeftWall;
+                this.Observation |= this.OLeftWall;
             }
-            if (this.getPosition(x, y+1) == cWall)
+            if (this.GetPosition(X, Y+1) == CWall)
             {
-                this.observation |= this.oDownWall;
+                this.Observation |= this.ODownWall;
             }
-            if (this.getPosition(x, y-1) == cWall)
+            if (this.GetPosition(X, Y-1) == CWall)
             {
-                this.observation |= this.oUpWall;
+                this.Observation |= this.OUpWall;
             }
         }
 
-        public int getPosition(int x, int y) {
-            if (inMaze(x, y))
+        public int GetPosition(int x, int y) {
+            if (InMaze(x, y))
             {
-                return this.maze[y, x];
+                return this.Maze[y, x];
             }
             else {
-                return cWall;
+                return CWall;
             }
         }
 
-        public int getReward(int x, int y) {
-            if (this.inMaze(x, y)) {
-                return this.rewards[y, x];
+        public int GetReward(int x, int y) {
+            if (this.InMaze(x, y)) {
+                return this.Rewards[y, x];
             }
-            return this.outside_maze_reward;
+            return this.OutsideMazeReward;
         }
 
-        public bool inMaze(int x, int y) {
-            return (x >= 0 && x < width) && (y >= 0 && y < height);
+        public bool InMaze(int x, int y) {
+            return (x >= 0 && x < Width) && (y >= 0 && y < Height);
         }
 
-        public int xdiff(int action) {
-            if (action == aLeft)
+        public int Xdiff(int action) {
+            if (action == ALeft)
                 return -1;
-            else if (action == aRight)
+            else if (action == ARight)
                 return 1;
             return 0;
         }
 
-        public int ydiff(int action)
+        public int Ydiff(int action)
         {
-            if (action == aUp)
+            if (action == AUp)
                 return -1;
-            else if (action == aDown)
+            else if (action == ADown)
                 return 1;
             return 0;
         }
 
-        public override Tuple<int, int> performAction(int action)
+        public override Tuple<int, int> PerformAction(int action)
         {
-            int newx = this.x + this.xdiff(action);
-            int newy = this.y + this.ydiff(action);
+            int newx = this.X + this.Xdiff(action);
+            int newy = this.Y + this.Ydiff(action);
 
-            if (accessible(newx, newy)) {
-                this.x = newx;
-                this.y = newy;
+            if (Accessible(newx, newy)) {
+                this.X = newx;
+                this.Y = newy;
             }
 
-            this.reward = this.getReward(newx, newy);
+            this.Reward = this.GetReward(newx, newy);
             this.calculate_observation();
 
-            return new Tuple<int, int>(this.observation,this.reward);
+            return new Tuple<int, int>(this.Observation,this.Reward);
         }
     }
 

@@ -8,31 +8,36 @@ using System.Threading.Tasks;
 
 namespace AIXI
 {
-    public class MyRandom
-    {
-        public int a = 17;
-        public int b = 11;
-        public int x = 51;
-        public int modulo = 10000;
-        public int NextNumber() {
-            x = (x * a + b) % modulo;
+    //public class MyRandom
+    //{
+    //    public int a = 17;
+    //    public int b = 11;
+    //    public int x = 51;
+    //    public int modulo = 10000;
+    //    public int NextNumber() {
+    //        x = (x * a + b) % modulo;
 
-            return x;
-        }
+    //        return x;
+    //    }
 
-        public int NextInt(int min=0, int max=10) {
-            int length = max - min;
-            return (NextNumber() % length) + min;
-        }
+    //    public int NextInt(int min=0, int max=10) {
+    //        int length = max - min;
+    //        return (NextNumber() % length) + min;
+    //    }
 
 
-        public double NextDouble() {
-            return (((double)NextNumber()) / NextNumber()) % 1;
-        }
-    }
+    //    public double NextDouble() {
+    //        return (((double)NextNumber()) / NextNumber()) % 1;
+    //    }
+    //}
     public class Utils
     {
-        public static Random rnd = new Random();
+        public static Random Rnd = new Random();
+
+        public static bool FloatCompare(double a, double b, double delta=1e-5) {
+            return Math.Abs(a - b) < delta;
+        }
+        
         static public int LogBase2(int value)
         {//Copied from internet, probably stack overflow, I forgot where.
             int log = 31;
@@ -52,11 +57,11 @@ namespace AIXI
 
         static public double RandomDouble(double min, double max)
         {
-            return rnd.NextDouble() * (max - min) + min;
+            return Rnd.NextDouble() * (max - min) + min;
         }
 
         static public bool ProbabilisticDecision(double limit) {
-            return rnd.NextDouble() < limit;
+            return Rnd.NextDouble() < limit;
         }
 
         static public double MyToDouble(string s) {
@@ -70,10 +75,10 @@ namespace AIXI
         }
 
         static public int RandomElement(int[] a) {//TODO: int->any type.
-            return a[rnd.Next(a.Length)];//todo: not a.Length-1?
+            return a[Rnd.Next(a.Length)];//todo: not a.Length-1?
         }
 
-        static public double log1p(double x) {
+        static public double Log1P(double x) {
         //Copied from John D Cook, licence: public domain
             // http://www.johndcook.com/blog/csharp_log_one_plus_x/
             if (x <= -1.0)
@@ -94,23 +99,23 @@ namespace AIXI
             return (-0.5*x + 1.0)*x;
         }
 
-        public static int[] encode(int integer_symbol, int bit_count) { 
-            string s = Convert.ToString(integer_symbol, 2);
-            int[] symbol_list = s.PadLeft(bit_count, '0') // Add 0's from left
+        public static int[] Encode(int integerSymbol, int bitCount) { 
+            string s = Convert.ToString(integerSymbol, 2);
+            int[] symbolList = s.PadLeft(bitCount, '0') // Add 0's from left
              .Select(c => int.Parse(c.ToString())) // convert each char to int
              .ToArray();
-            return symbol_list;
+            return symbolList;
         }
 
-        public static int decode(int[] symbol_list, int bit_count) {
-            Debug.Assert(bit_count>0 && bit_count <= symbol_list.Length);
+        public static int Decode(int[] symbolList, int bitCount) {
+            Debug.Assert(bitCount>0 && bitCount <= symbolList.Length);
             
             int value = 0;
-            for (int i = 0; i < bit_count; i++)
+            for (int i = 0; i < bitCount; i++)
             {
-                if (symbol_list[symbol_list.Length -i -1] == 1)
+                if (symbolList[symbolList.Length -i -1] == 1)
                 {
-                    value += Convert.ToInt32(Math.Pow(2, bit_count -i -1));
+                    value += Convert.ToInt32(Math.Pow(2, bitCount -i -1));
                 }
             }
             return value;

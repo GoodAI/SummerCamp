@@ -9,119 +9,120 @@ namespace AIXI
 {
     public class TigerEnvironment : AIXIEnvironment
     {
-        public enum actions_enum { aListen=0, aLeft=1, aRight=2 };
-        public enum observations_enum { oNull, oLeft, oRight };
-        public enum reward_enum { rEaten = 0, rListen = 99, rGold = 110 };
+        public enum ActionsEnum { AListen=0, ALeft=1, ARight=2 };
+        public enum ObservationsEnum { ONull, OLeft, ORight };
+        public enum RewardEnum { REaten = 0, RListen = 99, RGold = 110 };
 
-        public int aListen = (int)actions_enum.aListen;
-        public int aLeft = (int)actions_enum.aLeft;
-        public int aRight = (int)actions_enum.aRight;
+        public int AListen = (int)ActionsEnum.AListen;
+        public int ALeft = (int)ActionsEnum.ALeft;
+        public int ARight = (int)ActionsEnum.ARight;
 
-        public int oNull = (int)observations_enum.oNull;
-        public int oLeft = (int)observations_enum.oLeft;
-        public int oRight = (int)observations_enum.oRight;
+        public int ONull = (int)ObservationsEnum.ONull;
+        public int OLeft = (int)ObservationsEnum.OLeft;
+        public int ORight = (int)ObservationsEnum.ORight;
 
-        public int rEaten = (int)reward_enum.rEaten;
-        public int rListen = (int)reward_enum.rListen;
-        public int rGold = (int)reward_enum.rGold;
+        public int REaten = (int)RewardEnum.REaten;
+        public int RListen = (int)RewardEnum.RListen;
+        public int RGold = (int)RewardEnum.RGold;
 
-        public double default_listen_accuracy = 0.85;
-        public double listen_accuracy;
-        public int tiger;
-        public int gold;
-        public MyRandom myrnd;
+        public double DefaultListenAccuracy = 0.85;
+        public double ListenAccuracy;
+        public int Tiger;
+        public int Gold;
+        //public MyRandom myrnd;
         public TigerEnvironment(Dictionary<string, string> options)
             : base(options)
         {
-            valid_actions = Enum.GetValues(typeof(actions_enum)).Cast<int>().ToArray();
-            valid_observations = Enum.GetValues(typeof(observations_enum)).Cast<int>().ToArray();
-            valid_rewards = Enum.GetValues(typeof(reward_enum)).Cast<int>().ToArray();
+            ValidActions = Enum.GetValues(typeof(ActionsEnum)).Cast<int>().ToArray();
+            ValidObservations = Enum.GetValues(typeof(ObservationsEnum)).Cast<int>().ToArray();
+            ValidRewards = Enum.GetValues(typeof(RewardEnum)).Cast<int>().ToArray();
+            base.fill_out_bits();
 
-            this.myrnd = new MyRandom();
+            //this.myrnd = new MyRandom();
 
 
             //low-todo: make listen accuracy configurable in options
 
-            listen_accuracy = this.default_listen_accuracy;
-            Debug.Assert(0.0 <= this.listen_accuracy && this.listen_accuracy <= 1);
+            ListenAccuracy = this.DefaultListenAccuracy;
+            Debug.Assert(0.0 <= this.ListenAccuracy && this.ListenAccuracy <= 1);
             this.place_tiger();
 
-            this.observation = this.oNull;
-            this.reward = 0;
+            this.Observation = this.ONull;
+            this.Reward = 0;
         }
         public void place_tiger()
         {
-//            if (Utils.ProbabilisticDecision(0.5))
-            if (this.myrnd.NextDouble() < 0.5)
+            if (Utils.ProbabilisticDecision(0.5))
+            //if (this.myrnd.NextDouble() < 0.5)
             {
-                this.tiger = oLeft;
-                this.gold = oRight;
+                this.Tiger = OLeft;
+                this.Gold = ORight;
             }
             else
             {
-                this.tiger = oRight;
-                this.gold = oLeft;
+                this.Tiger = ORight;
+                this.Gold = OLeft;
             }
         }
 
-        public string print() {
-            Debug.Assert(this.action!=null, "you must do some action before calling print");
-            var action_text = new Dictionary<int, string>();
-            action_text.Add(aListen, "listen");
-            action_text.Add(aLeft, "left");
-            action_text.Add(aRight, "right");
+        public string Print() {
+            Debug.Assert(this.Action!=null, "you must do some action before calling print");
+            var actionText = new Dictionary<int, string>();
+            actionText.Add(AListen, "listen");
+            actionText.Add(ALeft, "left");
+            actionText.Add(ARight, "right");
 
-            var observation_text = new Dictionary<int, string>();
-            observation_text.Add(oNull, "null");
-            observation_text.Add(oLeft, "hear tiger at left door");
-            observation_text.Add(oRight, "hear tiger at right door");
+            var observationText = new Dictionary<int, string>();
+            observationText.Add(ONull, "null");
+            observationText.Add(OLeft, "hear tiger at left door");
+            observationText.Add(ORight, "hear tiger at right door");
 
-            var reward_text = new Dictionary<int, string>();
-            reward_text.Add(rEaten, "eaten");
-            reward_text.Add(rListen, "listen");
-            reward_text.Add(rGold, "gold!");
+            var rewardText = new Dictionary<int, string>();
+            rewardText.Add(REaten, "eaten");
+            rewardText.Add(RListen, "listen");
+            rewardText.Add(RGold, "gold!");
 
-            string message = string.Format("action = {0}, observation = {1}, reward = {2} ({3})", action_text[(int)this.action],
-                observation_text[this.observation],
-                reward_text[this.reward],
-                this.reward - 100
+            string message = string.Format("action = {0}, observation = {1}, reward = {2} ({3})", actionText[(int)this.Action],
+                observationText[this.Observation],
+                rewardText[this.Reward],
+                this.Reward - 100
                 );
             return message;
         }
 
-        public override Tuple<int, int> performAction(int action)
+        public override Tuple<int, int> PerformAction(int action)
         {
-            Debug.Assert(this.isValidAction(action));
-            this.action = action;
+            Debug.Assert(this.IsValidAction(action));
+            this.Action = action;
 
-            if (action == aListen)
+            if (action == AListen)
             {
-                this.reward = this.rListen;
-                if (this.myrnd.NextDouble() < this.listen_accuracy)
-                //if (Utils.ProbabilisticDecision(this.listen_accuracy))
+                this.Reward = this.RListen;
+                //if (this.myrnd.NextDouble() < this.listen_accuracy)
+                if (Utils.ProbabilisticDecision(this.ListenAccuracy))
                 {
-                    this.observation = this.tiger;
+                    this.Observation = this.Tiger;
                 }
                 else
                 {
-                    this.observation = this.gold;
+                    this.Observation = this.Gold;
                 }
             }
             else {
-                if ((action == aLeft && tiger == oLeft) || (action == aRight && tiger == oRight))
+                if ((action == ALeft && Tiger == OLeft) || (action == ARight && Tiger == ORight))
                 {
-                    this.reward = rEaten;
+                    this.Reward = REaten;
                 }
                 else {
-                    this.reward = rGold;
+                    this.Reward = RGold;
                 }
 
-                this.observation = oNull;
+                this.Observation = ONull;
                 this.place_tiger();
             }
 
 
-            return new Tuple<int, int>(this.observation, this.reward);
+            return new Tuple<int, int>(this.Observation, this.Reward);
         }
     }
 }

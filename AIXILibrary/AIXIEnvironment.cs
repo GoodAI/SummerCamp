@@ -8,57 +8,69 @@ namespace AIXI
 {
     public abstract class AIXIEnvironment
     {
-        public int? action; //TODO maybe?: int? -> int
-        public bool is_finished=false;
-        public int observation;
-        public int reward;
-        public Dictionary<string, string> options;
-        public int[] valid_actions;
-        public int[] valid_observations;
-        public int[] valid_rewards;
-        
+        public int? Action; //TODO maybe?: int? -> int
+        public bool IsFinished=false;
+        public int Observation;
+        public int Reward;
+        public Dictionary<string, string> Options;
+        public int[] ValidActions;
+        public int[] ValidObservations;
+        public int[] ValidRewards;
+
+        public int ActionBits;
+        public int ObservationBits;
+        public int RewardBits;
+
         //method __unicode__
 
         public AIXIEnvironment(Dictionary<string, string> options) {
-            this.options = options;
+            this.Options = options;
         }
 
-        public int actionBits() {
-            return Utils.BitsNeeded(this.valid_actions.Max());
+        public virtual void fill_out_bits(){
+            this.ActionBits = Utils.BitsNeeded(this.ValidActions.Max());
+            this.ObservationBits = Utils.BitsNeeded(this.ValidObservations.Max());
+            this.RewardBits = Utils.BitsNeeded(this.ValidRewards.Max());
+        }
+
+
+        public int actionBits()
+        {
+            return ActionBits;
         }
         public int observationBits()
         {
-            return Utils.BitsNeeded(this.valid_observations.Max());
+            return this.ObservationBits;
         }
         public int perceptBits()
         {
-            return this.observationBits() + this.rewardBits();
+            return this.ObservationBits + this.RewardBits;
         }
 
         public int rewardBits() {
-            return Utils.BitsNeeded(this.valid_rewards.Max());
+            return this.RewardBits;
         }
 
-        public bool isValidAction(int action)
+        public bool IsValidAction(int action)
         {
-            return this.valid_actions.Contains(action);
+            return this.ValidActions.Contains(action);
         }
 
-        public bool isValidObservation(int observation)
+        public bool IsValidObservation(int observation)
         {
-            return this.valid_observations.Contains(observation);
+            return this.ValidObservations.Contains(observation);
         }
-        public bool isValidReward(int reward)
+        public bool IsValidReward(int reward)
         {
-            return this.valid_rewards.Contains(reward);
+            return this.ValidRewards.Contains(reward);
         }
 
         public int? maximum_action() {
             //todo: put all maxX together
             //todo: in which sense this should be maximum? - How it is used?
             //  because we are just taking last element, not maximal
-            if (this.valid_actions.Length > 0) {
-                return this.valid_actions[this.valid_actions.Length-1];
+            if (this.ValidActions.Length > 0) {
+                return this.ValidActions[this.ValidActions.Length-1];
             }
             else
             {
@@ -68,9 +80,9 @@ namespace AIXI
 
         public int? maximum_observation()
         {
-            if (this.valid_observations.Length > 0)
+            if (this.ValidObservations.Length > 0)
             {
-                return this.valid_observations[this.valid_observations.Length - 1];
+                return this.ValidObservations[this.ValidObservations.Length - 1];
             }
             else
             {
@@ -80,9 +92,9 @@ namespace AIXI
 
         public int? maximum_reward()
         {
-            if (this.valid_rewards.Length > 0)
+            if (this.ValidRewards.Length > 0)
             {
-                return this.valid_rewards[this.valid_rewards.Length - 1];
+                return this.ValidRewards[this.ValidRewards.Length - 1];
             }
             else
             {
@@ -92,9 +104,9 @@ namespace AIXI
 
 
         public int? minimum_action() {  //todo: put all minimum_X together
-            if (this.valid_actions.Length > 0)
+            if (this.ValidActions.Length > 0)
             {
-                return this.valid_actions[0]; //TODO? in pyaixi is valid_actions[1] ... Why?
+                return this.ValidActions[0]; //TODO? in pyaixi is valid_actions[1] ... Why?
             }
             else {
                 return null;
@@ -102,9 +114,9 @@ namespace AIXI
         }
         public int? minimum_observation()
         {
-            if (this.valid_observations.Length > 0)
+            if (this.ValidObservations.Length > 0)
             {
-                return this.valid_observations[0];
+                return this.ValidObservations[0];
             }
             else
             {
@@ -113,9 +125,9 @@ namespace AIXI
         }
         public int? minimum_reward()
         {
-            if (this.valid_rewards.Length > 0)
+            if (this.ValidRewards.Length > 0)
             {
-                return this.valid_rewards[0];
+                return this.ValidRewards[0];
             }
             else
             {
@@ -124,7 +136,7 @@ namespace AIXI
         }
 
 
-        public abstract Tuple<int, int> performAction(int action);
+        public abstract Tuple<int, int> PerformAction(int action);
 
         // TODO:
         //public void print();

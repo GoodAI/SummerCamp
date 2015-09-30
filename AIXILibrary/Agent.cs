@@ -8,33 +8,33 @@ namespace AIXI
 {
     abstract public class Agent
     {
-        public enum update_enum { action_update, percept_update };
-        public int action_update = (int)update_enum.action_update;
-        public int percept_update = (int)update_enum.percept_update;
-        public int age = 0;
-        public int horizon;  //TODO: this has to be initialised somewhere
+        public enum UpdateEnum { ActionUpdate, PerceptUpdate };
+        public int ActionUpdate = (int)UpdateEnum.ActionUpdate;
+        public int PerceptUpdate = (int)UpdateEnum.PerceptUpdate;
+        public int Age = 0;
+        public int Horizon;  //TODO: this has to be initialised somewhere
 
 
-        public AIXIEnvironment environment;
-        public Dictionary<string, string> options;
+        public AIXIEnvironment Environment;
+        public Dictionary<string, string> Options;
 
-        public int last_update;
-        public int learning_period=0;
+        public int LastUpdate;
+        public int LearningPeriod=0;
 
-        public double total_reward = 0;
+        public double TotalReward = 0;
 
         public Agent(AIXIEnvironment env, Dictionary<string, string> options)
         {
-            this.environment = env;
-            this.options = options;
-            this.last_update = action_update;
+            this.Environment = env;
+            this.Options = options;
+            this.LastUpdate = ActionUpdate;
 
             if (options.ContainsKey("learning-period"))
             {
-                Int32.TryParse(options["learning-period"], out this.learning_period);
+                Int32.TryParse(options["learning-period"], out this.LearningPeriod);
             }
             else {
-                this.learning_period = 0;
+                this.LearningPeriod = 0;
             }
                 
 
@@ -43,9 +43,9 @@ namespace AIXI
         }
 
         public double AverageReward() {
-            if (this.age > 0)
+            if (this.Age > 0)
             {
-                return this.total_reward / this.age;
+                return this.TotalReward / this.Age;
             }
             else {
                 return 0.0;
@@ -53,21 +53,21 @@ namespace AIXI
         }
 
         public int GenerateRandomObservation() {
-            return Utils.RandomElement(this.environment.valid_observations);
+            return Utils.RandomElement(this.Environment.ValidObservations);
         }
         public int GenerateRandomAction()
         {
-            return Utils.RandomElement(this.environment.valid_actions);
+            return Utils.RandomElement(this.Environment.ValidActions);
         }
         public int GenerateRandomReward()
         {
-            return Utils.RandomElement(this.environment.valid_rewards);
+            return Utils.RandomElement(this.Environment.ValidRewards);
         }
 
         public int? MaximumAction() {
-            if (this.environment != null)
+            if (this.Environment != null)
             {
-                return this.environment.maximum_action();
+                return this.Environment.maximum_action();
             }
             else
             {
@@ -76,9 +76,9 @@ namespace AIXI
         }
         public int? MaximumReward()
         {
-            if (this.environment != null)
+            if (this.Environment != null)
             {
-                return this.environment.maximum_reward();
+                return this.Environment.maximum_reward();
             }
             else
             {
@@ -96,13 +96,13 @@ namespace AIXI
 
         abstract public double Playout(int horizon);
 
-        abstract public int? search();
+        abstract public int? Search();
 
-        public void reset() {
+        public void Reset() {
             //when overriding this method, do not forget to call this base version.
-            this.age = 0;
-            this.total_reward = 0;
-            this.last_update = action_update;
+            this.Age = 0;
+            this.TotalReward = 0;
+            this.LastUpdate = ActionUpdate;
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 
 
 namespace AIXI
@@ -11,6 +12,33 @@ namespace AIXI
 //        public double probability = 0.7;
         static void Main(string[] args)
         {
+
+            var ctf = new CTWContextTreeFast(5);
+            var ct = new CTWContextTree(5);
+
+            int[] input = { 1, 1, 0, 1, 1, 0, 0, 0, 1, 1,1,1,0,1 };
+            ct.update_tree(input);
+            ctf.update_tree(input);
+            ct.revert_tree(4);
+            ctf.revert_tree(4);
+            int[] input2 = {0,0,1};
+            ct.update_tree(input2);
+            ctf.update_tree(input2);
+
+            if (ctf.compare(ct))
+            {
+                Console.WriteLine("Stejny!");
+            }
+            else
+            {
+                ctf.print_tree();
+                Console.WriteLine("----");
+                ct.print_tree();
+                Console.WriteLine("Ruzny!");
+            }
+
+
+
             var options = new Dictionary<string, string>();
             //            environment     = coin_flip
             //# Probability of coin landing heads-up.
@@ -27,6 +55,9 @@ namespace AIXI
             options["agent-horizon"] = "4";
             options["mc-simulations"] = "200";    //original value=300
             options["random-seed"] = "5";
+            options["terminate-age"] = "500";
+            options["ctw-model"] = "ctf";
+
 
 
 //            var rewards = new int[2, 3] { { 1, 2, 6 }, { 3, -4, 5 } }; ;
@@ -111,8 +142,12 @@ namespace AIXI
             //    Console.Write("{0};", symbol);
             //}
             //Console.WriteLine();
-            
+
+            var startingTime = DateTime.Now;
+
             InteractionLoop(agent, env, options);
+            var endingTime = DateTime.Now;
+            Console.WriteLine(endingTime - startingTime);
 
             //Console.WriteLine(time_end-time_beginning);
             Console.ReadLine();
@@ -131,47 +166,47 @@ namespace AIXI
                 rnd = new Random();                
             }
 
-            double explore_rate=0.0;
+            double exploreRate=0.0;
             if (options.ContainsKey("exploration"))
             {
-                explore_rate = Utils.MyToDouble(options["exploration"]);
+                exploreRate = Utils.MyToDouble(options["exploration"]);
             }
-            bool explore = explore_rate > 0;
+            bool explore = exploreRate > 0;
 
-            double explore_decay=0.0;
+            double exploreDecay=0.0;
             if (options.ContainsKey("explore-decay"))
             {
-                explore_decay = Utils.MyToDouble(options["explore-decay"]);
+                exploreDecay = Utils.MyToDouble(options["explore-decay"]);
             }
   
-            Debug.Assert(0.0 <= explore_rate);
-            Debug.Assert(0.0 <= explore_decay && explore_decay <= 1.0);
+            Debug.Assert(0.0 <= exploreRate);
+            Debug.Assert(0.0 <= exploreDecay && exploreDecay <= 1.0);
 
-            int terminate_age=0;
+            int terminateAge=0;
             if (options.ContainsKey("terminate-age"))
             {
-                terminate_age = Convert.ToInt32(options["terminate-age"]);
+                terminateAge = Convert.ToInt32(options["terminate-age"]);
             }
-            bool terminate_check = terminate_age > 0;
-            Debug.Assert(0<=terminate_age);
+            bool terminateCheck = terminateAge > 0;
+            Debug.Assert(0<=terminateAge);
 
-            int learning_period = 0;
+            int learningPeriod = 0;
             if (options.ContainsKey("learning-period"))
             {
-                learning_period = Convert.ToInt32(options["learning-period"]);
+                learningPeriod = Convert.ToInt32(options["learning-period"]);
             }
-            Debug.Assert(0 <= learning_period);
+            Debug.Assert(0 <= learningPeriod);
 
             int cycle = 0;
-            while (!env.is_finished) {//refact: put computing of total & avg reward here
-                if (terminate_check && agent.age > terminate_age) {
+            while (!env.IsFinished) {//refact: put computing of total & avg reward here
+                if (terminateCheck && agent.Age > terminateAge) {
                     break;
                 }
-                DateTime cycle_start = DateTime.Now;
-                int observation = env.observation;
-                int reward = env.reward;
+                var cycleStart = DateTime.Now;
+                int observation = env.Observation;
+                int reward = env.Reward;
 
-                if (learning_period > 0 && cycle > learning_period) {
+                if (learningPeriod > 0 && cycle > learningPeriod) {
                     explore = false;
                 }
 
@@ -180,33 +215,33 @@ namespace AIXI
                 bool explored = false;
                 int action;
 
-                if (explore && rnd.NextDouble() < explore_rate)
+                if (explore && rnd.NextDouble() < exploreRate)
                 {
                     explored = true;
                     action = agent.GenerateRandomAction();
                 }
                 else {
-                    action = (int)agent.search(); //low-todo: deal with nullable
+                    //low-todo: deal with nullable
+                    action = (int)agent.Search();
                 }
 
-                env.performAction(action);
+                env.PerformAction(action);
                 agent.ModelUpdateAction(action);
 
-                TimeSpan time_taken = DateTime.Now - cycle_start;
+                TimeSpan timeTaken = DateTime.Now - cycleStart;
 
                 Console.WriteLine("{0}:\t{1},{2},{3}\t{4},{5}  \t{6},{7}\t>{8},{9}",
                     cycle, observation, reward, action,
-                    explored, explore_rate,
-                    agent.total_reward, agent.AverageReward(),
-                    time_taken, agent.ModelSize()
+                    explored, exploreRate,
+                    agent.TotalReward, agent.AverageReward(),
+                    timeTaken, agent.ModelSize()
                     );
 
 
                 if (explore) {
-                    explore_rate *= explore_decay;
+                    exploreRate *= exploreDecay;
                 }
                 cycle += 1;
-               // System.Threading.Thread.Sleep(1000);
             }
         }
     }

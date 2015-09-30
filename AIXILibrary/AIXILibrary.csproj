@@ -53,7 +53,9 @@
     <Compile Include="environments\MyTTTEnvironment.cs" />
     <Compile Include="environments\TigerEnvironment.cs" />
     <Compile Include="environments\TTTEnvironment.cs" />
+    <Compile Include="Model.cs" />
     <Compile Include="prediction\ctw_context_tree.cs" />
+    <Compile Include="prediction\ctw_context_tree_fast.cs" />
     <Compile Include="prediction\ctw_context_tree_node.cs" />
     <Compile Include="prediction\ctw_context_tree_undo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

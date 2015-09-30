@@ -8,24 +8,26 @@ using System.Diagnostics;
 
 namespace AIXI
 {
-    public class TTTEnvironment : AIXIEnvironment
+    public class TttEnvironment : AIXIEnvironment
     {
 
-        public TTTEnvironment(Dictionary<string, string> options)
+        public TttEnvironment(Dictionary<string, string> options)
             : base(options)
         {
-            this.valid_actions = new int[9] { 0,1,2,3,4,5,6,7,8};
-            this.valid_observations = new int [174762+1]; // This one may be wrong.
-            for (int k = 0; k < valid_observations.Length; k++) {
-                this.valid_observations[k] = k;
+            this.ValidActions = new int[9] { 0,1,2,3,4,5,6,7,8};
+            this.ValidObservations = new int [174762+1]; // This one may be wrong.
+            for (int k = 0; k < ValidObservations.Length; k++) {
+                this.ValidObservations[k] = k;
             }
-                this.valid_rewards = new int[5] { 0, 1, 2, 3, 4 };
-            this.reward = 0;
+                this.ValidRewards = new int[5] { 0, 1, 2, 3, 4 };
+            this.Reward = 0;
+            base.fill_out_bits();
+
 
         }
 
-        public override Tuple<int, int> performAction(int action) {
-            this.action = action;
+        public override Tuple<int, int> PerformAction(int action) {
+            this.Action = action;
             //MyLog.INFO.WriteLine("Perf action in TTT: "+action);
             return new Tuple<int, int>(42, 84);
         }

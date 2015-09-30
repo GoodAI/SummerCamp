@@ -11,7 +11,7 @@ namespace AIXI
         public RandomAgent(AIXIEnvironment env, Dictionary<string, string> options)
             : base(env, options)
         {
-            this.horizon = 5;  //TODO: what to put here?
+            this.Horizon = 5;  //TODO: what to put here?
         }
         override public int ModelSize() {
             return 0;
@@ -26,17 +26,17 @@ namespace AIXI
         }
 
         override public Tuple<int, int> GeneratePerceptAndUpdate() { 
-            int observation = Utils.RandomElement(this.environment.valid_observations);
-            int reward = Utils.RandomElement(this.environment.valid_rewards);
+            int observation = Utils.RandomElement(this.Environment.ValidObservations);
+            int reward = Utils.RandomElement(this.Environment.ValidRewards);
             return new Tuple<int, int>(observation, reward);
         }
 
         override public double Playout(int horizon) {
-            return horizon * Utils.RandomDouble((int)this.environment.minimum_reward(), (int)this.environment.maximum_reward());//low-todo: remove recasts
+            return horizon * Utils.RandomDouble((int)this.Environment.minimum_reward(), (int)this.Environment.maximum_reward());//low-todo: remove recasts
         }
 
-        override public int? search() {
-            return Utils.RandomElement(this.environment.valid_actions);
+        override public int? Search() {
+            return Utils.RandomElement(this.Environment.ValidActions);
         }
     }
 }
