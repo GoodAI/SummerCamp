@@ -54,7 +54,7 @@
           </Task>
         </Tasks>
       </PolynomialFunction>
-      <MyTicTacToePlayerNode LoadOnStart="False" SaveOnStop="False" Id="95" Name="Node_95" yaxlib:realtype="GoodAI.Modules.TicTacToe.MyTicTacToePlayerNode">
+      <MyTicTacToePlayerNode LoadOnStart="False" SaveOnStop="False" Id="95" Name="Opponent" yaxlib:realtype="GoodAI.Modules.TicTacToe.MyTicTacToePlayerNode">
         <Me>PLAYER_X</Me>
         <DataFolder></DataFolder>
         <Location X="676" Y="-857" />
@@ -64,7 +64,7 @@
           </Task>
         </Tasks>
       </MyTicTacToePlayerNode>
-      <MyAIXINode LoadOnStart="False" SaveOnStop="False" Id="99" Name="Node_99" yaxlib:realtype="AIXIModule.MyAIXINode">
+      <MyAIXINode LoadOnStart="False" SaveOnStop="False" Id="99" Name="MC-AIXI-CTW node" yaxlib:realtype="AIXIModule.MyAIXINode">
         <MCSimulations>100</MCSimulations>
         <ContextTreeDepth>12</ContextTreeDepth>
         <AgentHorizon>8</AgentHorizon>
@@ -77,14 +77,14 @@
         <InitialExploration>0.9</InitialExploration>
         <ExplorationDecay>0.99</ExplorationDecay>
         <DataFolder></DataFolder>
-        <Location X="710" Y="-698" />
+        <Location X="701" Y="-688" />
         <Tasks>
           <Task Enabled="True" PropertyName="Play" yaxlib:realtype="AIXIModule.MyAIXITask" />
         </Tasks>
       </MyAIXINode>
     </Children>
-    <LayoutProperties Zoom="0.5946034">
-      <Translation X="-45" Y="440" />
+    <LayoutProperties Zoom="0.8408962">
+      <Translation X="54" Y="840" />
     </LayoutProperties>
     <GroupInputNodes>
       <MyParentInput ParentInputIndex="0" Id="1" Name="Visual">
@@ -224,7 +224,7 @@
   </Observers>
   <UsedModules>
     <Module Name="GoodAI.Platform.Core.dll" Version="9" />
-    <Module Name="GoodAI.BasicNodes.dll" Version="4" />
+    <Module Name="GoodAI.BasicNodes.dll" Version="6" />
     <Module Name="AIXIModule.dll" Version="1" />
   </UsedModules>
 </Project>

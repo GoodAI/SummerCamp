@@ -8,6 +8,8 @@ using System.Diagnostics;
 
 using GoodAI.Core.Utils;
 
+// Environment that will be passed to AIXILibrary
+// This environment/opponent is Brain Simulator
 
 namespace AIXI
 {
