@@ -12,7 +12,7 @@ namespace AIXI
 
             //POSSIBLE OPTIONS:
 
-            //ctw-model: possible values ct/ctf/cuda/random. Which agent
+            //ctw-model: possible values ct/ctf/cuda. Which CTW tree implementation should CTW-agent use.
             options["ctw-model"] = "ctf";
 
             //exploration: (possible values 0.0-1.0), initial probability of exploration.

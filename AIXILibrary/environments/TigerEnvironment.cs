@@ -66,7 +66,6 @@ namespace AIXI
         }
 
         public string Print() {
-            Debug.Assert(this.Action!=null, "you must do some action before calling print");
             var actionText = new Dictionary<int, string>();
             actionText.Add(AListen, "listen");
             actionText.Add(ALeft, "left");

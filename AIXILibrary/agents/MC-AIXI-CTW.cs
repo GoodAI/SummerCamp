@@ -11,6 +11,9 @@ namespace AIXI
 {
     public class MC_AIXI_CTW : Agent
     {
+        //Most of high-level logic is here. Implementation of CTW tree is in separate class
+
+
         public int Depth;
         public int McSimulations;
 
@@ -23,6 +26,7 @@ namespace AIXI
         {
             Int32.TryParse(options["ct-depth"], out this.Depth);
 
+            //pick what implementation of CTW tree to use
             if (options.ContainsKey("ctw-model") && options["ctw-model"] == "ctf")
             {
                 this.ContextTree = new CTWContextTreeFast(this.Depth);
@@ -52,6 +56,12 @@ namespace AIXI
             return this.ContextTree.get_model_size();
         }
 
+        //encode_X methods are for transforming int into array of its bits.
+        // this array is as long as number of bits per action needed.
+        //eg: with 4 bits per action (ie: actions are numbered 0-15)
+        //          encode_action(13) = [1,0,1,1]
+        //   and  with 3 bits per action:
+        //          encode_action(13) = [1,0,1]
         public int[] encode_action(int action) {
             return Utils.Encode(action, this.Environment.actionBits());
         }

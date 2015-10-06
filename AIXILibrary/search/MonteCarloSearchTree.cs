@@ -96,10 +96,6 @@ namespace AIXI
             else { //Previously visited decision node
 
                 int actionNullable = this.SelectAction(agent);
-                if (actionNullable == null)
-                {
-                    Debug.Assert(false, "I do not have any action available");
-                }
                 int action = actionNullable;
 
                 agent.ModelUpdateAction(action);

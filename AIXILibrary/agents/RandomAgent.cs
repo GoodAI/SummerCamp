@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 
 namespace AIXI
 {
+    //RandomAgent do not make any model and just plays at random. Used for testing.
     class RandomAgent: Agent
     {
         public RandomAgent(AIXIEnvironment env, Dictionary<string, string> options)
             : base(env, options)
         {
-            this.Horizon = 5;  //TODO: what to put here?
+            this.Horizon = 0;
         }
         override public int ModelSize() {
             return 0;
@@ -32,7 +33,7 @@ namespace AIXI
         }
 
         override public double Playout(int horizon) {
-            return horizon * Utils.RandomDouble((int)this.Environment.minimum_reward(), (int)this.Environment.maximum_reward());//low-todo: remove recasts
+            return horizon * Utils.RandomDouble((int)this.Environment.minimum_reward(), (int)this.Environment.maximum_reward());
         }
 
         override public int Search() {
