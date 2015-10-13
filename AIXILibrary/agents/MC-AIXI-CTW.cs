@@ -39,7 +39,7 @@ namespace AIXI
                 throw new ArgumentException("unknown ctw-model in options");
             }
 
-
+            //TODO: BUG: this will overwrite ctw-model
             this.ContextTree = new CTWContextTreeFast(this.Depth);
             //this.context_tree = new CTWContextTree(this.depth);
 
@@ -93,7 +93,6 @@ namespace AIXI
             }
             this.TotalReward += reward;
             this.LastUpdate = PerceptUpdate;
-
         }
 
         public int? GenerateAction() {

@@ -41,33 +41,35 @@ namespace AIXI
             Int32.TryParse(options["max-observation"], out this.max_observation);
             this.observations_num = this.max_observation - this.min_observation + 1;
 
-            Int32.TryParse(options["min-reward"], out this.min_observation);
-            Int32.TryParse(options["max-reward"], out this.max_observation);
-            this.rewards_num = this.max_observation - this.min_observation + 1;
+            Int32.TryParse(options["min-reward"], out this.min_reward);
+            Int32.TryParse(options["max-reward"], out this.max_reward);
+            this.rewards_num = this.max_reward - this.min_reward + 1;
 
-            this.valid_actions = new int[this.actions_num];
+            this.ValidActions = new int[this.actions_num];
             for (int i = 0; i < actions_num; i++) {
-                this.valid_actions[i] = i;
+                this.ValidActions[i] = i;
             }
 
-            this.valid_observations = new int[this.observations_num];
+            this.ValidObservations= new int[this.observations_num];
             for (int i = 0; i < observations_num; i++)
             {
-                this.valid_observations[i] = i;
+                this.ValidObservations[i] = i;
             }
 
-            this.valid_rewards = new int[this.rewards_num];
+            this.ValidRewards = new int[this.rewards_num];
             for (int i = 0; i < rewards_num; i++)
             {
-                this.valid_rewards[i] = i;
+                this.ValidRewards[i] = i;
             }
 
-            this.reward = 0;
+            base.fill_out_bits();
+
+            this.Reward = 0;
         }
 
-        public override Tuple<int, int> performAction(int action)
+        public override Tuple<int, int> PerformAction(int action)
         {
-            this.action = action;
+            this.Action = action;
             //MyLog.INFO.WriteLine("Perf action in TTT: "+action);
             return new Tuple<int, int>(42, 84);
         }

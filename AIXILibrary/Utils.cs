@@ -6,6 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
+using GoodAI.Core.Utils;
+
+
 namespace AIXI
 {
     //public class MyRandom
@@ -79,7 +83,7 @@ namespace AIXI
         }
 
         static public double Log1P(double x) {
-        //Copied from John D Cook, licence: public domain
+        //Author: John D Cook, licence: public domain
             // http://www.johndcook.com/blog/csharp_log_one_plus_x/
             if (x <= -1.0)
             {
@@ -108,8 +112,10 @@ namespace AIXI
         }
 
         public static int Decode(int[] symbolList, int bitCount) {
+//            MyLog.INFO.WriteLine("len = " + symbolList.Length + " bitcount=" + bitCount);
+ //           MyLog.Writer.FlushCache();
             Debug.Assert(bitCount>0 && bitCount <= symbolList.Length);
-            
+
             int value = 0;
             for (int i = 0; i < bitCount; i++)
             {

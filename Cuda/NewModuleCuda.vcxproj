@@ -131,6 +131,10 @@
       <NvccCompilation>ptx</NvccCompilation>
       <CompileOut>$(OutDir)%(RelativeDir)%(Filename).ptx</CompileOut>
     </CudaCompile>
+    <CudaLink>
+      <Optimization>Od</Optimization>
+      <AdditionalLibraryDirectories>C:\Users\Cuda\Documents\GitHub\old\AIXIModule\Module\bin\Debug\ptx;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </CudaLink>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -186,7 +190,21 @@
     </CudaCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <CudaCompile Include="CTW_agent.cu" />
+    <CudaCompile Include="ctw_context_tree.cu" />
+    <CudaCompile Include="ctw_context_tree_node.cu" />
+    <CudaCompile Include="random.cu" />
     <CudaCompile Include="SomeNode.cu" />
+    <CudaCompile Include="TestingNode.cu" />
+    <CudaCompile Include="utils.cu" />
+    <CudaCompile Include="vars.cu" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CTW_agent.h" />
+    <ClInclude Include="ctw_context_tree.h" />
+    <ClInclude Include="ctw_context_tree_node.h" />
+    <ClInclude Include="utils.h" />
+    <ClInclude Include="vars.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

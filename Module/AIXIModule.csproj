@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="BS_RL_Environment.cs" />
     <Compile Include="MyAIXINode.cs" />
+    <Compile Include="TestingNode.cs" />
     <Compile Include="Versioning\MyConversion.cs" />
     <Compile Include="SomeNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

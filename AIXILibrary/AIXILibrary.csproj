@@ -35,6 +35,9 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="GoodAI.Platform.Core">
+      <HintPath>..\..\..\..\..\..\..\Program Files\GoodAI\Brain Simulator\GoodAI.Platform.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />

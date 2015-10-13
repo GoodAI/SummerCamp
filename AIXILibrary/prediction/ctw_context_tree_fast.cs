@@ -13,8 +13,9 @@ namespace AIXI
         public double LogProbability;
         public int NumberOf0S;
         public int NumberOf1S;
-        public int Child1;//child1 is 1, child0 is 0
         public int Child0;
+        public int Child1;//child1 is 1, child0 is 0
+
     };
     public class CTWContextTreeFast : IModel
     {
@@ -36,18 +37,16 @@ namespace AIXI
 
         public CTWContextTreeFast(int depth)
         {
-            this.Nodes = new CtNode[5];
+            this.Nodes = new CtNode[5];//TODO: increase this value
             this.FreeIndices = new Queue<int>();
             
             Context = new List<int>();
             //this.context.Capacity = this.depth * 2 + 1;
-
-
+            
             Debug.Assert(depth >= 0);
             this.Depth = depth;
             this.History = new List<int> ();
             this.TreeSize = 1;
-
 
             this.Multipliers = new double[2*this.CacheMultipliersBellow, this.CacheMultipliersBellow];
             for (int sum = 0; sum < 2 * this.CacheMultipliersBellow; sum++)
@@ -217,7 +216,7 @@ namespace AIXI
             return index;
         }
 
-        public void FreeNode(int index) {
+        public void FreeNode(int index) {//TODO: change tree size?
             this.FreeIndices.Enqueue(index);
         }
 

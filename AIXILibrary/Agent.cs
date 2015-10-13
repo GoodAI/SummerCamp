@@ -100,6 +100,18 @@ namespace AIXI
             }
         }
 
+        public int? MaximumObservation()
+        {
+            if (this.Environment != null)
+            {
+                return this.Environment.maximum_observation();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         //returns current size of model
         abstract public int ModelSize();
 

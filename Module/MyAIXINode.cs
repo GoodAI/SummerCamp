@@ -12,8 +12,9 @@ using GoodAI.Core.Memory;
 using GoodAI.Core.Utils;
 using GoodAI.Core.Task;
 using System.Threading;
+using GoodAI.Core;
 
-
+using ManagedCuda;
 
 
 namespace AIXIModule
@@ -211,7 +212,6 @@ namespace AIXIModule
             AverageReward.Count = 1;
             ModelSize.Count = 1;
         }
-
     }
 
     [Description("MC-AIXI-CTW learner")]
@@ -227,6 +227,7 @@ namespace AIXIModule
         public bool explore;
         public bool explored;
 
+        private MyCudaKernel m_kernel;
 
         public override void Init(int nGPU)
         {
@@ -246,10 +247,15 @@ namespace AIXIModule
             options["min-reward"] = Owner.MinReward.ToString();
             options["max-reward"] = Owner.MaxReward.ToString();
 
+            /*foreach (var key in options.Keys) {
+                MyLog.INFO.WriteLine("options " + key + " = " + options[key]);
+         
+            }*/
+
             this.explore_rate = Owner.InitialExploration;
             this.exploration_decay = Owner.ExplorationDecay;
             this.explore = this.explore_rate > 0.0;
-            MyLog.INFO.WriteLine("### " + this.explore_rate + " " + this.exploration_decay);
+//            MyLog.INFO.WriteLine("### " + this.explore_rate + " " + this.exploration_decay);
 
             //TODO: proper error handling
             if (this.explore_rate < 0.0 || this.explore_rate > 1.0 || exploration_decay < 0.0 || exploration_decay > 1.0) {
@@ -261,17 +267,17 @@ namespace AIXIModule
             this.agent = new AIXI.MC_AIXI_CTW(this.env, this.options);
 //            this.m_cursor = 0;
             this.i = 0;
+
+//            m_kernel = MyKernelFactory.Instance.Kernel(nGPU, @"SomeNode", "IncrementAll");
         }
 
         public override void Execute()
         {
-
             Int32 observation=0;
             Owner.Reward.SafeCopyToHost();
             Owner.Input.SafeCopyToHost();
 
             Owner.Action.Fill(0f);
-
 
             for (int j = 0; j < 9; j++) {
                 if (Owner.Input.Host[j] == 0) {
@@ -286,10 +292,10 @@ namespace AIXIModule
             }
 
             
-            this.env.observation = observation;
+            this.env.Observation = observation;
             int rewardUnNormalized = (int)Owner.Reward.Host[0];
             int reward = rewardUnNormalized - this.env.min_reward;
-            this.env.reward = reward;
+            this.env.Reward = reward;
             MyLog.INFO.WriteLine("observation = " + observation + " and reward =" + rewardUnNormalized);
 
             agent.ModelUpdatePercept(observation, reward);
@@ -301,8 +307,9 @@ namespace AIXIModule
                 action = (int)agent.GenerateRandomAction();
             }
             else{
-                action =  (int)agent.search();
+                action =  (int)agent.Search();
             }
+
 
 
             //MyLog.INFO.WriteLine("action = " + action);
@@ -313,18 +320,18 @@ namespace AIXIModule
 
             Owner.Action.Host[action] = 1f;
 
-            this.env.performAction(action);
+            this.env.PerformAction(action);
             this.agent.ModelUpdateAction(action);
 
-            Owner.Age.Host[0] = this.agent.age;
+            Owner.Age.Host[0] = this.agent.Age;
             Owner.Observation.Host[0] = observation;
             Owner.Explored.Host[0] = this.explored ? 1 : 0;
             Owner.ExplorationRate.Host[0] = this.explore_rate;
-            Owner.TotalReward.Host[0] = (float)agent.total_reward;
+            Owner.TotalReward.Host[0] = (float)agent.TotalReward;
 
-            if (agent.age > 0)
+            if (agent.Age > 0)
             {
-                Owner.AverageReward.Host[0] = (float)(agent.total_reward + env.min_reward * agent.age) / agent.age;
+                Owner.AverageReward.Host[0] = (float)(agent.TotalReward + env.min_reward * agent.Age) / agent.Age;
             }
             else
             {
