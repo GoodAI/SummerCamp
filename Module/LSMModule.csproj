@@ -58,13 +58,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LSM\BenchmarkFileSaver.cs" />
-    <Compile Include="LSM\BenchmarkFileSaver2.cs" />
     <Compile Include="LSM\LiquidStateMachine.cs" />
     <Compile Include="LSM\Tasks\LSMComputeTask.cs" />
     <Compile Include="LSM\Tasks\LSMMaassInitTask.cs" />
     <Compile Include="LSM\Tasks\LSMOutputTask.cs" />
     <Compile Include="LSM\Tasks\LSMRandomInitTask.cs" />
-    <Compile Include="LSM\TextImageInput.cs" />
     <Compile Include="Versioning\MyConversion.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

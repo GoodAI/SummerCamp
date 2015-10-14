@@ -11,7 +11,7 @@ using ManagedCuda;
 namespace LSMModule.LSM.Tasks {
     /// <author>Adr33</author>
     /// <meta>ok</meta>
-    /// <status>Work in progress</status>
+    /// <status>Alpha release</status>
     /// <summary>Task for sending of output</summary>
     /// <description>
     /// Generates the external output of LSM from internal output and inner state of neurons.

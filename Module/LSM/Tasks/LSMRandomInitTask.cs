@@ -11,7 +11,7 @@ using YAXLib;
 namespace LSMModule.LSM.Tasks {
     /// <author>Adr33</author>
     /// <meta>ok</meta>
-    /// <status>Work in progress</status>
+    /// <status>Alpha release</status>
     /// <summary>Task for initialization of network with Random topology</summary>
     /// <description>
     /// Starting initialization for LSM with Random topology:<br></br>

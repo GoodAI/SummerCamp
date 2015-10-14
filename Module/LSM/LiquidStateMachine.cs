@@ -14,17 +14,17 @@ using YAXLib;
 namespace LSMModule {
     /// <author>Adr33</author>
     /// <meta>ok</meta>
-    /// <status>Work in progress</status>
+    /// <status>Alpha release</status>
     /// <summary>Liquid State Machine node</summary>
     /// <description>
     /// Liquid State Machine node - the key node of this module<br></br>
-    /// - tranfers binary input into an output, which also takes into account last few elements of the sequence
-    /// - edges of the network are generated randomly with constrains put by different topologies
-    /// - neurons are of type integrate-and-fire(IF)
-    /// - recommended connectivity of LSM is said to be between 5-10% based on used topology
-    /// - LSM can be either spiking or non-spiking
-    /// - inner state and output of neurons are computed used equations discribed in LSMOutputTask
-    /// - this implementation also allows you to make LSM spike internally more than once in one step
+    /// - tranfers binary input into an output, which also takes into account last few elements of the sequence<br></br>
+    /// - edges of the network are generated randomly with constrains put by different topologies<br></br>
+    /// - neurons are of type integrate-and-fire(IF)<br></br>
+    /// - recommended connectivity of LSM is said to be between 5-10% based on used topology<br></br>
+    /// - LSM can be either spiking or non-spiking<br></br>
+    /// - inner state and output of neurons are computed used equations discribed in LSMOutputTask<br></br>
+    /// - this implementation also allows you to make LSM spike internally more than once in one step<br></br>
     /// - as output of this LSM we take current state of all the neurons in current step
     /// </description>
     class LiquidStateMachine : MyWorkingNode {

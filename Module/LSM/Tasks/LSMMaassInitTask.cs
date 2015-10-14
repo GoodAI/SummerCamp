@@ -11,11 +11,11 @@ using YAXLib;
 namespace LSMModule.LSM.Tasks {
     /// <author>Adr33</author>
     /// <meta>ok</meta>
-    /// <status>Work in progress</status>
+    /// <status>Alpha release</status>
     /// <summary>Task for initialization of network with a topology according to prof. Maass</summary>
     /// <description>
     /// Starting initialization for LSM with topology according to prof. Maass:<br></br>
-    /// - 3D topology with the first depth layer used as input
+    /// - 3D topology with the first depth layer used as input<br></br>
     /// - neighbours generated randomly with favouring of close neighbours
     /// </description>
     [Description("Init Maass network"), MyTaskInfo(OneShot = true)]

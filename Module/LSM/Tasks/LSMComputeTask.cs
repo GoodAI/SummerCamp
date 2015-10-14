@@ -12,11 +12,11 @@ using YAXLib;
 namespace LSMModule.LSM.Tasks {
     /// <author>Adr33</author>
     /// <meta>ok</meta>
-    /// <status>Work in progress</status>
+    /// <status>Alpha release</status>
     /// <summary>Task for inner computing</summary>
     /// <description>
     /// Generates the inner state and internal output of neurons.<br></br>
-    /// The main equation for inner state of neurons X in time T is:
+    /// The main equation for inner state of neurons X in time T is:<br></br>
     /// innerState[X, T] = (innerState[X, T-1] + A * imageInput + B * 1/N * sum(all edge inputs for X) / (A + B + Threshold),
     /// where N is number of input neurons for neuron X and A/B are constants changeable in BrainSimulator
     /// </description>
