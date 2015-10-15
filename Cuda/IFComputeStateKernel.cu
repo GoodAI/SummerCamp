@@ -6,8 +6,8 @@ extern "C"{
 
 	// Kernel for computing the inner state of neurons
 	// The main equation for inner state of neurons X in time T is:
-	// innerState[X, T] = innerState[X, T-1] + imageInput[X, T] + sum(all edge inputs for X in T)
-	// 
+	// innerState[X, T] = innerState[X, T-1] + imageInput[X, T] + sum(all edge inputs for X in T).
+	// After firing neuron goes into a refractory state, which means it is not receiving any input for few steps
 
 	__global__ void IFComputeStateKernel(
 		int initState, // value of init state

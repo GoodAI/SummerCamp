@@ -32,15 +32,15 @@ namespace LSMModule {
         [MyBrowsable, Category("\tNetwork")]
         public virtual float Connectivity { get; set; }
 
-        [YAXSerializableField(DefaultValue = 144)]
+        [YAXSerializableField(DefaultValue = 28)]
         [MyBrowsable, Category("\tNetwork")]
         public virtual int Inputs { get; set; }
 
-        [YAXSerializableField(DefaultValue = 0.5f)]
+        [YAXSerializableField(DefaultValue = 30)]
         [MyBrowsable, Category("\tNetwork")]
         public virtual float Threshold { get; set; }
 
-        [YAXSerializableField(DefaultValue = 10)]
+        [YAXSerializableField(DefaultValue = 28)]
         [MyBrowsable, Category("\tNetwork")]
         public virtual int InnerCycle { get; set; }
 
@@ -68,7 +68,7 @@ namespace LSMModule {
         [MyBrowsable, Category("\tPattern")]
         public virtual int PatternLength { get; set; }
 
-        [YAXSerializableField(DefaultValue = 20)]
+        [YAXSerializableField(DefaultValue = 12)]
         [MyBrowsable, Category("Misc")]
         public int OutputColumnHint { get; set; }
 

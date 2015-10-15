@@ -31,7 +31,7 @@ namespace LSMModule.LSM.Tasks {
         [MyBrowsable, Category("\tLayer")]
         public virtual IOEnum ConnectivityType { get; set; }
 
-        [YAXSerializableField(DefaultValue = 400)]
+        [YAXSerializableField(DefaultValue = 144)]
         [MyBrowsable, Category("\tLayer")]
         public virtual int Neurons { get; set; }
 

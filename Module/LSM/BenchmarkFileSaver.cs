@@ -49,7 +49,7 @@ namespace LSMModule {
         [YAXSerializableField(DefaultValue = FileWriteMethod.Overwrite)]
         public FileWriteMethod WriteMethod { get; set; }
 
-        [YAXSerializableField(DefaultValue = 100)]
+        [YAXSerializableField(DefaultValue = 50)]
         [MyBrowsable, Category("\tLayer")]
         public virtual int BlockSize { get; set; }
 
@@ -149,7 +149,7 @@ namespace LSMModule {
                         temp /= m_iter;
                         temp *= 100;
 
-                        sb.Append(temp.ToString("0.00"));
+                        sb.Append(m_count.ToString());
                         sb.Append(';');
 
                         m_stream.Write(sb.ToString());

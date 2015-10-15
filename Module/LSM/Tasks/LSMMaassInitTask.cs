@@ -24,7 +24,7 @@ namespace LSMModule.LSM.Tasks {
         // constant for calculating of close neighbours
         public const float MAASS_LAMBDA = 8;
 
-        [YAXSerializableField(DefaultValue = 27)]
+        [YAXSerializableField(DefaultValue = 16)]
         [MyBrowsable, Category("\tLayer")]
         public virtual int Depth { get; set; }
 
