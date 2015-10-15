@@ -1,4 +1,5 @@
 
+
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
 
@@ -17,27 +18,16 @@
 #include "mc_tree.cu"
 
 
-//#include "vars.h"
-//#include "ctw_context_tree.h"
-
-
 extern "C"
 {
-
 	__device__ ct_tree* TREE = NULL;
 	__device__ ctw_agent* AGENT = NULL;
 
-	__device__  unsigned int X = 123456;//random generator: todo: put to better (shared?) memory
+	__device__  unsigned int X = 123456;//random generator: todo: put to better (shared?) memory & to better place in source codes
 	__device__  unsigned int A = 1664525;
 	__device__  unsigned int C = 1013904223;
 
-
-
-	__global__ void TestAll(int* testInts, 
-		float* testFloats, 
-		int intsNum, 
-		int floatNum,
-		
+	__global__ void AixiInitKernel(
 		int depth,
 		int mc_simulations,
 		int horizon,
@@ -51,16 +41,21 @@ extern "C"
 			+ threadIdx.x;
 
 		create_agent(depth, mc_simulations, horizon, maximum_action, maximum_reward, maximum_observation);
+		int q = 1 + 1;
+	}
+
+	__global__ void AixiPlayKernel(int reward, int observation, int* actionOutput)
+	{
+		int threadId = blockIdx.y*blockDim.x*gridDim.x
+			+ blockIdx.x*blockDim.x
+			+ threadIdx.x;
 
 
-
-		for (int i = 0; i < 20; i++){
-			model_update_percept(rand_int_range(0, 2), rand_int_range(0, 10));
-			model_update_action(rand_int_range(0, 2));
-		}
-		model_update_percept(rand_int_range(0, 2), rand_int_range(0, 10));
+		model_update_percept(observation, reward);
 
 		int action = search();
-		
+		model_update_action(action);
+		actionOutput[0] = action;
+
 	}
 }

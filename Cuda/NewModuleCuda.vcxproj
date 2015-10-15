@@ -190,11 +190,12 @@
     </CudaCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <CudaCompile Include="AixiKernels.cu" />
     <CudaCompile Include="CTW_agent.cu" />
     <CudaCompile Include="ctw_context_tree.cu" />
     <CudaCompile Include="ctw_context_tree_node.cu" />
+    <CudaCompile Include="mc_tree.cu" />
     <CudaCompile Include="random.cu" />
-    <CudaCompile Include="SomeNode.cu" />
     <CudaCompile Include="TestingNode.cu" />
     <CudaCompile Include="utils.cu" />
     <CudaCompile Include="vars.cu" />
@@ -203,6 +204,7 @@
     <ClInclude Include="CTW_agent.h" />
     <ClInclude Include="ctw_context_tree.h" />
     <ClInclude Include="ctw_context_tree_node.h" />
+    <ClInclude Include="mc_tree.h" />
     <ClInclude Include="utils.h" />
     <ClInclude Include="vars.h" />
   </ItemGroup>

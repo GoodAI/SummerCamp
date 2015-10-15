@@ -11,7 +11,6 @@ namespace AIXI
     //  RandomAgent: just taking random actions for testing
     //  MC_AIXI_CTW: main implementation. Inside of this class is implemented CTW tree. There are three different implementations (one (ct) is old and slow, one (ctf) is fast and one (cuda) is using CUDA).
 
-    
     abstract public class Agent
     {
         //agents can be in two states: 

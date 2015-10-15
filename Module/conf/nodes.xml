@@ -5,5 +5,7 @@
     </Node>
     <Node type="AIXIModule.TestingNode" CanBeAdded="true" >
     </Node>
+    <Node type="AIXIModule.MyAIXICudaNode" CanBeAdded="true" >
+    </Node>
   </KnownNodes>
 </Configuration>

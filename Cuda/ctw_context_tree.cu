@@ -2,6 +2,7 @@
 #include "ctw_context_tree.h"
 #include "cuda_runtime.h"
 #include "vars.h"
+#include "utils.h"
 #include "ctw_context_tree_node.h"
 #include <stdlib.h>
 #include <assert.h>
@@ -50,7 +51,15 @@ __device__ ct_tree_undo* backup_tree(){
 }
 
 __device__ int history_position(){
-	return TREE->history_count % TREE->history_array_size;
+	return (TREE->history_count-1) % TREE->history_array_size;
+}
+
+
+__device__ void update_tree_history_symbols(int symbols, int symbol_count){
+	//copy last /symbol_count/ bits of symbols into history. (first bit copied is on the left)
+	for (int i = symbol_count-1; i >=0; i--){
+		update_tree_history((symbols & (1<<i)) ? 1:0);
+	}
 }
 
 __device__ void update_tree_history(int symbol){
@@ -63,13 +72,12 @@ __device__ void revert_tree_history(int symbolCount){
 	TREE->history_count -= symbolCount;
 }
 
-
 __device__ void update_context(){
 	assert(TREE->history_count >= TREE->depth);
 	TREE->context[0] = TREE->root_i;
 
 	int node_i = TREE->root_i;
-	int history_position = TREE->history_count;
+	int history_position = TREE->history_count-1;
 	for (int i = 1; i <= TREE->depth; i++){
 		//todo: get symbol
 		int symbol = TREE->history[history_position%TREE->history_array_size];
@@ -89,8 +97,9 @@ __device__ void update_context(){
 
 //__device__ void update_tree(int* symbol_list, int symbol_count) {
 __device__ void update_tree(int symbols, int symbol_count) {
-	for (int i = 0; i < symbol_count; i++){
-		int symbol = symbols & (1<<i);
+	//todo: add some kind of assert, like in update_context that will assert that we have enough of history - without history you cannot call update_tree
+	for (int i = symbol_count-1; i >=0; i--){
+		int symbol = (symbols & (1<<i)) ? 1:0;
 		update_context();
 		for (int j = TREE->depth - 1; j >= 0; j--){
 			update_node(TREE->context[j], symbol);
@@ -124,12 +133,14 @@ __device__ void revert_tree(int symbol_count)
 		if (TREE->history_count <= 0) {
 			return;
 		}
-		int symbol = TREE->history[TREE->history_count%TREE->history_array_size];
+		int position = TREE->history_count - 1;
+		int pos_norm = position % TREE->history_array_size;
+		int symbol = TREE->history[pos_norm];
 		TREE->history_count--;
 
 		if (TREE->history_count >= TREE->depth) {
 			update_context();
-			//refact: We do not need to create variable nodes at all
+
 			for (int j = TREE->depth - 1; j >= 0; j--) {
 				revert_node(TREE->context[j], symbol);
 			}
@@ -143,28 +154,33 @@ __device__ int get_model_size() {
 }
 
 
-__device__ int* generate_random_symbols_and_update(int symbol_count) {
-	//TODO!! Not needed ATM.
-	/*
-	int* symbol_list = (int*) malloc(sizeof(int)*symbol_count);
+__device__ int generate_random_symbols_and_update(int symbol_count) {
 
-	for (int i = 0; i < symbol_count; i++) {
+	int symbol_list = 0;
+
+	for (int i = symbol_count; i >=0; i--) {
 		int symbol;
-		int symbolToPredict=1;
+		int symbol_to_predict = 1;
 		
-		if (Utils.Rnd.NextDouble() < this.Predict(symbolsToPredict)){
+		if (rand_float() < predict_symbol(symbol_to_predict)){
 			symbol = 1;
 		}
 		else{
 			symbol = 0;
 		}
 
-		symbolList[i] = symbol;
+		symbol_list = symbol_list | (symbol << i);
 
-		var singletonSymbol = new int[1];
-		singletonSymbol[0] = symbol;
-		this.update_tree(singletonSymbol);
+//		update_tree(symbol, 1);
+
+		// here is change from original - I am not sure why it is needed now it may not be needed since gen rand symbol is not called when we do not have enough of history
+		
+		if (TREE->history_count >= TREE->depth){
+			update_tree(symbol, 1);
+		}
+		else{
+			update_tree_history(symbol);
+		}
 	}
-	return symbolList;
-	*/
+	return symbol_list;
 }

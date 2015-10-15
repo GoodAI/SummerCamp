@@ -23,6 +23,11 @@ extern "C"
 	extern __device__ ct_tree* TREE;
 	extern __device__ ctw_agent* AGENT;
 
+	//n: to which memory put these values? todo: shared memory?
+	extern __device__   unsigned int X;
+	extern __device__   unsigned int A;
+	extern __device__   unsigned int C;
+
 	/*
 	extern __device__ int FIRST_FREE_INDEX; // index of NODES that points to first element that is not in use.
 	*/

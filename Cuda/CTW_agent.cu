@@ -4,6 +4,7 @@
 #include "vars.h"
 #include "CTW_agent.h"
 #include "utils.h"
+#include "mc_tree.h"
 //#include <stdint.h>
 
 __device__ ctw_agent* create_agent(
@@ -25,7 +26,7 @@ __device__ ctw_agent* create_agent(
 
 	agent->context_tree = create_ct_tree(depth);
 	
-	TREE = agent->context_tree;//n: this may not be needed (since it is already done in create_ct_tree
+	TREE = agent->context_tree;//n: this may not be needed (since it is already done in create_ct_tree)
 
 	agent->horizon = horizon;
 
@@ -45,8 +46,8 @@ __device__ ctw_agent* create_agent(
 	return agent;
 }
 
-
 __device__ double average_reward() {
+	//return reward that is normalized to 0-maximum_reward. To unnormalize you must add minimum reward
 	if (AGENT->age > 0)
 	{
 		return AGENT->total_reward/ AGENT->age;
@@ -56,22 +57,9 @@ __device__ double average_reward() {
 	}
 }
 
-
-__device__ int GenerateRandomObservation() {
-	//TODO
-}
-__device__ int GenerateRandomAction()
-{
-	//TODO
-}
-__device__ int GenerateRandomReward()
-{
-	//TODO
-}
-
 __device__ int encode_percept(int observation, int reward)
 {
-	return reward | (observation << AGENT->reward_bits);
+	return observation | (reward << AGENT->observation_bits);
 }
 
 __device__ void model_update_percept(int observation, int reward)
@@ -80,68 +68,44 @@ __device__ void model_update_percept(int observation, int reward)
 
 	int perceptSymbols = encode_percept(observation, reward);
 
-	update_tree(perceptSymbols, AGENT->percept_bits);
+	if (TREE->history_count >= TREE->depth){
+		update_tree(perceptSymbols, AGENT->percept_bits);
+	}
+	else{
+		update_tree_history_symbols(perceptSymbols, AGENT->percept_bits);
+	}
+
 
 	AGENT->total_reward += reward;
 	AGENT->last_update = PerceptUpdate;
 }
 
-__device__ int GeneratePercept() { //used to return tuple<int, int >
-	//TODO
-	/*
-	int observation = Utils.RandomElement(this.Environment.ValidObservations);
-	int reward = Utils.RandomElement(this.Environment.ValidRewards);
-	return new Tuple<int, int>(observation, reward);
-	*/
+
+__device__ void model_update_action(int action)
+{
+	assert(action >= 0 && action <= AGENT->maximum_action);
+	assert(AGENT->last_update == PerceptUpdate);
+
+	update_tree_history_symbols(action, AGENT->action_bits);
+
+	AGENT->age++;
+	AGENT->last_update = ActionUpdate;
 }
 
-__device__ int GeneratePerceptAndUpdate() { //used to return tuple<int, int >
-/*	int[] perceptSymbols = this.ContextTree.GenerateRandomSymbolsAndUpdate(this.Environment.perceptBits());
 
-	Tuple<int, int> OandR = this.decode_percept(perceptSymbols);
+__device__ int generate_percept_and_update() {
+	int percept = generate_random_symbols_and_update(AGENT->percept_bits);
+	AGENT->last_update = PerceptUpdate;
+	int reward = percept >> AGENT->observation_bits;
+	AGENT->total_reward += reward;
+	return percept;
 
-
-	int observation = OandR.Item2;
-	int reward = OandR.Item1;
-
-	this.TotalReward += reward;
-	this.LastUpdate = PerceptUpdate;
-	
-	return new Tuple<int, int>(observation, reward);*/
-}
-
-__device__ int Search() {
-/*	CtwContextTreeUndo undoInstance = new CtwContextTreeUndo(this);
-	MonteCarloSearchNode searchTree = new MonteCarloSearchNode(MonteCarloSearchNode.DecisionNode);
-	for (int i = 0; i < this.McSimulations; i++) {
-		searchTree.Sample(this, this.Horizon, 0);
-		this.model_revert(undoInstance);
-	}
-
-	searchTree.PrintBs();
-
-
-	int bestAction = -1;
-	double bestMean = double.NegativeInfinity;
-	foreach(int action in this.Environment.ValidActions) {
-
-		if (!searchTree.Children.ContainsKey(action)) {
-			continue;
-		}
-
-		double mean = searchTree.Children[action].Mean + Utils.RandomDouble(0, 0.0001);
-		if (mean > bestMean) {
-			bestMean = mean;
-			bestAction = action;
-		}
-	}
-	return bestAction;*/
 }
 
 
 __device__ void model_revert(ct_tree_undo* undo_instance)
 {
-	while (TREE->history_count>undo_instance->history_count){
+	while (TREE->history_count > undo_instance->history_count){
 		if (AGENT->last_update == PerceptUpdate)
 		{
 			revert_tree(AGENT->percept_bits);
@@ -156,4 +120,47 @@ __device__ void model_revert(ct_tree_undo* undo_instance)
 	AGENT->age = undo_instance->age;
 	AGENT->total_reward = undo_instance->total_reward;
 	AGENT->last_update = undo_instance->last_update;//is this step needed? we have already set last_update above
+}
+
+__device__ int generate_random_action(){
+	return rand_int_range(0,AGENT->maximum_action);
+}
+
+__device__ float playout(int horizon) {
+	//idea: run this several times (in several threads?) and then avg results
+	float total_reward = 0.0;
+
+	for (int i = 0; i < horizon; i++) {
+		int action = generate_random_action();//later: improved playout policy?
+		model_update_action(action);
+		int percept = generate_percept_and_update();
+		int reward = percept >> AGENT->observation_bits;
+		total_reward += reward;
+	}
+	return total_reward;
+}
+
+
+__device__ int search() {
+	ct_tree_undo * undo_instance = backup_tree();
+	mc_tree_node* mc_root = create_mc_node(Decision);
+
+	for (int i = 0; i < AGENT->mc_simulations; i++) {
+		sample(AGENT->horizon, mc_root);
+		model_revert(undo_instance);
+	}
+
+	int best_action = -1;
+	float best_mean = -INFINITY;
+	for (int i = 0; i < mc_root->children_count; i++){
+		mc_key_val* item = &(mc_root->children[i]);
+		int action = item->key;
+		mc_tree_node * child = item->val;
+		float mean = child->mean+rand_range(0, 0.0001);
+		if (mean > best_mean){
+			best_mean = mean;
+			best_action = action;
+		}
+	}
+	return best_action;
 }

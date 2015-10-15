@@ -62,6 +62,7 @@ namespace AIXI
                 var symbolsToPredict = new int[1];
                 symbolsToPredict[0]=1;
 
+
                 if (Utils.Rnd.NextDouble() < this.Predict(symbolsToPredict)){
                     symbol=1;
                 }

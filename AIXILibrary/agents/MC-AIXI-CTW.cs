@@ -13,8 +13,8 @@ namespace AIXI
     {
         //Most of high-level logic is here. Implementation of CTW tree is in separate class
 
-
         public int Depth;
+
         public int McSimulations;
 
         //public CTWContextTreeFast context_tree;
@@ -39,8 +39,6 @@ namespace AIXI
                 throw new ArgumentException("unknown ctw-model in options");
             }
 
-            //TODO: BUG: this will overwrite ctw-model
-            this.ContextTree = new CTWContextTreeFast(this.Depth);
             //this.context_tree = new CTWContextTree(this.depth);
 
 

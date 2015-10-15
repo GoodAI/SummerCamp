@@ -48,19 +48,18 @@ __device__ ctw_agent* create_agent(
 __device__ double average_reward();
 
 
-__device__ int GenerateRandomObservation();
-__device__ int GenerateRandomAction();
-__device__ int GenerateRandomReward();
+__device__ int generate_random_action();
 
 __device__ void model_update_percept(int observation, int reward);
-
-__device__ int GeneratePercept();
-
-__device__ int GeneratePerceptAndUpdate();
-
-__device__ int Search();
+__device__ void model_update_action(int action);
 
 
+__device__ int generate_percept_and_update();
+
+
+__device__ float playout(int horizon);
+
+__device__ int search();
 
 
 

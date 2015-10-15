@@ -46,6 +46,8 @@ typedef struct {
 
 __device__ ct_tree* create_ct_tree(int depth);
 
+__device__ void update_tree_history_symbols(int symbols, int symbol_count);
+
 __device__ void update_tree_history(int symbol);
 
 __device__ void revert_tree_history(int symbolCount);
@@ -60,7 +62,7 @@ __device__ void revert_tree(int symbol_count);
 
 __device__ int get_model_size();
 
-__device__ int* generate_random_symbols_and_update(int symbol_count);
+__device__ int generate_random_symbols_and_update(int symbol_count);
 
 __device__ ct_tree_undo* backup_tree();
 

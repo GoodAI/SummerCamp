@@ -22,11 +22,11 @@ namespace AIXIModule
     /// <author>Jiri Nadvornik</author>
     /// <meta>jn</meta>
     /// <status>Experimental</status>
-    /// <summary>My Tic-Tac-Toe Agent</summary>
+    /// <summary>My MC-AIXI-CTW agent running on CUDA</summary>
     // <description>Uses MC-AIXI-CTW algorithm for reinforcement learning</description>
-    class MyAIXINode : MyWorkingNode
+    class MyAIXICudaNode : MyWorkingNode
     {
-        public MyAIXITask Play
+        public MyAIXICudaTask Play
         {
             get;
             private set;
@@ -65,7 +65,12 @@ namespace AIXIModule
                 SetOutput(0, value);
             }
         }
-        
+
+        public MyMemoryBlock<int> OutputAction
+        {
+            get;
+            private set;
+        }
 
         public MyMemoryBlock<int> Age
         {
@@ -78,7 +83,7 @@ namespace AIXIModule
             get;
             private set;
         }
-        
+
         public MyMemoryBlock<int> Explored
         {
             get;
@@ -102,14 +107,13 @@ namespace AIXIModule
             get;
             private set;
         }
-        
+
         public MyMemoryBlock<int> ModelSize
         {
             get;
             private set;
         }
 
-      
         [MyBrowsable, Category("Parameters"), YAXSerializableField(DefaultValue = 200)]
         public int MCSimulations
         {
@@ -131,13 +135,6 @@ namespace AIXIModule
             set;
         }
         
-        /*[MyBrowsable, Category("Parameters"), YAXSerializableField(DefaultValue = 0)]
-        public int RandomSeed
-        {
-            get;
-            set;
-        }*/
-
         [MyBrowsable, Category("Parameters"), YAXSerializableField(DefaultValue = 0)]
         public int MinAction
         {
@@ -150,7 +147,7 @@ namespace AIXIModule
             get;
             set;
         }
-        
+
         [MyBrowsable, Category("Parameters"), YAXSerializableField(DefaultValue = -10)]
         public int MinReward
         {
@@ -190,24 +187,20 @@ namespace AIXIModule
             set;
         }
 
-
         public override void Validate(MyValidator validator)
         {
-            //MyLog.INFO.WriteLine("In.c = " + Input.Count + " "+ (Input.Count != 9));
-            //MyLog.INFO.WriteLine("Out.c = " + Action.Count + " " + (+Action.Count != 9));
-
-
             base.Validate(validator);
             validator.AssertError(Input.Count == 9 && Action.Count == 9, this, "Both inputs should have size 9.");
-//            validator.AssertWarning(XInput.Count == 1 && YInput.Count == 1, this, "Both inputs should have size 1. Only first value will be considered.");
         }
 
         public override void UpdateMemoryBlocks()
         {
+            OutputAction.Count = 1;
 
+            
             Action.Count = 9;
             Age.Count = 1;
-            Observation.Count=1;
+            Observation.Count = 1;
             Explored.Count = 1;
             ExplorationRate.Count = 1;
             TotalReward.Count = 1;
@@ -216,5 +209,4 @@ namespace AIXIModule
         }
     }
 
-    
 }

@@ -16,7 +16,7 @@ namespace AIXI
 
         public int Type;
 
-        public double ExplorationConstant = 2.0;
+        public double ExplorationConstant = 2.0;//LATER: play with this //TODO: put into options
         public double UnexploredBias = 1000000.0;
         public double Mean=0.0;
 
@@ -71,6 +71,8 @@ namespace AIXI
         }
 
         public double Sample(Agent agent, int horizon, int level=77) {//refact(?): make MCNodeDecision & MCNodeSample &overload this
+            //todo: change default value of level, or remove that parameter
+
             double reward = 0.0;
 
             if (horizon == 0) {
