@@ -24,8 +24,6 @@ namespace LSMModule.LSM.Tasks {
         // constant for calculating of close neighbours
         public const float MAASS_LAMBDA = 8;
 
-        public const double LAMBDA = 0.00000001;
-
         [YAXSerializableField(DefaultValue = 27)]
         [MyBrowsable, Category("\tLayer")]
         public virtual int Depth { get; set; }
@@ -37,11 +35,6 @@ namespace LSMModule.LSM.Tasks {
         [YAXSerializableField(DefaultValue = 3)]
         [MyBrowsable, Category("\tLayer")]
         public virtual int Width { get; set; }
-
-        //[YAXSerializableField(DefaultValue = 1.0f)]
-        //[MyBrowsable, Category("\tLayer")]
-        //public virtual float maassC { get; set; }
-
 
         public override void Init(int nGPU) {
         }
@@ -121,7 +114,7 @@ namespace LSMModule.LSM.Tasks {
                         int[] bDim = new int[] { j % dimensions[1], j / dimensions[1], j / (dimensions[0] * dimensions[1]) };
 
                         double probability = euclideanDistance(aDim, bDim);
-                        probability = Math.Exp(-Math.Pow(probability / LSMMaassInitTask.MAASS_LAMBDA, 2));// *this.maassC;
+                        probability = Math.Exp(-Math.Pow(probability / LSMMaassInitTask.MAASS_LAMBDA, 2));
 
                         if (probability >= rand.NextDouble()) {
                             float weight = rand.Next(1, 100) / 100.0f;

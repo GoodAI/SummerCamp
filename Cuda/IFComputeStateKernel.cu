@@ -6,8 +6,8 @@ extern "C"{
 
 	// Kernel for computing the inner state of neurons
 	// The main equation for inner state of neurons X in time T is:
-	// innerState[X, T] = (innerState[X, T-1] + A * imageInput + B * 1/N * sum(all edge inputs for X) / (A + B + Threshold),
-	// where N is number of input neurons for neuron X and A/B are constants changeable in BrainSimulator
+	// innerState[X, T] = innerState[X, T-1] + imageInput[X, T] + sum(all edge inputs for X in T)
+	// 
 
 	__global__ void IFComputeStateKernel(
 		int initState, // value of init state
@@ -33,9 +33,9 @@ extern "C"{
 
 			if (innerStates[id] >= threshold){
 				neuronOutputs[id] = innerStates[id];
-				innerStates[id] = -130;
+				innerStates[id] = refractoryState;
 			}
-			else if (innerStates[id] >= -65){
+			else if (innerStates[id] >= initState){
 				float totalInput = 0;
 
 				for (int i = 0; i < count; i++) {
@@ -47,35 +47,40 @@ extern "C"{
 					innerStates[id] += totalInput;
 				}
 			}
-			else if (innerStates[id] < -65){
-				innerStates[id] /= 1.3f;
+			else if (innerStates[id] < initState){
+				innerStates[id] /= refractory;
 			}
 
+			imageInput[id] = 0;
+
+
+			// The same code as above, but optimalized for better Cuda performance (harder to debug)
 			/*int c1 = (innerStates[id] >= threshold);
 			int c2 = (innerStates[id] < threshold);
 
 			neuronOutputs[id] = c1 * innerStates[id];
-			innerStates[id] = c2 * innerStates[id] + c1 * -130;
+			innerStates[id] = c2 * innerStates[id] + c1 * refractoryState;
 
-			int c3 = (innerStates[id] >= -65);
-			int c4 = (innerStates[id] < -65);
-			
-			innerStates[id] = c3 * innerStates[id] + c4 * (innerStates[id] / 1.3f);
+			int c3 = (innerStates[id] >= initState);
+			int c4 = (innerStates[id] < initState);
+
+			innerStates[id] = c3 * innerStates[id] + c4 * (innerStates[id] / refractory);
 
 			if (c2 && c3){
-				float totalInput = 0;
+			float totalInput = 0;
 
-				for (int i = 0; i < count; i++) {
-					totalInput += edgeInputs[i * count + id];
-				}
+			for (int i = 0; i < count; i++) {
+			totalInput += edgeInputs[i * count + id];
+			}
 
-				totalInput += imageInput[id];
+			totalInput += imageInput[id];
 
-				int c5 = (totalInput > 0);
-				innerStates[id] += c5 * totalInput;
-			}*/
+			int c5 = (totalInput > 0);
+			innerStates[id] += c5 * totalInput;
+			}
 
-			imageInput[id] = 0;
+			imageInput[id] = 0;*/
+
 		}
 
 	}

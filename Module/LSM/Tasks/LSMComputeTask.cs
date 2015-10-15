@@ -17,8 +17,7 @@ namespace LSMModule.LSM.Tasks {
     /// <description>
     /// Generates the inner state and internal output of neurons.<br></br>
     /// The main equation for inner state of neurons X in time T is:<br></br>
-    /// innerState[X, T] = (innerState[X, T-1] + A * imageInput + B * 1/N * sum(all edge inputs for X) / (A + B + Threshold),
-    /// where N is number of input neurons for neuron X and A/B are constants changeable in BrainSimulator
+    /// innerState[X, T] = innerState[X, T-1] + imageInput[X, T] + sum(all edge inputs for X in T)
     /// </description>
     [Description("Compute inner state")]
     class LSMComputeTask : MyTask<LiquidStateMachine> {
@@ -33,14 +32,7 @@ namespace LSMModule.LSM.Tasks {
 
             m_LSMParseInputKernel = MyKernelFactory.Instance.Kernel(@"LSMParseInputKernel");
 
-            switch (Owner.NeuronType) {
-                case LiquidStateMachine.NeuronTypeEnum.IF2:
-                    m_LSMComputeStateKernel = MyKernelFactory.Instance.Kernel(@"IF2ComputeStateKernel");
-                    break;
-                default:
-                    m_LSMComputeStateKernel = MyKernelFactory.Instance.Kernel(@"IFComputeStateKernel");
-                    break;
-            }
+            m_LSMComputeStateKernel = MyKernelFactory.Instance.Kernel(@"IFComputeStateKernel");
 
             m_LSMComputeEdgesKernel = MyKernelFactory.Instance.Kernel(@"LSMComputeEdgesKernel");
         }

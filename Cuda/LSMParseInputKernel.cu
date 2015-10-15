@@ -1,7 +1,3 @@
-//Includes for IntelliSense (WHAT is this for???)
-#define _SIZE_T_DEFINED
-
-
 #include <cuda.h>
 #include <device_launch_parameters.h>
 #include <texture_fetch_functions.h>

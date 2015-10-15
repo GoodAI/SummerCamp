@@ -12,7 +12,7 @@ namespace LSMModule.LSM.Tasks {
     /// <author>Adr33</author>
     /// <meta>ok</meta>
     /// <status>Alpha release</status>
-    /// <summary>Task for sending of output</summary>
+    /// <summary>Task for generating of output</summary>
     /// <description>
     /// Generates the external output of LSM from internal output and inner state of neurons.
     /// </description>

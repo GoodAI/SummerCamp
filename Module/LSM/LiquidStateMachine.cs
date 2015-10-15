@@ -24,7 +24,6 @@ namespace LSMModule {
     /// - recommended connectivity of LSM is said to be between 5-10% based on used topology<br></br>
     /// - LSM can be either spiking or non-spiking<br></br>
     /// - inner state and output of neurons are computed used equations discribed in LSMOutputTask<br></br>
-    /// - this implementation also allows you to make LSM spike internally more than once in one step<br></br>
     /// - as output of this LSM we take current state of all the neurons in current step
     /// </description>
     class LiquidStateMachine : MyWorkingNode {
@@ -73,15 +72,6 @@ namespace LSMModule {
         [MyBrowsable, Category("Misc")]
         public int OutputColumnHint { get; set; }
 
-        public enum NeuronTypeEnum {
-            IF,
-            IF2
-        }
-
-        [YAXSerializableField(DefaultValue = NeuronTypeEnum.IF)]
-        [MyBrowsable, Category("\tLayer")]
-        public virtual NeuronTypeEnum NeuronType { get; set; }
-
         #region Memory blocks
         [MyInputBlock(0)]
         public MyMemoryBlock<float> Input {
@@ -119,8 +109,6 @@ namespace LSMModule {
         public override void UpdateMemoryBlocks() {
 
             // Calculates number of neurons based on used topology
-            // Not sure whether this approach is correct, but it works
-
             if (RandomInitTask != null && RandomInitTask.Enabled) {
                 Neurons = RandomInitTask.getNeurons();
             } else if (MaassInitTask != null && MaassInitTask.Enabled) {

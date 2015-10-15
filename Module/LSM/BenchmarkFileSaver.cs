@@ -111,8 +111,8 @@ namespace LSMModule {
             }
 
             public override void Execute() {
-                // Saves the fault of current step to temporary memory
-                // If end of block is reached saves the average fault over the block to the file
+                // Calculates whether input was recognized correctly
+                // If end of block is reached saves the percentage of correct guesses over the whole block
                 if ((Owner.Output != null)) {
                     Owner.Output.SafeCopyToHost();
                     Owner.Target.SafeCopyToHost();
