@@ -19,14 +19,14 @@ using System.Globalization;
 namespace LSMModule {
     /// <author>Adr33</author>
     /// <meta>ok</meta>
-    /// <status>Work in progress</status>
+    /// <status>Alpha release</status>
     /// <summary>LSM Benchmark File Saver node</summary>
     /// <description>
     /// Modification of MyCsvFileWriterNode, which serves for benchmark testing of performance of LSM<br></br>
-    /// - the value which is tracked is fault of output, which is difference between label and output
-    ///   - the fault is calculated as sum over the elements of absolute value of substraction between output and label matrices
-    ///   - the fault is always calculated over the whole input block(whole file, input set)
-    /// - the basic setting of LSM and the environment is also saved alongside the fault
+    /// - the value which is tracked is whether detector was able to correctly recognize input as target<br></br>
+    ///   - detector recognized input as target if the correct value in target has the biggest score in output<br></br>
+    ///   - the value is calculated over the whole input block(whole file, input set) and then divided by the size of block<br></br>
+    ///   - so the final value equal to how many percents of inputs over the block were correctly recognized<br></br>
     /// - this node serves purely for testing purpose, it is not needed for the run of LSM
     /// </description>
     class BenchmarkFileSaver : MyWorkingNode {
@@ -49,66 +49,22 @@ namespace LSMModule {
         [YAXSerializableField(DefaultValue = FileWriteMethod.Overwrite)]
         public FileWriteMethod WriteMethod { get; set; }
 
-        [YAXSerializableField(DefaultValue = 100)]
+        [YAXSerializableField(DefaultValue = 50)]
         [MyBrowsable, Category("\tLayer")]
         public virtual int BlockSize { get; set; }
-
-        [MyBrowsable, Category("Content")]
-        [YAXSerializableField(DefaultValue = "trainrate;neurons;inputs;connectivity;threshold;spikes;A;B;blocksize"), YAXElementFor("Structure")]
-        [EditorAttribute(typeof(MultilineStringEditor), typeof(UITypeEditor))]
-        public string Headers { get; set; }
-
-        [MyBrowsable, Category("Input")]
-        [YAXSerializableField(DefaultValue = 1u), YAXElementFor("Structure")]
-        public uint InputSize { get; private set; }
-
-        [MyBrowsable, Category("Input")]
-        [YAXSerializableField(DefaultValue = 1u), YAXElementFor("Structure")]
-        public uint InputWidth { get; private set; }
-
-        [MyBrowsable, Category("Input")]
-        [YAXSerializableField(DefaultValue = 1u), YAXElementFor("Structure")]
-        public uint InputHeight { get; private set; }
-
-        [YAXSerializableField(DefaultValue = 0.0025f)]
-        [MyBrowsable, Category("\tLayer")]
-        public virtual float Trainrate { get; set; }
-
-        [YAXSerializableField(DefaultValue = 400)]
-        [MyBrowsable, Category("\tLayer")]
-        public virtual int Neurons { get; set; }
-
-        [YAXSerializableField(DefaultValue = 0.1f)]
-        [MyBrowsable, Category("\tLayer")]
-        public virtual float Connectivity { get; set; }
-
-        [YAXSerializableField(DefaultValue = 144)]
-        [MyBrowsable, Category("\tLayer")]
-        public virtual int Inputs { get; set; }
-
-        [YAXSerializableField(DefaultValue = 0.5f)]
-        [MyBrowsable, Category("\tLayer")]
-        public virtual float Threshold { get; set; }
-
-        [YAXSerializableField(DefaultValue = 1.0f)]
-        [MyBrowsable, Category("\tLayer")]
-        public virtual float A { get; set; }
-
-        [YAXSerializableField(DefaultValue = 1.0f)]
-        [MyBrowsable, Category("\tLayer")]
-        public virtual float B { get; set; }
-
-        [YAXSerializableField(DefaultValue = true)]
-        [MyBrowsable, Category("\tLayer")]
-        public virtual bool Spikes { get; set; }
 
         private StreamWriter m_stream;
 
         #region Memory blocks
 
         [MyInputBlock(0)]
-        public MyMemoryBlock<float> Fault {
+        public MyMemoryBlock<float> Target {
             get { return GetInput(0); }
+        }
+
+        [MyInputBlock(1)]
+        public MyMemoryBlock<float> Output {
+            get { return GetInput(1); }
         }
 
         #endregion
@@ -124,7 +80,6 @@ namespace LSMModule {
             StreamWriter m_stream;
             int m_count;
             int m_iter;
-            float m_sum;
 
             public override void Init(int nGPU) {
 
@@ -139,16 +94,9 @@ namespace LSMModule {
 
                 m_count = 0;
                 m_iter = 0;
-                m_sum = 0;
 
-                // When appending, dont add the headers
-                if (!String.IsNullOrEmpty(Owner.Headers) && (Owner.WriteMethod == FileWriteMethod.Overwrite)) {
+                if (Owner.WriteMethod == FileWriteMethod.Overwrite) {
                     StringBuilder sb = new StringBuilder();
-                    if (Owner.Headers.EndsWith(Environment.NewLine)) {
-                        Owner.Headers.Remove(Owner.Headers.Length - 1);
-                    }
-                    sb.Append(Owner.Headers);
-
                     for (int i = 0; i < 1001; i++) {
                         sb.Append(i.ToString());
                         sb.Append(';');
@@ -158,66 +106,57 @@ namespace LSMModule {
                     m_stream.Flush();
                 }
 
-                m_stream.WriteLine();
-
-                // Writing of basic LSM info
-
-                StringBuilder sb2 = new StringBuilder();
-
-                sb2.Append(Owner.Trainrate.ToString("0.0000"));
-                sb2.Append(';');
-
-                sb2.Append(Owner.Neurons);
-                sb2.Append(';');
-
-                sb2.Append(Owner.Inputs);
-                sb2.Append(';');
-
-                sb2.Append(Owner.Connectivity.ToString("0.000"));
-                sb2.Append(';');
-
-                sb2.Append(Owner.Threshold.ToString("0.00"));
-                sb2.Append(';');
-
-                sb2.Append(Owner.Spikes.ToString());
-                sb2.Append(';');
-
-                sb2.Append(Owner.A.ToString("0.000"));
-                sb2.Append(';');
-
-                sb2.Append(Owner.B.ToString("0.000"));
-                sb2.Append(';');
-
-                sb2.Append(Owner.BlockSize.ToString());
-                sb2.Append(';');
-
-                m_stream.Write(sb2);
+                m_stream.WriteLine("");
                 m_stream.Flush();
             }
 
             public override void Execute() {
-                // Saves the fault of current step to temporary memory
-                // If end of block is reached saves the average fault over the block to the file
-                if ((Owner.Fault != null)) {
-                    Owner.Fault.SafeCopyToHost();
+                // Calculates whether input was recognized correctly
+                // If end of block is reached saves the percentage of correct guesses over the whole block
+                if ((Owner.Output != null)) {
+                    Owner.Output.SafeCopyToHost();
+                    Owner.Target.SafeCopyToHost();
 
-                    m_count++;
-                    m_sum += Owner.Fault.Host[0];
+                    int top = -1;
 
-                    if (m_count >= Owner.BlockSize) {
-                        m_iter++;
-                        float fault = m_sum / m_count;
-                        m_sum = 0;
+                    for (int i = 0; i < 10; i++) {
+                        if (Owner.Target.Host[i] > 0.5f) {
+                            top = i;
+                            break;
+                        }
+                    }
 
+                    bool good = true;
+                    float max = Owner.Output.Host[top];
+
+                    for (int i = 0; i < 10; i++) {
+                        if (i != top && Owner.Output.Host[i] > max) {
+                            good = false;
+                            break;
+                        }
+                    }
+
+                    if (good) {
+                        m_count++;
+                    }
+
+                    m_iter++;
+
+                    if (m_iter >= Owner.BlockSize) {
                         StringBuilder sb = new StringBuilder();
 
-                        sb.Append(fault.ToString("0.00"));
+                        float temp = m_count;
+                        temp /= m_iter;
+                        temp *= 100;
+
+                        sb.Append(m_count.ToString());
                         sb.Append(';');
 
                         m_stream.Write(sb.ToString());
                         m_stream.Flush();
 
                         m_count = 0;
+                        m_iter = 0;
                     }
                 }
             }

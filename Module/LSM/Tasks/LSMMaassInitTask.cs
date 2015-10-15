@@ -11,40 +11,30 @@ using YAXLib;
 namespace LSMModule.LSM.Tasks {
     /// <author>Adr33</author>
     /// <meta>ok</meta>
-    /// <status>Work in progress</status>
+    /// <status>Alpha release</status>
     /// <summary>Task for initialization of network with a topology according to prof. Maass</summary>
     /// <description>
     /// Starting initialization for LSM with topology according to prof. Maass:<br></br>
-    /// - 3D topology with the first depth layer used as input
+    /// - 3D topology with the first depth layer used as input<br></br>
     /// - neighbours generated randomly with favouring of close neighbours
     /// </description>
     [Description("Init Maass network"), MyTaskInfo(OneShot = true)]
     class LSMMaassInitTask : MyTask<LiquidStateMachine> {
 
         // constant for calculating of close neighbours
-        public const float MAASS_LAMBDA = 2;
+        public const float MAASS_LAMBDA = 8;
 
-        public const double LAMBDA = 0.00000001;
-
-        public enum NeuronTypeEnum {
-            IF
-        }
-
-        [YAXSerializableField(DefaultValue = NeuronTypeEnum.IF)]
+        [YAXSerializableField(DefaultValue = 16)]
         [MyBrowsable, Category("\tLayer")]
-        public virtual NeuronTypeEnum NeuronType { get; set; }
+        public virtual int Depth { get; set; }
 
         [YAXSerializableField(DefaultValue = 3)]
         [MyBrowsable, Category("\tLayer")]
-        public virtual int MaassDepth { get; set; }
+        public virtual int Height { get; set; }
 
-        [YAXSerializableField(DefaultValue = 1.0f)]
+        [YAXSerializableField(DefaultValue = 3)]
         [MyBrowsable, Category("\tLayer")]
-        public virtual float maassC { get; set; }
-
-        [YAXSerializableField(DefaultValue = false)]
-        [MyBrowsable, Category("\tLayer")]
-        public virtual bool maassBackDepthEdges { get; set; }
+        public virtual int Width { get; set; }
 
         public override void Init(int nGPU) {
         }
@@ -55,7 +45,7 @@ namespace LSMModule.LSM.Tasks {
                     Owner.EdgeInputs.Host[i * Owner.Neurons + j] = 0;
                 }
                 Owner.ImageInput.Host[i] = 0;
-                Owner.InnerStates.Host[i] = 0;
+                Owner.InnerStates.Host[i] = Owner.InitState;
             }
 
             maass();
@@ -65,21 +55,39 @@ namespace LSMModule.LSM.Tasks {
             Owner.EdgeInputs.SafeCopyToDevice();
             Owner.Weights.SafeCopyToDevice();
             Owner.InnerStates.SafeCopyToDevice();
+            Owner.OutputsIndex.SafeCopyToDevice();
         }
 
 
         private void maass() {
             int[] dimensions = new int[3];
-            int[] tempDim = getRectangle(Owner.Input.Count);
 
-            dimensions[0] = tempDim[0];
-            dimensions[1] = tempDim[1];
-            dimensions[2] = this.MaassDepth;
+            dimensions[0] = Height;
+            dimensions[1] = Width;
+            dimensions[2] = Depth;
 
             // Setting of input neurons
+            Random rand = new Random();
+
             List<int> tempSet = new List<int>();
-            for (int i = 0; i < this.Owner.Input.Count; i++) {
-                Owner.ImageOutput.Host[i] = i;
+            for (int i = 0; i < this.Owner.Inputs; i++) {
+                int temp = rand.Next(0, Owner.Neurons);
+
+                while (tempSet.Contains(temp)) {
+                    temp = rand.Next(0, Owner.Neurons);
+                }
+
+                tempSet.Add(temp);
+                Owner.ImageOutput.Host[i] = temp;
+            }
+
+            // Outputs
+
+            int index2 = 0;
+            for (int j = 0; j < this.Owner.Neurons; j++) {
+                if (tempSet.Contains(j)) continue;
+                Owner.OutputsIndex.Host[index2] = j;
+                index2++;
             }
 
             // Edges randomization
@@ -89,11 +97,9 @@ namespace LSMModule.LSM.Tasks {
                 }
             }
 
-
-            Random rand = new Random();
             for (int i = 0; i < Owner.Neurons; i++) {
-                int[] aDim = new int[] { i % dimensions[1], i / dimensions[1], i / Owner.Inputs };
-                int neighbours = Convert.ToInt32((Owner.Neurons - aDim[2] * Owner.Inputs) * Owner.Connectivity);
+                int[] aDim = new int[] { i % dimensions[1], i / dimensions[1], i / (dimensions[0] * dimensions[1]) };
+                int neighbours = Convert.ToInt32((Owner.Neurons - 1) * Owner.Connectivity);
                 int[] nPerm = getPermutation(Owner.Neurons);
                 int nCount = 0;
                 int index = 0;
@@ -105,32 +111,21 @@ namespace LSMModule.LSM.Tasks {
                     int j = nPerm[index++];
 
                     if (i != j && !tempSet.Contains(j)) {
-                        int[] bDim = new int[] { j % dimensions[1], j / dimensions[1], j / Owner.Inputs };
+                        int[] bDim = new int[] { j % dimensions[1], j / dimensions[1], j / (dimensions[0] * dimensions[1]) };
 
-                        if (this.maassBackDepthEdges || aDim[2] <= bDim[2]) {
-                            double probability = euclideanDistance(aDim, bDim);
-                            probability = this.maassC * Math.Exp(-Math.Pow(probability / LSMMaassInitTask.MAASS_LAMBDA, 2));
+                        double probability = euclideanDistance(aDim, bDim);
+                        probability = Math.Exp(-Math.Pow(probability / LSMMaassInitTask.MAASS_LAMBDA, 2));
 
-                            if (probability < 1 && probability >= rand.NextDouble()) {
-                                float weight = rand.Next(1, 100) / 100.0f;
-                                Owner.Weights.Host[i * Owner.Neurons + j] = weight;
+                        if (probability >= rand.NextDouble()) {
+                            float weight = rand.Next(1, 100) / 100.0f;
+                            Owner.Weights.Host[i * Owner.Neurons + j] = weight;
 
-                                tempSet.Add(j);
-                                nCount++;
-                            }
+                            tempSet.Add(j);
+                            nCount++;
                         }
                     }
                 }
             }
-        }
-
-        //Compute sides of rectangle of n neurons
-        private int[] getRectangle(int n) {
-            int a = Convert.ToInt32(Math.Floor(Math.Sqrt(n)+LAMBDA));
-            while (n % a != 0) {
-                a--;
-            }
-            return new int[] {n/a, a};
         }
 
         // Generating permutation of int array 0..n-1
@@ -166,7 +161,7 @@ namespace LSMModule.LSM.Tasks {
         }
 
         public int getNeurons() {
-            return Owner.Neurons = Owner.Inputs * this.MaassDepth;
+            return Owner.Neurons = Height * Width * Depth;
         }
     }
 

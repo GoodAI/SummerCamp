@@ -1,7 +1,3 @@
-//Includes for IntelliSense (WHAT is this for???)
-#define _SIZE_T_DEFINED
-
-
 #include <cuda.h>
 #include <device_launch_parameters.h>
 #include <texture_fetch_functions.h>
@@ -17,12 +13,12 @@ extern "C"{
 	// In non-spiking environment the pixel spikes its value
 
 	__global__ void LSMParseInputKernel(
-		float* probabilities, // probabilities, whether pixel of an image will spike
 		float* input, // output of an image
 		int* imageTargets, // target neurons of an image input
 		float* imageInput, // image input for neurons
 		int spikes, // spiking with probability/non-spiking of float input value
 		float spikeSize, // size of a spike
+		int offset, // input offset
 		int count // size of an input
 		)
 	{
@@ -33,7 +29,8 @@ extern "C"{
 
 		if (id < count){
 			int target = imageTargets[id];
-			imageInput[target] = spikes * (input[id] > probabilities[id]) * spikeSize + (!spikes) * input[id];
+			int realIndex = id + offset;
+			imageInput[target] = spikes * spikeSize * input[realIndex] + (!spikes) * input[realIndex];
 		}
 	}
 

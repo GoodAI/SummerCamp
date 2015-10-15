@@ -11,8 +11,8 @@ using ManagedCuda;
 namespace LSMModule.LSM.Tasks {
     /// <author>Adr33</author>
     /// <meta>ok</meta>
-    /// <status>Work in progress</status>
-    /// <summary>Task for sending of output</summary>
+    /// <status>Alpha release</status>
+    /// <summary>Task for generating of output</summary>
     /// <description>
     /// Generates the external output of LSM from internal output and inner state of neurons.
     /// </description>
@@ -26,9 +26,10 @@ namespace LSMModule.LSM.Tasks {
         }
 
         public override void Execute() {
-            m_LSMoutputKernel.SetupExecution(Owner.Neurons);
-            m_LSMoutputKernel.Run(Owner.InnerStates, Owner.NeuronOutputs, Owner.Output, Owner.Neurons);
+            int outputs = Owner.Neurons - Owner.Inputs;
 
+            m_LSMoutputKernel.SetupExecution(outputs);
+            m_LSMoutputKernel.Run(Owner.InnerStates, Owner.Output, Owner.OutputsIndex, Owner.Threshold, outputs);
 
             Owner.Output.SafeCopyToHost();
         }

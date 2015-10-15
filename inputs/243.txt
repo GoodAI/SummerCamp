@@ -1,3 +1,0 @@
-A liquid state machine (LSM) is a particular kind of spiking neural network.
-A LSM consists of a large collection of units (called nodes, or neurons).
-Each node receives time varying input from external sources (the inputs) as well as from other nodes.

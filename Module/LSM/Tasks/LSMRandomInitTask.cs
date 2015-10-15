@@ -11,7 +11,7 @@ using YAXLib;
 namespace LSMModule.LSM.Tasks {
     /// <author>Adr33</author>
     /// <meta>ok</meta>
-    /// <status>Work in progress</status>
+    /// <status>Alpha release</status>
     /// <summary>Task for initialization of network with Random topology</summary>
     /// <description>
     /// Starting initialization for LSM with Random topology:<br></br>
@@ -22,24 +22,16 @@ namespace LSMModule.LSM.Tasks {
     [Description("Init random network"), MyTaskInfo(OneShot = true)]
     class LSMRandomInitTask : MyTask<LiquidStateMachine> {
 
-        public enum NeuronTypeEnum {
-            IF
-        }
-
         public enum IOEnum {
             input,
             output
         }
 
-        [YAXSerializableField(DefaultValue = NeuronTypeEnum.IF)]
-        [MyBrowsable, Category("\tLayer")]
-        public virtual NeuronTypeEnum NeuronType { get; set; }
-
         [YAXSerializableField(DefaultValue = IOEnum.output)]
         [MyBrowsable, Category("\tLayer")]
         public virtual IOEnum ConnectivityType { get; set; }
 
-        [YAXSerializableField(DefaultValue = 400)]
+        [YAXSerializableField(DefaultValue = 144)]
         [MyBrowsable, Category("\tLayer")]
         public virtual int Neurons { get; set; }
 
@@ -47,12 +39,13 @@ namespace LSMModule.LSM.Tasks {
         }
 
         public override void Execute() {
+
             for (int i = 0; i < Owner.Neurons; i++) {
                 for (int j = 0; j < Owner.Neurons; j++) {
                     Owner.EdgeInputs.Host[i * Owner.Neurons + j] = 0;
                 }
                 Owner.ImageInput.Host[i] = 0;
-                Owner.InnerStates.Host[i] = 0;
+                Owner.InnerStates.Host[i] = Owner.InitState;
             }
 
             random();
@@ -62,6 +55,7 @@ namespace LSMModule.LSM.Tasks {
             Owner.EdgeInputs.SafeCopyToDevice();
             Owner.Weights.SafeCopyToDevice();
             Owner.InnerStates.SafeCopyToDevice();
+            Owner.OutputsIndex.SafeCopyToDevice();
         }
 
         private void random() {
@@ -70,7 +64,7 @@ namespace LSMModule.LSM.Tasks {
             // Image input randomization
 
             List<int> tempSet = new List<int>();
-            for (int i = 0; i < this.Owner.Input.Count; i++) {
+            for (int i = 0; i < this.Owner.Inputs; i++) {
                 int temp = rand.Next(0, Owner.Neurons);
 
                 while (tempSet.Contains(temp)) {
@@ -79,6 +73,15 @@ namespace LSMModule.LSM.Tasks {
 
                 tempSet.Add(temp);
                 Owner.ImageOutput.Host[i] = temp;
+            }
+
+            //Outputs
+
+            int index = 0;
+            for (int i = 0; i < this.Owner.Neurons; i++) {
+                if (tempSet.Contains(i)) continue;
+                Owner.OutputsIndex.Host[index] = i;
+                index++;
             }
 
             // Edges randomization
