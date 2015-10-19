@@ -97,7 +97,7 @@ namespace LSMModule {
 
                 if (Owner.WriteMethod == FileWriteMethod.Overwrite) {
                     StringBuilder sb = new StringBuilder();
-                    for (int i = 0; i < 1001; i++) {
+                    for (int i = 1; i < 1001; i++) {
                         sb.Append(i.ToString());
                         sb.Append(';');
                     }
