@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<Configuration  RootNamespace="CWRNN">
-  <KnownNodes>
-    <Node type="CWRNN.CWRNNNode" CanBeAdded="true" />
-  </KnownNodes>
-</Configuration>
