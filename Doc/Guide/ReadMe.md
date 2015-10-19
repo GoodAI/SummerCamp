@@ -103,7 +103,7 @@ After failing the first testing we decided to test whether the LSM isn't able to
 
 In this test we need to let the LSM run the pattern more times inside of its inner circle. We were training LSM on set of 50 MNIST images and testing it on a set of different 250 MNIST images, which we considered as noisy versions of training data. After deciding what the ideal default settings was we ran a serie of same tests (LSM has randomly connected neurons!!!) and created average output of them. The results were that the LSM is after the training phase able to recognize 100% of the training set and between 20-40% of the testing set based on the settings of parameters.
 
-![](http://kuzela.eu/img/graph1.png)
+![](https://raw.githubusercontent.com/GoodAI/LSMModule/master/Doc/Guide/img/graph1.png?token=AJknG_RzDsiM67OR4kh9ONL_tJhWiXPIks5WLp1TwA%3D%3D)
 
 ***Image 5: Training performance and speed of tested network.***
 
