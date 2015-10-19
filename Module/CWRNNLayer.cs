@@ -100,6 +100,9 @@ namespace CWRNN
         [YAXSerializableField(DefaultValue = 1), YAXElementFor("Structure")]
         public int OUTPUT_UNITS { get; protected set; }
 
+        [MyBrowsable, Category("Observers")]
+        [YAXSerializableField(DefaultValue = 5), YAXElementFor("Observers")]
+        public int ColumnHint { get; protected set; }
 
         [MyPersistable]
         public MyMemoryBlock<float> InputWeights { get; protected set; }
@@ -134,8 +137,6 @@ namespace CWRNN
         public MyMemoryBlock<int> Periods { get; set; }
         public MyMemoryBlock<int> ActiveGroups { get; set; }
 
-        ////public int MySimulationSteps;
-
         //TASKS
         public CWInitLayerTask InitNetwork { get; protected set; }
         public CWFeedForwardTask Feedforward { get; protected set; }
@@ -150,8 +151,7 @@ namespace CWRNN
                 INPUT_UNITS = Input.Count;
                 OUTPUT_UNITS = Target.Count;
                 Output.Count = OUTPUT_UNITS;
-                Output.ColumnHint = 5;
-                //property nastaveni column hint v gui
+                Output.ColumnHint = ColumnHint;
 
                 HIDDEN_UNITS = NeuronGroups * NeuronsPerGroup;
 

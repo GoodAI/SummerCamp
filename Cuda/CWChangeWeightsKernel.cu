@@ -49,7 +49,7 @@ extern "C"
 		__syncthreads();
 
 		if (weightId < D_HIDDEN_UNITS * D_INPUT_UNITS 
-			&& (contextByActivations || activeGroupsShared[groupID] == 1))
+			&& (contextByActivations || activeGroupsShared[groupID]))
 		{
 			float gradient = 0;
 
@@ -104,7 +104,6 @@ extern "C"
 			&& (contextByActivations || activeGroupsShared[groupID])
 			&& (contextByActivations || (x >= (groupID * D_NEURONS_PER_GROUP))))		
 		{
-			// parallel reduction?
 			float gradient = 0;
 
 			for (int i = 0; i < D_OUTPUT_UNITS; i++)
@@ -120,9 +119,7 @@ extern "C"
 
 			float weightDelta = trainingRate * gradient + momentum * recurrentWeightDeltas[weightId];
 			recurrentWeightDeltas[weightId] = weightDelta;
-			//recurrentWeightDeltas[weightId] = 1000;
 			recurrentWeights[weightId] += weightDelta;
-			//recurrentWeights[weightId] += 1000;
 		}
 	}
 

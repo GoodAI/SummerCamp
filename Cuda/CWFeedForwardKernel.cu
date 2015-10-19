@@ -24,7 +24,6 @@ extern "C"
 	__global__ void CWFeedforwardHiddenKernel(
 		float *input, 
 		float *hiddenActivations,
-		float *previousHiddenActivations, 
 		float *hiddenActivationDerivatives, 
 		float *inputWeights, 
 		float *recurrentWeights,
@@ -60,12 +59,11 @@ extern "C"
 
 			for (int i = 0; i < D_HIDDEN_UNITS; i++)
 			{
-				weightedSum += recurrentWeights[weightId] * previousHiddenActivations[i];
+				weightedSum += recurrentWeights[weightId] * hiddenActivations[i];
 				weightId++;
 			}
 			
-			// dodelat synchronizaci vlaken, aby se mohlo pouzivat jen jedno pole hidden activations
-			//__syncthreads();
+			__syncthreads();
 
 			hiddenActivations[unitId] = Evaluate(D_ACTIVATION_FUNCTION, weightedSum);
 			hiddenActivationDerivatives[unitId] = EvaluateDerivative(D_ACTIVATION_FUNCTION, weightedSum);

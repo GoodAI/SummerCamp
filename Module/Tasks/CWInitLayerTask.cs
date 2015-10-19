@@ -44,7 +44,6 @@ namespace CWRNN.Tasks
             setPeriods(Owner.Period);
 
             Owner.Periods.SafeCopyToDevice();
-            //Owner.ActiveGroups.Fill(1);
 
             Owner.RecurrentWeights.SafeCopyToDevice(); 
 
@@ -97,7 +96,6 @@ namespace CWRNN.Tasks
                         Owner.Periods.Host[i] = (int)Math.Pow(2, i);
                         for (int j = 0; j < Owner.NeuronsPerGroup; j++)
                         {
-                            //Owner.Periods.Host[i * Owner.NeuronsPerGroup + j] = (int)Math.Pow(2, i);
                             for (int k = 0; k < i * Owner.NeuronsPerGroup; k++)
                             {
                                 Owner.RecurrentWeights.Host[i * Owner.HIDDEN_UNITS * Owner.NeuronsPerGroup
@@ -121,15 +119,6 @@ namespace CWRNN.Tasks
                         }
                         for (int j = 0; j < Owner.NeuronsPerGroup; j++)
                         {
-                            //if (i == 0 || i == 1)
-                            //{
-                            //    Owner.Periods.Host[i * Owner.NeuronsPerGroup + j] = 1;
-                            //}
-                            //else
-                            //{
-                            //    Owner.Periods.Host[i * Owner.NeuronsPerGroup + j] = Owner.Periods.Host[(i - 1) * Owner.NeuronsPerGroup] 
-                            //        + Owner.Periods.Host[(i - 2) * Owner.NeuronsPerGroup];
-                            //}
                             for (int k = 0; k < i * Owner.NeuronsPerGroup; k++)
                             {
                                 Owner.RecurrentWeights.Host[i * Owner.HIDDEN_UNITS * Owner.NeuronsPerGroup
@@ -158,14 +147,6 @@ namespace CWRNN.Tasks
                         }
                         for (int j = 0; j < Owner.NeuronsPerGroup; j++)
                         {
-                            //if (i == 0)
-                            //{
-                            //    Owner.Periods.Host[i * Owner.NeuronsPerGroup + j] = 1;
-                            //}
-                            //else
-                            //{
-                            //    Owner.Periods.Host[i * Owner.NeuronsPerGroup + j] = number;
-                            //}
                             for (int k = 0; k < i * Owner.NeuronsPerGroup; k++)
                             {
                                 Owner.RecurrentWeights.Host[i * Owner.HIDDEN_UNITS * Owner.NeuronsPerGroup
@@ -181,7 +162,6 @@ namespace CWRNN.Tasks
                         Owner.Periods.Host[i] = (int)Math.Pow(i + 1, 2);
                         for (int j = 0; j < Owner.NeuronsPerGroup; j++)
                         {
-                            //Owner.Periods.Host[i * Owner.NeuronsPerGroup + j] = (int)Math.Pow(i + 1, 2);
                             for (int k = 0; k < i * Owner.NeuronsPerGroup; k++)
                             {
                                 Owner.RecurrentWeights.Host[i * Owner.HIDDEN_UNITS * Owner.NeuronsPerGroup
