@@ -97,15 +97,15 @@ namespace CWRNN.Tasks
         public override void Execute()
         {
             // don't copy? use one
-            Owner.InputWeightRTRLDerivatives.CopyToMemoryBlock(Owner.PreviousInputWeightRTRLDerivatives, 0, 0, Owner.InputWeightRTRLDerivatives.Count);
-            Owner.RecurrentWeightRTRLDerivatives.CopyToMemoryBlock(Owner.PreviousRecurrentWeightRTRLDerivatives, 0, 0, Owner.RecurrentWeightRTRLDerivatives.Count);
+            //Owner.InputWeightRTRLDerivatives.CopyToMemoryBlock(Owner.PreviousInputWeightRTRLDerivatives, 0, 0, Owner.InputWeightRTRLDerivatives.Count);
+            //Owner.RecurrentWeightRTRLDerivatives.CopyToMemoryBlock(Owner.PreviousRecurrentWeightRTRLDerivatives, 0, 0, Owner.RecurrentWeightRTRLDerivatives.Count);
 
             m_inputWeightRTRLDerivativesKernel.Run(
                 Owner.Input,
                 Owner.HiddenActivationDerivatives,
                 Owner.RecurrentWeights,
                 Owner.InputWeightRTRLDerivatives,
-                Owner.PreviousInputWeightRTRLDerivatives,
+                //Owner.PreviousInputWeightRTRLDerivatives,
                 Owner.ActiveGroups,
                 Owner.contextByActivations
             );
@@ -115,7 +115,7 @@ namespace CWRNN.Tasks
                 Owner.HiddenActivationDerivatives,
                 Owner.RecurrentWeights,
                 Owner.RecurrentWeightRTRLDerivatives,
-                Owner.PreviousRecurrentWeightRTRLDerivatives,
+                //Owner.PreviousRecurrentWeightRTRLDerivatives,
                 Owner.ActiveGroups,
                 Owner.contextByActivations
             );

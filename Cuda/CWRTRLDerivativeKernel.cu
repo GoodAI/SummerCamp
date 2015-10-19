@@ -23,7 +23,7 @@ extern "C"
 		float *hiddenActivationDerivatives,
 		float *recurrentWeights,
 		float *inputWeightRTRLDerivatives,
-		float *previousInputWeightRTRLDerivatives,
+		//float *previousInputWeightRTRLDerivatives,
 		int *activeGroups,
 		int contextByActivations
 		)
@@ -53,10 +53,12 @@ extern "C"
 			float sum = 0;
 			for (int i = 0; i < D_HIDDEN_UNITS; i++)
 			{
-				sum += recurrentWeights[unitId * D_HIDDEN_UNITS + i] * previousInputWeightRTRLDerivatives[i * (D_HIDDEN_UNITS * D_INPUT_UNITS) + weightId];
+				sum += recurrentWeights[unitId * D_HIDDEN_UNITS + i] * inputWeightRTRLDerivatives[i * (D_HIDDEN_UNITS * D_INPUT_UNITS) + weightId];
 			}
 
 			// synchronizace + 1 pole?
+
+			__syncthreads();
 
 			inputWeightRTRLDerivatives[partialId] = hiddenActivationDerivatives[unitId] * ((unitId == to) * input[from] + sum);
 		}
@@ -67,7 +69,7 @@ extern "C"
 		float *hiddenActivationDerivatives,
 		float *recurrentWeights,
 		float *recurrentWeightRTRLDerivatives,
-		float *previousRecurrentWeightRTRLDerivatives,
+		//float *previousRecurrentWeightRTRLDerivatives,
 		int *activeGroups,
 		int contextByActivations
 		)
@@ -97,10 +99,12 @@ extern "C"
 			float sum = 0;
 			for (int i = 0; i < D_HIDDEN_UNITS; i++)
 			{
-				sum += recurrentWeights[unitId * D_HIDDEN_UNITS + i] * previousRecurrentWeightRTRLDerivatives[i * (D_HIDDEN_UNITS * D_HIDDEN_UNITS) + weightId];
+				sum += recurrentWeights[unitId * D_HIDDEN_UNITS + i] * recurrentWeightRTRLDerivatives[i * (D_HIDDEN_UNITS * D_HIDDEN_UNITS) + weightId];
 			}
 
 			// sync
+
+			__syncthreads();
 
 			recurrentWeightRTRLDerivatives[partialId] = hiddenActivationDerivatives[unitId] * ((unitId == to) * previousHiddenActivations[from] + sum);
 		}
