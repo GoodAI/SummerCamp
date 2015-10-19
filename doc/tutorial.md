@@ -21,7 +21,7 @@ The CWRNN is implemented in the `CWRNN` node. The algorithm is based upon recurr
 
 The output of the network is calculated at each time step by equation:
 
-![Math fo CWRNN](equation.PNG)
+![Math fo CWRNN](equation.png)
 
 Important to notice is, that the connections between neural groups lead only from the units with larger periods to the units with smaller periods (from "slow units" towards the "fast units"). Each group by itself is fully connected.
 
@@ -30,7 +30,7 @@ Important to notice is, that the connections between neural groups lead only fro
 
 The CWRNN node can take any vector input. The network uses Real time recurrent learning algorithm, which is implemented inside the node. The size of the output of the node corresponds to the size of the target.
 
-![Clockwork RNN Node](setting.PNG)
+![Clockwork RNN Node](setting.png)
 
 **Parameters:**
 	
