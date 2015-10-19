@@ -42,6 +42,22 @@ The CWRNN node can take any vector input. The network uses Real time recurrent l
  * and change **learning rate** + **momentum**.
 	 * parameter of RTRL task
 	 * can be adjusted during run of the simulation
+ * put on/off **context learning**
+	 * you can experiment with sending some context (feedback) from the faster units to the slower units
+	 * there are 2 possibilities how to send it:
+		 * using **mean of activations** from all faster unit over the time, when a slow unit is not updated and add it to the activation of the slower unit
+		 * **updating weights** going to the not updated units (even if they don't change their output)
+#
+	mean of activations	
+	Activation context task				on
+	contextByActivation	(/Settings)		1
+#
+
+#
+	updating weights
+	Activation context task				off
+	contextByActivation	(/Settings)		1
+#
 
 #### <a name="WhenToUsetheNode"></a>When to Use the Node
 
