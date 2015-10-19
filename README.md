@@ -1,3 +1,3 @@
 # ClockworkRNNModule
 Module for clockwork recurent neural network learned by RTRL.
-/doc/tutorial.md
+https://github.com/GoodAI/ClockworkNNModule/blob/master/doc/tutorial.md
