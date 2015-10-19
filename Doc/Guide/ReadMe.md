@@ -3,13 +3,13 @@
 Liquid State Machine (further referenced as LSM) is a spiking neural network, firstly mentioned by prof. Wolfgang Maass in 2002. The word "Liquid" comes from a reference to real liquids like water. Imagine throwing a stone into a pond. After you do it you can observe the particular molecules of the water change their state, reacting on the incoming "input". The same way you look on the water you can also look on the LSM.
 
 
-![The Liquid State Machine (LSM) (Maass et al., 2002b)](http://kuzela.eu/img/lsm.jpg)
+![The Liquid State Machine (LSM) (Maass et al., 2002b)](https://raw.githubusercontent.com/GoodAI/LSMModule/master/Doc/Guide/img/lsm.jpg?token=AJknG-9XckS-tNY7BB3TIjpjXoP3Xqn_ks5WLp2qwA%3D%3D)
 
 **Image 1: The Liquid State Machine (LSM) principle (source: [http://hananel.hazan.org.il/the-liquid-state-machine-lsm/](http://hananel.hazan.org.il/the-liquid-state-machine-lsm/))**
 
 LSM consists of neurons, which are connected together to be able to communicate. All of those neurons are of a type leaky integrate-and-fire (LIF). Such neurons accumulate the incoming spikes until a limit is reached and they fire a spike into all of their neighbours. They are called leaky, because through the time, if no input comes, their inner state(potential) is slowly decreased until it reaches the state of calm (which eventualy means the same state as after reset). The inner state of neuron *a* through the time is computed as stated in the following formula (see **Image 2**), where IS(t) is inner state in time t, EI(t) is external (outside of LSM) input in time t and IO(i, t) is internal output of neuron i in time t, which equals to internal input of all its neighbours in time t+1.
 
-![](http://kuzela.eu/img/lsm_inner.png)
+![](https://raw.githubusercontent.com/GoodAI/LSMModule/master/Doc/Guide/img/lsm_inner.png?token=AJknGxWE_REBMyBea_xG1L5sIIwxgu_Eks5WLp3MwA%3D%3D)
 
 ***Image 2: The basic equation for calculating the inner state of neurons.***
 
@@ -53,7 +53,7 @@ During the inner cycle the LSM node calculates the change of its inner state bas
 
 ## LSM node in Brain Simulator environment ##
 
-![](http://kuzela.eu/img/lsmInBS.png)
+![](https://raw.githubusercontent.com/GoodAI/LSMModule/master/Doc/Guide/img/lsmInBS.png?token=AJknGztpt6B7BI6xqZ1Mdnvz5Fx2Lij1ks5WLp21wA%3D%3D)
 
 ***Image 3: LSM node in Brain Simulator environment.***
 
@@ -83,7 +83,7 @@ This node is a modification of MyCsvFileWriterNode and it serves for benchmark t
 
 ## Testing of LSM ##
 
-![](http://kuzela.eu/img/testing.png)
+![](https://raw.githubusercontent.com/GoodAI/LSMModule/master/Doc/Guide/img/testing.png?token=AJknG3XfrLE1p7K-1exyqrnEoCZk6pRdks5WLp3lwA%3D%3D)
 
 ***Image 4: Benchmark testing of LSM node in Brain Simulator environment.***
 
@@ -109,7 +109,7 @@ In this test we need to let the LSM run the pattern more times inside of its inn
 
 The feed-forward network previously used as detector for the LSM was in the same test after the learning phace on average able to recognize correctly 100% of the training set and about 68% of the testing set. From these results (see **Image 6**) we can see, that using LSM as the encoder of input for feed-forward network doesn't have possitive impact on the result. So in which area can we find an upgrade over the feed-forward network? Somewhere, where feed-forward network on its own is not usable -> **temporal pattern recognition**.
 
-![](http://kuzela.eu/img/graph2.png)
+![](https://raw.githubusercontent.com/GoodAI/LSMModule/master/Doc/Guide/img/graph2.png?token=AJknG1egGFdR7WK0RpHfqpxr-A3m4yV7ks5WLp2KwA%3D%3D)
 
 ***Image 6: Test results of testing LSM performance on pattern recognition.***
 
@@ -119,13 +119,13 @@ Temporal pattern recognition is the area where LSM is supposed to give the best 
 
 We were using the already (from clasic pattern recognition test) optimalized default values of parameters. We wanted to run just few basic tests to be able to tell if our implementation is even able to perform basic temporal pattern recognition. So instead of creating the environment of temporal patterns we simulated temporal patterns using MNIST images. On **Image 7** you can see, that MNIST image of size 28x28 pixels we split into 28 rows and send them as a temporal pattern over 28 times.
 
-![](http://kuzela.eu/img/mnist.png)
+![](https://raw.githubusercontent.com/GoodAI/LSMModule/master/Doc/Guide/img/mnist.png?token=AJknG8U1tIkIddMwAcHVSO2s74_yjCwPks5WLp3bwA%3D%3D)
 
 ***Image 7: Simulation of temporal patterns using MNIST images.***
 
 As input data we used again 50 MNIST images as training data and different 250 MNIST images as testing data, which we used for testing of recognition of patterns with noise. After the training phase we were on average able to recognize 100% of training and about 16% of testing data. See **Image 8** for training performance and speed for LSM of 243 neurons being trained on 50/100/200/500 MNIST images.
 
-![](http://kuzela.eu/img/graph3.png)
+![](https://raw.githubusercontent.com/GoodAI/LSMModule/master/Doc/Guide/img/graph3.png?token=AJknG9WFwWDILOGktgnc2hMlv62Nrhd4ks5WLp2cwA%3D%3D)
 
 ***Image 8: Training performance and speed of LSM on temporal pattern recognition.***
 
