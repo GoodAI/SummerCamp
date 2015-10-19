@@ -1,0 +1,16 @@
+﻿Build started 16.7.2015 9:58:57.
+     1>Project "C:\Users\Alka\Disk Google\fel\SummerCamp\BrainSimulatorNewModule-master\Cuda\NewModuleCuda.vcxproj" on node 2 (Build target(s)).
+     1>AddCudaCompileDeps:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\cl.exe /E /nologo /showIncludes /TP /D__CUDACC__ /DWIN32 /DWIN64 /DNDEBUG /D_CONSOLE /D_MBCS /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include" /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\bin" /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include" /I. /FIcuda_runtime.h /c "C:\Users\Alka\Disk Google\fel\SummerCamp\BrainSimulatorNewModule-master\Cuda\SomeNode.cu" 
+       CudaBuild:
+         Compiling CUDA source file SomeNode.cu...
+         cmd.exe /C "C:\Users\Alka\AppData\Local\Temp\tmpe69813fad63a47e8b27a77938039b358.cmd"
+         "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\bin\nvcc.exe" -gencode=arch=compute_20,code=\"sm_20,compute_20\" --use-local-env --cl-version 2013 -ccbin "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64"  -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include"     --keep-dir x64\Release -maxrregcount=0  --machine 64 -ptx -cudart static  -o "C:\Users\Alka\Disk Google\fel\SummerCamp\BrainSimulatorNewModule-master\Cuda\..\Module\bin\Release\ptx\SomeNode.ptx" "C:\Users\Alka\Disk Google\fel\SummerCamp\BrainSimulatorNewModule-master\Cuda\SomeNode.cu"
+         
+         C:\Users\Alka\Disk Google\fel\SummerCamp\BrainSimulatorNewModule-master\Cuda>"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\bin\nvcc.exe" -gencode=arch=compute_20,code=\"sm_20,compute_20\" --use-local-env --cl-version 2013 -ccbin "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64"  -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include"     --keep-dir x64\Release -maxrregcount=0  --machine 64 -ptx -cudart static  -o "C:\Users\Alka\Disk Google\fel\SummerCamp\BrainSimulatorNewModule-master\Cuda\..\Module\bin\Release\ptx\SomeNode.ptx" "C:\Users\Alka\Disk Google\fel\SummerCamp\BrainSimulatorNewModule-master\Cuda\SomeNode.cu" 
+         SomeNode.cu
+     1>Done Building Project "C:\Users\Alka\Disk Google\fel\SummerCamp\BrainSimulatorNewModule-master\Cuda\NewModuleCuda.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:05.93
