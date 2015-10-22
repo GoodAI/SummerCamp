@@ -46,6 +46,12 @@ namespace AIXIModule
             get { return (Input != null) ? Input.Count : 0; }
         }*/
 
+        public MyMemoryBlock<int> OutputAction
+        {
+            get;
+            private set;
+        }
+
 
         public MyMemoryBlock<int> testInts
         {
@@ -98,6 +104,8 @@ namespace AIXIModule
 
         public override void UpdateMemoryBlocks()
         {
+            OutputAction.Count = 1;
+
             testInts.Count = 100;
             testFloats.Count = 100;
 

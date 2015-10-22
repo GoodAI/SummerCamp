@@ -5,12 +5,12 @@ using System.Collections.Generic;
 
 namespace AIXI
 {
-    public class CoinFlip : AIXIEnvironment
+    public class CheeseMazeEnvironment : AIXIEnvironment
     {
         enum ActionsEnum { ATail, AHead };
         enum ObservationsEnum { OTail, OHead };
 
-        enum RewardEnum { RLose=0, RWin=1 };
+        enum RewardEnum { RLose = 0, RWin = 1 };
 
         //int aTail = (int) actions_enum.aTail;
         //int aHead = (int)actions_enum.aHead;
@@ -23,9 +23,9 @@ namespace AIXI
 
         double _defaultProbability = 0.05;
         double _probability;
-        
+
         Random _rnd = new Random();
-        public CoinFlip(Dictionary<string, string> options)
+        public CheeseMazeEnvironment(Dictionary<string, string> options)
             : base(options)
         {
             ValidActions = (int[])Enum.GetValues(typeof(ActionsEnum));
@@ -52,7 +52,7 @@ namespace AIXI
 
         public override Tuple<int, int> PerformAction(int action)
         {
-            Debug.Assert(this.IsValidAction(action), "non-valid action used "+action);
+            Debug.Assert(this.IsValidAction(action), "non-valid action used " + action);
 
             this.Action = action;
             if (this._rnd.NextDouble() < this._probability)
@@ -67,7 +67,8 @@ namespace AIXI
             {
                 Reward = this.RWin;
             }
-            else {
+            else
+            {
                 Reward = this.RLose;
             }
 

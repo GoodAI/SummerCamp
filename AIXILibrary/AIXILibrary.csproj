@@ -30,6 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
@@ -51,9 +52,12 @@
     <Compile Include="agents\MC-AIXI-CTW.cs" />
     <Compile Include="agents\RandomAgent.cs" />
     <Compile Include="AIXIEnvironment.cs" />
-    <Compile Include="environments\coinFlip.cs" />
+    <Compile Include="environments\CheeseMazeEnvironment.cs" />
+    <Compile Include="environments\CoinFlip.cs" />
+    <Compile Include="environments\ExtendedTigerEnvironment.cs" />
     <Compile Include="environments\MazeEnvironment.cs" />
     <Compile Include="environments\MyTTTEnvironment.cs" />
+    <Compile Include="environments\RockPaperScissors.cs" />
     <Compile Include="environments\TigerEnvironment.cs" />
     <Compile Include="environments\TTTEnvironment.cs" />
     <Compile Include="Model.cs" />

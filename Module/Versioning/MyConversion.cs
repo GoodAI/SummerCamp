@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 using GoodAI.Core.Configuration;
 
-namespace NewModule.Versioning
+
+namespace AIXIModule.Versioning
 {
     public class MyConversion : MyBaseConversion
     {

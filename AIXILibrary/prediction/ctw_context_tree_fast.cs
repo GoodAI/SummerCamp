@@ -37,7 +37,7 @@ namespace AIXI
 
         public CTWContextTreeFast(int depth)
         {
-            this.Nodes = new CtNode[5];//TODO: increase this value
+            this.Nodes = new CtNode[256];
             this.FreeIndices = new Queue<int>();
             
             Context = new List<int>();
@@ -200,7 +200,7 @@ namespace AIXI
 
         public int GetFreeIndex() {
             //idea: use chache-oblivious placing (?)
-            //todo: resize arrays
+            
             int index;
             if (this.FreeIndices.Count > 0)
             {
@@ -216,7 +216,7 @@ namespace AIXI
             return index;
         }
 
-        public void FreeNode(int index) {//TODO: change tree size?
+        public void FreeNode(int index) {//todo: should we change tree size here?
             this.FreeIndices.Enqueue(index);
         }
 
@@ -519,7 +519,6 @@ namespace AIXI
                 if (this.History.Count >= this.Depth)
                 {
                     this.update_context();
-                    //refact: We do not need to create variable nodes at all
                     for (int j = this.Depth - 1; j >= 0; j--)
                     {
                         int nodeI = this.Context[j];

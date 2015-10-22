@@ -28,7 +28,8 @@ __device__ ct_tree* create_ct_tree(int depth){
 	TREE->free_array_array_size = 4;//todo:set to bigger
 	TREE->free_array_first_free = 0;
 
-	TREE->history_array_size = depth+10;//TODO!!! Compute how much of history do we need.
+	//TODO! Compute how much of history do we need (we do not need to remember everything, just enough for backtracking).
+	TREE->history_array_size = depth+10;
 	//we need depth+how much into future we are looking
 	TREE->history_count = 0;
 	TREE->history = (int*)malloc(sizeof(int) * TREE->history_array_size);
@@ -79,7 +80,7 @@ __device__ void update_context(){
 	int node_i = TREE->root_i;
 	int history_position = TREE->history_count-1;
 	for (int i = 1; i <= TREE->depth; i++){
-		//todo: get symbol
+		// are we sure this is working?
 		int symbol = TREE->history[history_position%TREE->history_array_size];
 		history_position--;
 		if (TREE->nodes[node_i].Children[symbol] != -1){
@@ -88,7 +89,6 @@ __device__ void update_context(){
 		else{
 			int new_node_i = create_new_node();
 			TREE->nodes[node_i].Children[symbol] = new_node_i;
-			TREE->size++;//todo: changed already in create_new_node?
 			node_i = new_node_i;
 		}
 		TREE->context[i] = node_i;
@@ -148,11 +148,9 @@ __device__ void revert_tree(int symbol_count)
 	}
 }
 
-
 __device__ int get_model_size() {
 	return TREE->size;
 }
-
 
 __device__ int generate_random_symbols_and_update(int symbol_count) {
 

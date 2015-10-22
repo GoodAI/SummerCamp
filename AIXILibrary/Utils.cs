@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 
 using GoodAI.Core.Utils;
+using System.Runtime.InteropServices;
 
 
 namespace AIXI
@@ -126,16 +127,15 @@ namespace AIXI
             }
             return value;
         }
-
-        static public string PrettyPrintArray(string[] a) {
-            return ":-)";//TODO
-        }
-
-        static public string IntArrayToString(int[] a)
+        /*
+        [StructLayout(LayoutKind.Explicit)]
+        public struct FloatAndUIntUnion
         {
-            return string.Join(", ", a.Select(v => v.ToString()));
-
-        }
+            [FieldOffset(0)]
+            public uint UInt32Bits;
+            [FieldOffset(0)]
+            public float FloatValue;
+        }*/
 
 
         //static public int? ArrayMax(int[] a) {
@@ -147,13 +147,16 @@ namespace AIXI
         //    }
         //    return max;
         //}
-
-        static public void UnivLogger(string s) {
-            Console.WriteLine(s);
-            Console.Beep();
-            
-            //todo: MyLog.INFO.WriteLine();
-            //todo: MyLog.Writer.flush()
+        /*
+        public static unsafe int SingleToInt32Bits(float value)
+        {
+            return *(int*)(&value);
         }
+
+
+        public static unsafe float Int32BitsToSingle(int value)
+        {
+            return *(float*)(&value);
+        }*/
     }
 }

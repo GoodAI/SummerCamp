@@ -16,7 +16,7 @@ namespace AIXI
 
         public int Type;
 
-        public double ExplorationConstant = 2.0;//LATER: play with this //TODO: put into options
+        public double ExplorationConstant = 2.0; //TODO: put this into the options
         public double UnexploredBias = 1000000.0;
         public double Mean=0.0;
 
@@ -70,8 +70,7 @@ namespace AIXI
             }
         }
 
-        public double Sample(Agent agent, int horizon, int level=77) {//refact(?): make MCNodeDecision & MCNodeSample &overload this
-            //todo: change default value of level, or remove that parameter
+        public double Sample(Agent agent, int horizon) {
 
             double reward = 0.0;
 
@@ -88,7 +87,7 @@ namespace AIXI
                 }
                 MonteCarloSearchNode observationChild = this.Children[observation];
 
-                reward = randomReward + observationChild.Sample(agent, horizon-1, level+1);
+                reward = randomReward + observationChild.Sample(agent, horizon-1);
             }
             else if (this.Visits == 0) //unvisited decision node or we have exceeded maximum tree depth
             {
@@ -107,7 +106,7 @@ namespace AIXI
                 }
                 MonteCarloSearchNode actionChild = this.Children[action];
 
-                reward = actionChild.Sample(agent, horizon, level + 1);   //it is not clear if not horizon-1. (asks pyaixi)
+                reward = actionChild.Sample(agent, horizon);   //it is not clear if not horizon-1. (asks pyaixi)
             }
 
             double visitsDouble = this.Visits;

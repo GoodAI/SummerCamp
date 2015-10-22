@@ -8,4 +8,9 @@
     <Node type="AIXIModule.MyAIXICudaNode" CanBeAdded="true" >
     </Node>
   </KnownNodes>
+  <KnownWorlds>
+    <World type="AIXIModule.AIXIEnvironmentWorld" CanBeAdded="true"></World>
+
+
+  </KnownWorlds>
 </Configuration>

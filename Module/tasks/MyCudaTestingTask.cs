@@ -22,7 +22,7 @@ namespace AIXIModule
     /// <summary>
     /// Task that tests various CUDA functions
     /// </summary>
-    [Description("Tests various CUDA functions")]
+    [Description("Test of various CUDA functions")]
     public class MyTestingTask : MyTask<TestingNode>
     {
         /// <summary>
@@ -31,17 +31,39 @@ namespace AIXIModule
         [MyBrowsable, Category("SomeCategory"), YAXSerializableField(DefaultValue = 1.0f)]
         public float Increment { get; set; }
 
-        private MyCudaKernel m_kernel;
+
+        private MyCudaKernel m_play;
+        private MyCudaKernel m_init;
+        private MyCudaKernel m_test;
+
+
+
 
         public override void Init(int nGPU)
         {
             //            m_kernel = MyKernelFactory.Instance.Kernel(nGPU, @"TestingNode", "TestAll");
-            m_kernel = MyKernelFactory.Instance.Kernel(nGPU, @"TestingNode", "TestAll");
+
+            
+            m_init = MyKernelFactory.Instance.Kernel(nGPU, @"AixiKernels", "AixiInitKernel");
+
+            m_init.SetupExecution(1);
+
+            m_init.Run(
+                3,
+                200,
+                4,
+                1,
+                1,
+                1
+                );
+            m_play = MyKernelFactory.Instance.Kernel(nGPU, @"AixiKernels", "AixiPlayKernel");
+            m_test = MyKernelFactory.Instance.Kernel(nGPU, @"AixiKernels", "AixiTestKernel");
 
         }
 
         public override void Execute()
         {
+            
             var options = new Dictionary<string, string>();
 
             //POSSIBLE OPTIONS:
@@ -57,30 +79,31 @@ namespace AIXIModule
             var rightInts = new int[1000];
             var rightFloats = new float[1000];
 
-            var env = new TigerEnvironment(options);
+            var env = new CoinFlip(options);
             var agent = new MC_AIXI_CTW(env, options);
 
             var tree = agent.ContextTree;
-            /*
-            var root = tree.Root;
-            root.Update(0);
-            root.Update(1);
-            root.Update(0);
-            root.Update(0);
-            root.Update(0);
+            
+            agent.ModelUpdatePercept(0,0);
+            agent.ModelUpdateAction(1);
+            agent.ModelUpdatePercept(0, 1);
+            agent.ModelUpdateAction(0);
+            agent.ModelUpdatePercept(1, 1);
 
-            rightFloats[0] = (float)root.LogKt;
-            rightFloats[1] = (float)root.LogProbability;
-            rightInts[1] = root.NumberOf0S;
-            rightInts[2] = root.NumberOf1S;
+            var backup = new CtwContextTreeUndo(agent);
+            agent.ModelUpdateAction(0);
+            agent.ModelUpdatePercept(1, 0);
+            agent.ModelUpdateAction(1);
+            agent.ModelUpdatePercept(0, 1);
+            agent.model_revert(backup);
 
-            rightFloats[2] = (float)root.LogKtMultiplier(0);
+            var q = 1 + 1;
 
-            root.Update(1);
-            root.Revert(1);
+            m_test.SetupExecution(1);
 
-            rightFloats[3] = (float)root.LogKt;
-            rightFloats[4] = (float)root.LogProbability;*/
+            m_test.Run();
+
+
 
             Owner.testInts.SafeCopyToDevice();
             Owner.testFloats.SafeCopyToDevice();
@@ -91,41 +114,30 @@ namespace AIXIModule
             Owner.Child0.SafeCopyToDevice();
             Owner.Child1.SafeCopyToDevice();
             Owner.FreeIndices.SafeCopyToDevice();
+            m_play.SetupExecution(1);
 
-            /*
-            var n0 = tree.Root ;
-            var n1 = new CTWContextTreeNode(tree);
-            var n2 = new CTWContextTreeNode(tree);
-            var n3 = new CTWContextTreeNode(tree);
-            var n4 = new CTWContextTreeNode(tree);
+            int reward =1;
+            int observation=1;
 
-            n0.Children[1] = n1;
-            n0.Children[0] = n2;
-            n2.Children[0] = n4;
-            n2.Children[1] = n3;*/
-
-            var ints = new int[] { 1, 1, 0, 1, 0, 0, 1, 1, 1 };
-            tree.update_tree_history(ints);
-            var ints2 = new int[] { 1, 0, 1, 0 };
-            tree.update_tree(ints2);
-
-            tree.revert_tree(2);
-
-            agent.ModelUpdatePercept(2, 11);
-
-            agent.ModelUpdateAction(2);
+            m_play.Run(reward, observation, Owner.OutputAction);
+            m_play.Run(reward, observation, Owner.OutputAction);
 
 
-            m_kernel.SetupExecution(1);
+            double total_reward = 0;
+            double steps = 0;
+            while (true) {
+                m_play.Run(reward, observation, Owner.OutputAction);
+                Owner.OutputAction.SafeCopyToHost();
 
-            m_kernel.Run(Owner.testInts, Owner.testFloats, Owner.testInts.Count, Owner.testFloats.Count,
-                agent.Depth,
-                10, //TODO
-                agent.Horizon,
-                agent.MaximumAction(),
-                agent.MaximumReward(),
-                agent.MaximumObservation()
-                );
+                int action = Owner.OutputAction.Host[0];
+                
+                var or = env.PerformAction(action);
+                observation = or.Item1;
+                reward = or.Item2;
+
+                steps++;
+                total_reward += reward;
+            }
 
             Owner.LogKt.SafeCopyToHost();
             Owner.LogProbability.SafeCopyToHost();

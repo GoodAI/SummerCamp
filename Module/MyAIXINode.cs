@@ -33,7 +33,7 @@ namespace AIXIModule
         }
 
         [MyInputBlock(0)]
-        public MyMemoryBlock<float> Input
+        public MyMemoryBlock<float> Observation
         {
             get
             {
@@ -50,6 +50,17 @@ namespace AIXIModule
                 return GetInput(1);
             }
         }
+
+
+        [MyInputBlock(2)]
+        public MyMemoryBlock<float> EnvironmentData
+        {
+            get
+            {
+                return GetInput<float>(2);
+            }
+        }
+
 
 
         [MyOutputBlock(0)]
@@ -73,7 +84,7 @@ namespace AIXIModule
             private set;
         }
 
-        public MyMemoryBlock<int> Observation
+        public MyMemoryBlock<int> ObservationMB
         {
             get;
             private set;
@@ -109,6 +120,7 @@ namespace AIXIModule
             private set;
         }
 
+        //todo-later: put here option "verbose"
       
         [MyBrowsable, Category("Parameters"), YAXSerializableField(DefaultValue = 200)]
         public int MCSimulations
@@ -138,39 +150,48 @@ namespace AIXIModule
             set;
         }*/
 
-        [MyBrowsable, Category("Parameters"), YAXSerializableField(DefaultValue = 0)]
+
+        [MyBrowsable, Category("Parameters"), YAXSerializableField(DefaultValue = false)]
+        public bool UseEnvironmentDataFromHere
+        {
+            get;
+            set;
+        }
+
+
+        [MyBrowsable, Category("Enviromental Data"), YAXSerializableField(DefaultValue = 0)]
         public int MinAction
         {
             get;
             set;
         }
-        [MyBrowsable, Category("Parameters"), YAXSerializableField(DefaultValue = 8)]
+        [MyBrowsable, Category("Enviromental Data"), YAXSerializableField(DefaultValue = 8)]
         public int MaxAction
         {
             get;
             set;
         }
-        
-        [MyBrowsable, Category("Parameters"), YAXSerializableField(DefaultValue = -10)]
+
+        [MyBrowsable, Category("Enviromental Data"), YAXSerializableField(DefaultValue = -10)]
         public int MinReward
         {
             get;
             set;
         }
-        [MyBrowsable, Category("Parameters"), YAXSerializableField(DefaultValue = 10)]
+        [MyBrowsable, Category("Enviromental Data"), YAXSerializableField(DefaultValue = 10)]
         public int MaxReward
         {
             get;
             set;
         }
 
-        [MyBrowsable, Category("Parameters"), YAXSerializableField(DefaultValue = 0)]
+        [MyBrowsable, Category("Enviromental Data"), YAXSerializableField(DefaultValue = 0)]
         public int MinObservation
         {
             get;
             set;
         }
-        [MyBrowsable, Category("Parameters"), YAXSerializableField(DefaultValue = 174762)]
+        [MyBrowsable, Category("Enviromental Data"), YAXSerializableField(DefaultValue = 174762)]
         public int MaxObservation
         {
             get;
@@ -189,8 +210,7 @@ namespace AIXIModule
             get;
             set;
         }
-
-
+        
         public override void Validate(MyValidator validator)
         {
             //MyLog.INFO.WriteLine("In.c = " + Input.Count + " "+ (Input.Count != 9));
@@ -198,21 +218,27 @@ namespace AIXIModule
 
 
             base.Validate(validator);
-            validator.AssertError(Input.Count == 9 && Action.Count == 9, this, "Both inputs should have size 9.");
 //            validator.AssertWarning(XInput.Count == 1 && YInput.Count == 1, this, "Both inputs should have size 1. Only first value will be considered.");
+            validator.AssertError(EnvironmentData==null || EnvironmentData.Count == 10 ,this, "EnvironmentData input has to have size 10.");
+
+
+            var explore_rate = this.InitialExploration;
+            var exploration_decay = this.ExplorationDecay;
+            validator.AssertError(!(explore_rate < 0.0 || explore_rate > 1.0 || exploration_decay < 0.0 || exploration_decay > 1.0), this, "exploration parameters have to be in [0,1]");
+
         }
 
         public override void UpdateMemoryBlocks()
         {
-
-            Action.Count = 9;
+            Action.Count = 1;
             Age.Count = 1;
-            Observation.Count=1;
+            ObservationMB.Count=1;
             Explored.Count = 1;
             ExplorationRate.Count = 1;
             TotalReward.Count = 1;
             AverageReward.Count = 1;
             ModelSize.Count = 1;
+
         }
     }
 

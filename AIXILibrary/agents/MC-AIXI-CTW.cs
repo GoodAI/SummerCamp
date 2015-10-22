@@ -206,7 +206,7 @@ namespace AIXI
             CtwContextTreeUndo undoInstance = new CtwContextTreeUndo(this);
             MonteCarloSearchNode searchTree = new MonteCarloSearchNode(MonteCarloSearchNode.DecisionNode);
             for (int i = 0; i < this.McSimulations; i++) {
-                searchTree.Sample(this, this.Horizon, 0);
+                searchTree.Sample(this, this.Horizon);
                 this.model_revert(undoInstance);
             }
 

@@ -1,4 +1,5 @@
 # Reinforcement learning module using Monte Carlo AIXI CTW node.
+# (Work in progress - Final version will be done afternoon on friday)
 
 This node is able to do reinforcement learning in wide variety of environments, including  POMDP.
 

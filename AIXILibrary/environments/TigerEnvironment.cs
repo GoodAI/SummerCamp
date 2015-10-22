@@ -41,7 +41,7 @@ namespace AIXI
             //this.myrnd = new MyRandom();
 
 
-            //low-todo: make listen accuracy configurable in options
+            //low-todo: make listen accuracy configurable via options
 
             ListenAccuracy = this.DefaultListenAccuracy;
             Debug.Assert(0.0 <= this.ListenAccuracy && this.ListenAccuracy <= 1);

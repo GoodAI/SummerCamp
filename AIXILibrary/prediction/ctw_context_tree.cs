@@ -10,7 +10,7 @@ namespace AIXI
     public class CTWContextTree : IModel{
         public int TreeSize;
         public List<CTWContextTreeNode> Context;
-        public int Depth;//refact: is this final/current depth?
+        public int Depth;
         public List<int> History { get; set; }
         public CTWContextTreeNode Root;
         public CTWContextTree(int depth)
@@ -114,7 +114,7 @@ namespace AIXI
             int updateDepth = 1;
             IEnumerable<int> historyIe = History;
             foreach (int symbol in historyIe.Reverse())
-            { //TODO: will this save reversed history to this.history?
+            { 
                 if (node.Children.ContainsKey(symbol))
                 {
                     node = node.Children[symbol];
@@ -147,7 +147,6 @@ namespace AIXI
 
                 if (this.History.Count >= this.Depth) {
                     this.update_context();
-                    //refact: We do not need to create variable nodes at all
                     for (int j = this.Depth - 1; j >= 0; j--) {
                         CTWContextTreeNode node = this.Context[j];
                         node.Revert(symbol);

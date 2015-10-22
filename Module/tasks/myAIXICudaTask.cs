@@ -93,8 +93,6 @@ namespace AIXIModule
 
         public override void Execute()
         {
-            MyLog.ERROR.WriteLine(":-)");
-            MyLog.Writer.FlushCache();
             Owner.Reward.SafeCopyToHost();
             Owner.Input.SafeCopyToHost();
 

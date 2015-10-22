@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Name="CoinFlip" xmlns:yaxlib="http://www.sinairv.com/yaxlib/">
+  <Network Sequential="False" LoadOnStart="False" SaveOnStop="False" Id="0" Name="Network">
+    <Children>
+      <MyAIXINode LoadOnStart="False" SaveOnStop="False" Id="101" Name="Node_101" yaxlib:realtype="AIXIModule.MyAIXINode">
+        <MCSimulations>200</MCSimulations>
+        <ContextTreeDepth>4</ContextTreeDepth>
+        <AgentHorizon>6</AgentHorizon>
+        <UseEnvironmentDataFromHere>False</UseEnvironmentDataFromHere>
+        <MinAction>0</MinAction>
+        <MaxAction>8</MaxAction>
+        <MinReward>-10</MinReward>
+        <MaxReward>10</MaxReward>
+        <MinObservation>0</MinObservation>
+        <MaxObservation>174762</MaxObservation>
+        <InitialExploration>0.1</InitialExploration>
+        <ExplorationDecay>0.99</ExplorationDecay>
+        <DataFolder></DataFolder>
+        <Location X="273" Y="267" />
+        <Tasks>
+          <Task Enabled="True" PropertyName="Play" yaxlib:realtype="AIXIModule.MyAIXITask" />
+        </Tasks>
+      </MyAIXINode>
+    </Children>
+    <LayoutProperties Zoom="0.7071068">
+      <Translation X="165" Y="-242" />
+    </LayoutProperties>
+    <GroupInputNodes>
+      <MyParentInput ParentInputIndex="0" Id="1" Name="Observation">
+        <Location X="-105" Y="336" />
+      </MyParentInput>
+      <MyParentInput ParentInputIndex="1" Id="4" Name="Reward">
+        <Location X="-100" Y="452" />
+      </MyParentInput>
+      <MyParentInput ParentInputIndex="2" Id="100" Name="EnvironmentData">
+        <Location X="-105" Y="567" />
+      </MyParentInput>
+    </GroupInputNodes>
+    <GroupOutputNodes>
+      <MyOutput Id="9" Name="Action">
+        <Location X="698" Y="500" />
+      </MyOutput>
+    </GroupOutputNodes>
+    <DataFolder></DataFolder>
+    <Connections>
+      <Connection From="101" To="9" FromIndex="0" ToIndex="0" />
+      <Connection From="1" To="101" FromIndex="0" ToIndex="0" />
+      <Connection From="4" To="101" FromIndex="0" ToIndex="1" />
+      <Connection From="100" To="101" FromIndex="0" ToIndex="2" />
+    </Connections>
+    <Tasks />
+  </Network>
+  <World LoadOnStart="False" SaveOnStop="False" Id="99" Name="World" yaxlib:realtype="AIXIModule.AIXIEnvironmentWorld">
+    <UsedWorld>CoinFlip</UsedWorld>
+    <DataFolder></DataFolder>
+    <Tasks>
+      <Task Enabled="True" PropertyName="reaction" yaxlib:realtype="AIXIModule.AIXIEnvironmentWorldTask" />
+    </Tasks>
+  </World>
+  <Observers>
+    <MyMatrixObserver yaxlib:realtype="GoodAI.Core.Observers.MyMatrixObserver">
+      <ViewMode>Fit_2D</ViewMode>
+      <KeepRatio>True</KeepRatio>
+      <Window>
+        <Location X="1303" Y="114" />
+        <Size Width="215" Height="77" />
+      </Window>
+      <AutosaveSnapshop>False</AutosaveSnapshop>
+      <BilinearFiltering>False</BilinearFiltering>
+      <TargetIdentifier>99#Reward</TargetIdentifier>
+      <m_nbDecimals>2</m_nbDecimals>
+      <m_xStart>0</m_xStart>
+      <m_xLength>1</m_xLength>
+      <m_yStart>0</m_yStart>
+      <m_yLength>1</m_yLength>
+    </MyMatrixObserver>
+    <MyMatrixObserver yaxlib:realtype="GoodAI.Core.Observers.MyMatrixObserver">
+      <ViewMode>Fit_2D</ViewMode>
+      <KeepRatio>True</KeepRatio>
+      <Window>
+        <Location X="1306" Y="193" />
+        <Size Width="212" Height="84" />
+      </Window>
+      <AutosaveSnapshop>False</AutosaveSnapshop>
+      <BilinearFiltering>False</BilinearFiltering>
+      <TargetIdentifier>99#Observation</TargetIdentifier>
+      <m_nbDecimals>2</m_nbDecimals>
+      <m_xStart>0</m_xStart>
+      <m_xLength>1</m_xLength>
+      <m_yStart>0</m_yStart>
+      <m_yLength>1</m_yLength>
+    </MyMatrixObserver>
+    <MyTimePlotObserver yaxlib:realtype="GoodAI.Core.Observers.MyTimePlotObserver">
+      <ObserverWidth>500</ObserverWidth>
+      <ObserverHeight>400</ObserverHeight>
+      <ViewMode>Fit_2D</ViewMode>
+      <KeepRatio>True</KeepRatio>
+      <Window>
+        <Location X="574" Y="438" />
+        <Size Width="668" Height="432" />
+      </Window>
+      <AutosaveSnapshop>False</AutosaveSnapshop>
+      <BilinearFiltering>False</BilinearFiltering>
+      <TargetIdentifier>101#AverageReward</TargetIdentifier>
+      <m_displayMethod>CYCLE</m_displayMethod>
+      <m_boundPolicy>AUTO</m_boundPolicy>
+      <m_boundMin>0.3942901</m_boundMin>
+      <m_boundMax>1.372487</m_boundMax>
+      <m_manualBoundMin>0.724</m_manualBoundMin>
+      <m_manualBoundMax>1.036</m_manualBoundMax>
+      <m_manualBoundHaveBeenSet>False</m_manualBoundHaveBeenSet>
+      <m_period>1</m_period>
+      <m_delay>0</m_delay>
+      <m_offset>0</m_offset>
+      <m_stride>1</m_stride>
+      <m_count>1</m_count>
+      <COLOR_BACKGROUND>4294967295</COLOR_BACKGROUND>
+      <COLOR_FONT>4278190080</COLOR_FONT>
+      <COLOR_CURVE1>4294901760</COLOR_CURVE1>
+      <COLOR_CURVE2>4278190335</COLOR_CURVE2>
+      <COLOR_CURVE3>4278255360</COLOR_CURVE3>
+      <COLOR_CURVE4>4294967040</COLOR_CURVE4>
+      <COLOR_CURVE5>4294902015</COLOR_CURVE5>
+      <COLOR_CURVE6>4278255615</COLOR_CURVE6>
+      <COLOR_CURVE_EXTRA>4278190080</COLOR_CURVE_EXTRA>
+    </MyTimePlotObserver>
+    <MyMatrixObserver yaxlib:realtype="GoodAI.Core.Observers.MyMatrixObserver">
+      <ViewMode>Fit_2D</ViewMode>
+      <KeepRatio>True</KeepRatio>
+      <Window>
+        <Location X="1303" Y="282" />
+        <Size Width="222" Height="77" />
+      </Window>
+      <AutosaveSnapshop>False</AutosaveSnapshop>
+      <BilinearFiltering>False</BilinearFiltering>
+      <TargetIdentifier>101#Action</TargetIdentifier>
+      <m_nbDecimals>2</m_nbDecimals>
+      <m_xStart>0</m_xStart>
+      <m_xLength>1</m_xLength>
+      <m_yStart>0</m_yStart>
+      <m_yLength>1</m_yLength>
+    </MyMatrixObserver>
+    <MyMatrixObserver yaxlib:realtype="GoodAI.Core.Observers.MyMatrixObserver">
+      <ViewMode>Fit_2D</ViewMode>
+      <KeepRatio>True</KeepRatio>
+      <Window>
+        <Location X="150" Y="150" />
+        <Size Width="300" Height="300" />
+      </Window>
+      <AutosaveSnapshop>False</AutosaveSnapshop>
+      <BilinearFiltering>False</BilinearFiltering>
+      <TargetIdentifier>101#Explored</TargetIdentifier>
+      <m_nbDecimals>2</m_nbDecimals>
+      <m_xStart>0</m_xStart>
+      <m_xLength>1</m_xLength>
+      <m_yStart>0</m_yStart>
+      <m_yLength>1</m_yLength>
+    </MyMatrixObserver>
+    <MyMatrixObserver yaxlib:realtype="GoodAI.Core.Observers.MyMatrixObserver">
+      <ViewMode>Fit_2D</ViewMode>
+      <KeepRatio>True</KeepRatio>
+      <Window>
+        <Location X="143" Y="450" />
+        <Size Width="300" Height="300" />
+      </Window>
+      <AutosaveSnapshop>False</AutosaveSnapshop>
+      <BilinearFiltering>False</BilinearFiltering>
+      <TargetIdentifier>101#ExplorationRate</TargetIdentifier>
+      <m_nbDecimals>2</m_nbDecimals>
+      <m_xStart>0</m_xStart>
+      <m_xLength>1</m_xLength>
+      <m_yStart>0</m_yStart>
+      <m_yLength>1</m_yLength>
+    </MyMatrixObserver>
+  </Observers>
+  <UsedModules>
+    <Module Name="AIXIModule.dll" Version="1" />
+    <Module Name="GoodAI.Platform.Core.dll" Version="9" />
+  </UsedModules>
+</Project>

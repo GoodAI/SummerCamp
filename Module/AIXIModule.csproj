@@ -15,7 +15,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -51,9 +51,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AIXIEnvironmentWorld.cs" />
     <Compile Include="BS_RL_Environment.cs" />
     <Compile Include="MyAIXINode.cs" />
     <Compile Include="MyAIXICudaNode.cs" />
+    <Compile Include="tasks\AIXIEnvironmentWorldTask.cs" />
     <Compile Include="tasks\MyAIXICudaTask.cs" />
     <Compile Include="tasks\MyAIXITask.cs" />
     <Compile Include="tasks\MyCudaTestingTask.cs" />

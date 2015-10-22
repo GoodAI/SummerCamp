@@ -38,7 +38,8 @@ extern "C"
 	{
 		int threadId = blockIdx.y*blockDim.x*gridDim.x
 			+ blockIdx.x*blockDim.x
-			+ threadIdx.x;
+			+ threadIdx.x; 
+
 
 		create_agent(depth, mc_simulations, horizon, maximum_action, maximum_reward, maximum_observation);
 		int q = 1 + 1;
@@ -50,12 +51,38 @@ extern "C"
 			+ blockIdx.x*blockDim.x
 			+ threadIdx.x;
 
-
 		model_update_percept(observation, reward);
 
-		int action = search();
+//		int action = search();
+		int action = 1;
 		model_update_action(action);
 		actionOutput[0] = action;
+
+	}
+
+	__global__ void AixiTestKernel()
+	{
+		int threadId = blockIdx.y*blockDim.x*gridDim.x
+			+ blockIdx.x*blockDim.x
+			+ threadIdx.x;
+
+		model_update_percept(0, 0);
+		model_update_action(1);
+		model_update_percept(0, 1);
+		model_update_action(0);
+		model_update_percept(1, 1);
+
+		ct_tree_undo* backup = backup_tree();
+		model_update_action(0);
+		model_update_percept(1, 0);
+		model_update_action(1);
+		model_update_percept(0, 1);
+
+		model_revert(backup);
+
+		//		int action = search();
+		int action = 1+2;
+//		model_update_action(action);
 
 	}
 }
