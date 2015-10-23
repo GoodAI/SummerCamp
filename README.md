@@ -1,7 +1,6 @@
 # Reinforcement learning module using Monte Carlo AIXI CTW node.
-# (Work in progress - Final version will be done afternoon on friday)
-
-This node is able to do reinforcement learning in wide variety of environments, including  POMDP.
+![](http://i.imgur.com/aOGxfr2.png)
+This node is able to do reinforcement learning in a wide variety of environments, including  POMDP.
 
 It will work in *worst case scenario*:
 * unknown environment
@@ -11,7 +10,7 @@ It will work in *worst case scenario*:
 * no explicit notion of state
 * rewards only sparsely distributed
 
-...but it will takes quite long time.
+...but it will take quite a long time.
 
 [kt]: https://en.wikipedia.org/wiki/Krichevsky%E2%80%93Trofimov_estimator
 [AIXI]: http://www.hutter1.net/ai/aixigentle.pdf
@@ -20,15 +19,15 @@ It will work in *worst case scenario*:
 
 ## Short introduction to algorithm
 
-From point-of-view of algorithm, the world looks like a sequence of bits, in which are encoded past rewards, observations and actions. Algorithm has set from beginning what is number of bits representing observations/rewards/actions. It interact with environment by giving bits that encodes chosen action and recieve bits that encodes observation and reward.
+From point-of-view of the algorithm, the world looks like a sequence of bits, in which are encoded past rewards, observations, and actions. Algorithm has set from beginning what is a number of bits representing observations/rewards/actions. It interacts with the environment by giving bits that encode chosen an action and receive bits that encode observation and reward.
 
 ![interaction](http://i.imgur.com/vxavfqf.jpg)
 
-This algorithm tries to approximate general [AIXI], which is formalism showing (incomputable) notion of what is an optimal action for agent in unknown environment.
+This algorithm tries to approximate general [AIXI], which is formalism showing the (incomputable) notion of what is an optimal action for an agent in the unknown environment.
 
-Internal model of environment for original AIXI is probability distribution over all possible programs that could represent environment, where apriori probability of one possibility (ie: one particular program) depends on its complexity.
+The internal model of environment for original AIXI is a probability distribution over all possible programs that could represent the environment, where the apriori probability of one possibility (ie: one particular program) depends on its complexity.
 
-Internal model of environment MC-AIXI-CTW is probability distribution over all predictive suffix trees (PSTs). Where apriori probability of one possibility (ie: one particular PST) depends on its complexity. This is done by context-tree weighting (CTW)
+The internal model of environment MC-AIXI-CTW is a probability distribution over all predictive suffix trees (PSTs). Where apriori probability of one possibility (ie: one particular PST) depends on its complexity. This is done by context-tree weighting (CTW)
 algorithm.
 
 ### PSTs and CTW
@@ -38,43 +37,133 @@ Bellow is example of one simple PST:
 
 When we want to use this PST to predict probability of next bit in interaction (eg: what will be first bit of our observation in next round?), when we saw sequence (for example) 01000*10* so far, it can be done this way:
 
-- We start in the root and look at last bit we saw: it was 0. We therefore go to child under edge with label "0". 
-- We are not in leaf, so far, so we continue in same way. second-to last bit was 1, so we end up in node  θ <sub>01</sub>.
-- When we arive in leaf, we find there probability of next bit being 1, in this case we predict that next bit will be 1 with probability 0.3.
+- We start in the root and look at last bit we saw: it was 0. We, therefore, go to a child under edge with a label "0". 
+- We are not in leaf, so far, so we continue in the same way. Second-to-last bit was 1, so we end up in node  θ <sub>01</sub>.
+- When we are in leaf, we find there the probability of next bit being 1, in this case, we predict that next bit will be 1 with probability 0.3.
 
-CTW part of MC-AIXI-CTW uses context tree weighting to compute mixture of predictions of all PST of certain depth, where each has weight corresponding to its complexity. Thetas of each PST are computed by [KT-estimator][kt]. Importance of this algorithm is that it is able to compute mixture of predictions of all 2<sup>D</sup> possible models, which would naively took 2<sup>2<sup>D</sup></sup> steps, in O(D).
+CTW part of MC-AIXI-CTW uses context tree weighting to compute a mixture of predictions of all PST of a certain depth, where each has a weight corresponding to its complexity. Thetas of each PST are computed by [KT-estimator][kt]. Importance of this algorithm is that it is able to compute mixture of predictions of all 2<sup>D</sup> possible models, which would naively took 2<sup>2<sup>D</sup></sup> steps, in O(D).
 
-CTW was originaly used for compression, but reusing it for prediction is natural since these two problems are closely related. When we are compressing, we can forget everything we can predict. Therefore, having a good predictor means having a good compressor. Original AIXI achieves best action possible, by using best compressor possible: Kolmogorov complexity.
+CTW was originally used for compression, but reusing it for prediction is natural since these two problems are closely related. When we are compressing, we can forget everything we can predict. Therefore, having a good predictor means having a good compressor. Original AIXI achieves the best action possible, by using best compressor possible: Kolmogorov complexity.
 
 ### Monte Carlo
-So far, we have rough idea about how to model (ie: being able predict reactions of) environment. When we have this model, it is necessary to plan what action to take.  Most well-known algorithms for this (eg: α-β-pruning) are not usable because:
+So far, we have rough idea about how to model (ie: being able to predict reactions of) environment. When we have this model, it is necessary to plan what action to take.  Most well-known algorithms for this (eg: α-β-pruning) are not usable because:
 
-- we do not have heuristic estimation of quality (goodness/badness) of a state. Our algorithm runs in unknown environment.
-- There is no explicit "state" - state of environment is hidden, algorithm see just some output. From point of view of MC-AIXI-CTW state we are in is whole history of interaction.
+- we do not have the heuristic estimation of quality (goodness/badness) of a state. Our algorithm runs in the unknown environment.
+- There is no explicit "state" - state of the environment is hidden, algorithm sees just some output. From a point of view of MC-AIXI-CTW state we are in is whole history of interaction.
 
-To solve this, Monte Carlo Tree Search (MCTS) algorithm, widely used in Go playing bots, is used. When we consider what to do in some state, instead of considering possible next states from "state space" like in minimax-like algorithms, we try to play several games starting in our current state against our model of environment while choosing our actions randomly.
+To solve this, Monte Carlo Tree Search (MCTS) algorithm, widely used in Playing bots, is used. When we consider what to do in some state, instead of considering possible next states from "state space" like in minimax-like algorithms, we try to play several games starting in our current state against our model of the environment while choosing our actions randomly.
 
 How MCTS works:
 ![pUCT](http://i.imgur.com/1h3Funl.png)
 
-This way, algorithm can make a tree model, like on image above as to what situation will various actions lead to, and compute average reward of them. To pick what action to take it uses [ρUCT] (modified [UCT]) to keep balance between exploration and exploitation.
+This way, an algorithm can make a tree model, like on the image above as to what situation will various actions lead to, and compute average reward of them. To pick what action to take it uses [ρUCT] (modified [UCT]) to keep a balance between exploration and exploitation.
+
+# What is in this package
+## AIXINode.
+This node has three inputs and on output. Two of inputs are reward and observation and output is action. This works like was described above.
+
+The third input is EnvironmentalData. This node needs to have some information about the environment, like a number of actions. This can be configured in settings of the node, or via this parameter directly from the environment (in world AIXIEnvironmentWorld).
+
+Note: In this version, maximal size of each observation, reward and action is just 23b, and the sum of a number of bits needed for observation and reward has to be less than 32b.
+
+#### Parameters. 
+![](http://i.imgur.com/gsAgnUo.png)
+
+It is possible to set several parameters of AIXI Node:
+- The depth of Context tree - That is how far back (in bits) should agent look while deciding about what do next. Time complexity grows O(N). Maximal space usage is O(2<sup>N</sup>), but this is not achieved in practice. (common values: 4-96)
+- Agent horizon = How many rounds into the future look while planning. (Common values: 3-6)
+- Initial Exploration and Exploration Decay: Probability of doing random action, instead of planning using monte-carlo, is (initial-exploration)*(exploration decay)<sup>(# of round)</sup>.
+- MC Simulations. How many times do Monte Carlo sampling. Common values are 100-1000
+
+Agent also has to know something about the environment it is in. This can be set in AIXI Node properties or via input EnvironmentalData (described bellow).
+
+Note: a large number of possible observations and rewards has little impact on performance. All actions are searched in linear order, thus there should be smaller number of actions.
+
+![](http://i.imgur.com/AgrJuWa.png)
 
 
+## World AIXIEnvironmentWorld
+In the package is included world AIXIEnvironmentWorld that contains several standard games from literature about genral reinforcement learning. References can be found in [Vennes (2011)][jvPhD]. It also provides a vector of 10 numbers Environment Data, that can be connected to AIXINode, that will use it to automatically set parameters of an environment, that has to be set by hand otherwise.
 
-### Parallelisation
-Parallelisation of this algorithm is not so straightforward since it depends on searching in trees, instead of matrix operations, etc. Basic ideas for parallelisation of general MCTS techniques were published by [Rocki][rockipaper] and [Chaslot][parmcts]. But published research in this area is rather scarse.
+There are these values in Environment Data vecotor:
+0. action_bits
+1. reward_bits
+2. observation_bits
+3. perception_bits (sum of two above)
+4. min_action
+5. min_reward
+6. min_observation
+7. max_action
+8. max_reward
+9. max_observation
 
-I decided to make algorithm paralel in two ways at once. First way is that, when we simulate game against environment (wigly lines at bottom of image bellow), we simulate many games at once in parallel, their results are then averaged.
+## Available games
+There is example brain for each of these games:
 
-Other way is that instead of having one BCTS tree of possible future, we make several trees that are merged at end of cycle.
+#### CoinFlip
+This is an extremely simple environment. In each round, environment flips a biased coin that has probability 0.9 of being tails (coded as 0). Agent puts its guess (tails/heads), and environment says what it was and what real result. The reward is 0 for incorrect guess and 1 point for correct guess.
 
-![Parallelisation](http://i.imgur.com/T2AqbzE.jpg)
+#### Tiger
+In this environment, there are two doors. Behind one is a pot of gold. And behind the second one is the tiger. Agent can open one of the doors (10 points for the pot of gold, -100 for tiger), or listen (-1 point), which will reveal the position of the tiger with probability 0.85. After opening the door, the game starts over with the random position of gold and tiger.
 
-# Usage
-[TODO]
+#### Extended Tiger
+This game is similar to Tiger, but Agent starts sitting. Available actions are: open left door, open right door, listen, stand up. Listening works only while sitting. Reward are similar like in Tiger, but 30 points for finding the pot of gold. Planning of several actions to future is needed in this game.
 
-# Performance
-[TODO]
+#### Biased Rock Paper Scissors
+Here agent plays rock-paper-scissors against an opponent who will repeat rock if it won the game using it.
+
+#### Cheese Maze
+Agent is in the maze (bellow) and has actions: left, right, up, down. And reward: -10 for bumping into a wall, 10 for finding cheese, -1 for moving to free cell. The agent is observing 4 bits corresponding to seeing walls around cell he is in. That means he has ambiguous observations. 
+
+![Cheese Maze](http://i.imgur.com/0iZwU8T.png)
+
+#### Tic-Tac-Toe
+Here agent plays repeated games of tic-tac-toe against oponent playing randomly. Nine actions are "place mark to field no. N". Observation is whole playing field. Rewards are 2 for winning, -2 for losing, -3 for an ilegal move (field is already taken). In this environment is much more possible observations than in others.
+
+### Overview of games
+| Game           | # of actions | # of observations | perceptual aliasing | noisy observation |
+|----------------|--------------|-------------------|---------------------|-------------------|
+| Coin flip      | 2            | 2                 | No                  |  Yes                 |
+| Tiger          | 3            | 3                 | Yes                 | Yes               |
+| Extended Tiger | 4            | 3                 | Yes                 | Yes               |
+| Biased RPS     | 3            | 3                 | No                  | Yes               |
+| Cheese Maze    | 4            | 16                | Yes                 | No                |
+| Tic-Tac-Toe    | 9            | 19683             | No                  | No                |
+
+
+## AIXILibrary
+This is a C# library, that is Brain Simulator-independent, implementing MC-AIXI-CTW.
+
+Example of usage:
+```c#
+// Description of these options is in AIXIStandalone/AIXIStandalone/Program.cs
+var options = new Dictionary<string, string>();
+options["ctw-model"] = "ctf";
+options["exploration"] = "0.1";
+options["explore-decay"] = "0.99";
+options["ct-depth"] = "8";
+options["agent-horizon"] = "4";
+options["mc-simulations"] = "200";
+
+var env = new CoinFlip(options);
+
+var agent = new MC_AIXI_CTW(env, options);
+
+// interaction loop
+while (True){
+      //give observation and reward to agent, so it can update its model of environment
+      agent.ModelUpdatePercept(env.Observation, env.Reward);
+
+      // Let agent pick action according to UCT
+      int action = agent.Search();
+
+      env.PerformAction(action);
+
+      // Let the agent know that we really want to do this action.
+      agent.ModelUpdateAction(action);
+}
+```
+There are included two Visual Studio solutions: AIXIStandalone and AIXIModule. Former is for using AIXILibrary without Brain Simulator. Later is for using Brain Simulator. 
 
 [jvPhD]: http://jveness.info/publications/veness_phd_thesis_final.pdf
 [mcaixictw]: https://www.jair.org/media/3125/live-3125-5397-jair.pdf
@@ -83,14 +172,18 @@ Other way is that instead of having one BCTS tree of possible future, we make se
 [rockipaper]: http://olab.is.s.u-tokyo.ac.jp/~kamil.rocki/rocki_scai11.pdf
 [mcsurvey]: http://ieeexplore.ieee.org/xpls/abs_all.jsp?arnumber=6145622&tag=1
 
+##
+
+## Credits
+This project was created for [GoodAI](http://goodai.com), during [Summer Camp](http://datalab.fit.cvut.cz/events/52-summer-camp-2015) at  [FIT ČVUT](http://fit.cvut.cz/). Some images used are by Joel Vennes. It was heavily inspired by [pyaixi](https://github.com/gkassel/pyaixi) by Geoff Kassel and [mc-aixi](https://github.com/moridinamael/mc-aixi) by Daniel Visentin and Marcus Hutter.
 
 ## Literature
-- Introduction to MC-AIXI-CTW is in PhD thesis of [Joel Veness][jvPhd].
+
+- Introduction to MC-AIXI-CTW is in Ph.D. thesis of [Joel Veness][jvPhd].
 - Main paper on this is [A Monte-Carlo AIXI Approximation][mcaixictw] by J Veness et al.
 - Some ideas on parallelisation of monte-carlo tree search are in:
-    - [PhD thesis][rockiThesis] of Kamil Rocki
+    - [Ph.D. thesis][rockiThesis] of Kamil Rocki
     - [Parallel Monte-Carlo Tree Search][parmcts] by G Chaslot, et al.
     - [Parallel Monte Carlo Tree Search on GPU][rockipaper] by K Rocki and R Suda
 - A survey of techniques related to Monte Carlo Tree Search is in:
   - [A Survey of Monte Carlo Tree Search Methods][mcsurvey]
-
