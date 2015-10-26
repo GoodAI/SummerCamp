@@ -47,13 +47,21 @@ namespace AIXI
         public int RWall = (int)RewardEnum.RWall;
         public int OutsideMazeReward = (int) RewardEnum.RWall;
         
-        public MazeEnvironment(Dictionary<string, string> options, string layout)
+        public MazeEnvironment(Dictionary<string, string> options, string layout="")
             : base(options)
         {
             //Note: numbering of rows of maze is such:
             // 0 - {first/upper one}
             // 1 - {second one}
             //...
+            if (layout == "") {
+                layout =
+    @"#######
+#.....#
+#.#.#.#
+#.#@#.#
+#######";
+            }
 
 
             this.ValidActions = new[] { this.ALeft, this.AUp, this.ARight, this.ADown };

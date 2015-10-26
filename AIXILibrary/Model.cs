@@ -17,9 +17,9 @@ namespace AIXI
         void revert_tree_history(int symbolCount);
 
         double Predict(int[] symbolList);
-        //not needed:
-        //void GenerateRandomSymbols(int symbol_count) {
         int[] GenerateRandomSymbolsAndUpdate(int symbolCount);
+        int[] GenerateRandomSymbols(int symbolCount);
+
 
         int get_model_size();
 

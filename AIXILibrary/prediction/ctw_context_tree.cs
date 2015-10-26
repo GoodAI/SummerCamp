@@ -50,9 +50,10 @@ namespace AIXI
             this.Root.Print();
         }
 
-        public void GenerateRandomSymbols(int symbolCount) {
-            //TODO, I do not understand this one - it should not be needed
-            throw new NotImplementedException();
+        public int[] GenerateRandomSymbols(int symbolCount) {
+            var symbol_list = GenerateRandomSymbolsAndUpdate(symbolCount);
+            this.revert_tree(symbolCount);
+            return symbol_list;
         }
 
         public int[] GenerateRandomSymbolsAndUpdate(int symbolCount) {

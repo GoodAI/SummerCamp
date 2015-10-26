@@ -3,8 +3,9 @@
   <Network Sequential="False" LoadOnStart="False" SaveOnStop="False" Id="0" Name="Network">
     <Children>
       <MyAIXINode LoadOnStart="False" SaveOnStop="False" Id="101" Name="Node_101" yaxlib:realtype="AIXIModule.MyAIXINode">
+        <LearningPeriod>100</LearningPeriod>
         <MCSimulations>200</MCSimulations>
-        <ContextTreeDepth>4</ContextTreeDepth>
+        <ContextTreeDepth>16</ContextTreeDepth>
         <AgentHorizon>6</AgentHorizon>
         <UseEnvironmentDataFromHere>False</UseEnvironmentDataFromHere>
         <MinAction>0</MinAction>
@@ -104,10 +105,10 @@
       <TargetIdentifier>101#AverageReward</TargetIdentifier>
       <m_displayMethod>CYCLE</m_displayMethod>
       <m_boundPolicy>AUTO</m_boundPolicy>
-      <m_boundMin>0.3942901</m_boundMin>
-      <m_boundMax>1.372487</m_boundMax>
-      <m_manualBoundMin>0.724</m_manualBoundMin>
-      <m_manualBoundMax>1.036</m_manualBoundMax>
+      <m_boundMin>0.07257748</m_boundMin>
+      <m_boundMax>0.7493309</m_boundMax>
+      <m_manualBoundMin>0.2605667</m_manualBoundMin>
+      <m_manualBoundMax>1.133767</m_manualBoundMax>
       <m_manualBoundHaveBeenSet>False</m_manualBoundHaveBeenSet>
       <m_period>1</m_period>
       <m_delay>0</m_delay>

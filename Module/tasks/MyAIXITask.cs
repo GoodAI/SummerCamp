@@ -31,6 +31,7 @@ namespace AIXIModule
         public float exploration_decay;
         public bool explore;
         public bool explored;
+        public int experimental_period;
 
         public override void Init(int nGPU)
         {
@@ -39,6 +40,12 @@ namespace AIXIModule
             options["ct-depth"] = Owner.ContextTreeDepth.ToString();
             options["agent-horizon"] = Owner.AgentHorizon.ToString();
             options["mc-simulations"] = Owner.MCSimulations.ToString();
+//            options["learning-period"] = Owner.LearningPeriod.ToString();
+
+            options["ctw-model"] = "ctf";
+
+            Int32.TryParse(Owner.LearningPeriod.ToString(), out this.experimental_period);
+
 
             if (Owner.UseEnvironmentDataFromHere)
             {   
@@ -51,7 +58,7 @@ namespace AIXIModule
 
                 options["min-reward"] = Owner.MinReward.ToString();
                 options["max-reward"] = Owner.MaxReward.ToString();
-                
+
             }
             else {
                 //use configuration given by environment
@@ -101,7 +108,13 @@ namespace AIXIModule
             this.explored = false;
             int action;
 
-            if (this.explore && AIXI.Utils.ProbabilisticDecision(this.explore_rate))
+            bool experiment = false;
+            if (this.experimental_period > 0 && this.i < this.experimental_period)
+            {
+                experiment = true;
+            }
+
+            if (experiment || (this.explore && AIXI.Utils.ProbabilisticDecision(this.explore_rate)))
             {
                 this.explored = true;
                 action = (int)agent.GenerateRandomAction();

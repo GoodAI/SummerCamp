@@ -121,7 +121,14 @@ namespace AIXIModule
         }
 
         //todo-later: put here option "verbose"
-      
+
+        [MyBrowsable, Category("Parameters"), YAXSerializableField(DefaultValue = 1000)]
+        public int LearningPeriod
+        {
+            get;
+            set;
+        }
+
         [MyBrowsable, Category("Parameters"), YAXSerializableField(DefaultValue = 200)]
         public int MCSimulations
         {

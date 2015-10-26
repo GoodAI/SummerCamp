@@ -13,7 +13,7 @@ namespace AIXI
         public Dictionary<int, CTWContextTreeNode> Children;
         public CTWContextTree Tree;
         public double LogKt=0.0;
-        public double LogProbability = 0.0;//log of prob==0 -> prob ==1. Is this true?
+        public double LogProbability = 0.0;//n: q: log of prob==0 -> prob ==1. Is this true?
         public int NumberOf0S=0;
         public int NumberOf1S=0;
         public CTWContextTreeNode(CTWContextTree tree){
@@ -120,7 +120,7 @@ namespace AIXI
                     logChildProbability += child.LogProbability;
                 }
 
-                //for better numerical results
+                //for better numerical results (least chance of overflow)
                 double a = Math.Max(this.LogKt, logChildProbability);
                 double b = Math.Min(this.LogKt, logChildProbability);
 

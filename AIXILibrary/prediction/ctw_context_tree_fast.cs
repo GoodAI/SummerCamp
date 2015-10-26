@@ -402,6 +402,13 @@ namespace AIXI
                 //todo: is it fast enough to compute Math.Log(0.5) every time. Joel has it cached.
             }
         }
+        public int[] GenerateRandomSymbols(int symbolCount)
+        {
+            var symbol_list = this.GenerateRandomSymbolsAndUpdate(symbolCount);
+            this.revert_tree(symbolCount);
+            return symbol_list;
+        }
+
         public int[] GenerateRandomSymbolsAndUpdate(int symbolCount)
         {
             int[] symbolList = new int[symbolCount];

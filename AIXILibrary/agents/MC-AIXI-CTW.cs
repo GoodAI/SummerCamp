@@ -99,9 +99,12 @@ namespace AIXI
         }
 
         public Tuple<int,int> GeneratePercept() {
-            int observation = Utils.RandomElement(this.Environment.ValidObservations);
-            int reward = Utils.RandomElement(this.Environment.ValidRewards);
-            return new Tuple<int, int>(observation, reward);
+            var symbols = this.ContextTree.GenerateRandomSymbols(this.Environment.perceptBits());
+
+            return decode_percept(symbols);
+            //int observation = Utils.RandomElement(this.Environment.ValidObservations);
+            //int reward = Utils.RandomElement(this.Environment.ValidRewards);
+            //return new Tuple<int, int>(observation, reward);
         }
 
         public int decode_reward(int[] symbolList) {
