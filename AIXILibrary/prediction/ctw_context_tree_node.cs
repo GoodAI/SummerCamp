@@ -51,6 +51,8 @@ namespace AIXI
         }
 
         public double LogKtMultiplier(int symbol) {
+            //log of probability from KT-estimator:
+            // log(Pr_kt(1 |0^a 1^b)) = log((b + 1/2)/(a + b + 1))
             double numerator = this.SymbolCount(symbol)+0.5;
             double denominator = this.Visits()+1;
             return Math.Log(numerator / denominator);

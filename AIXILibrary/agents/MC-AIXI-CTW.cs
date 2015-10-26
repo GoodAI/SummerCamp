@@ -153,6 +153,7 @@ namespace AIXI
         }
 
         public override double Playout(int horizon) {
+            // refrac: do not believe rewards that are further away so much
             double totalReward = 0.0;
 
             for (int i = 0; i < horizon; i++) {
@@ -204,17 +205,20 @@ namespace AIXI
 
         override public int Search() {
             CtwContextTreeUndo undoInstance = new CtwContextTreeUndo(this);
+
             MonteCarloSearchNode searchTree = new MonteCarloSearchNode(MonteCarloSearchNode.DecisionNode);
+
             for (int i = 0; i < this.McSimulations; i++) {
                 searchTree.Sample(this, this.Horizon);
                 this.model_revert(undoInstance);
             }
 
-            searchTree.PrintBs();
+            //searchTree.PrintBs();
 
 
             int bestAction=-1;
             double bestMean = double.NegativeInfinity;
+
             foreach (int action in this.Environment.ValidActions) {
 
                 if (!searchTree.Children.ContainsKey(action)) {

@@ -11,30 +11,28 @@ namespace AIXI
     {
         public enum MazeActionEnum { ALeft, AUp, ARight, ADown };
 
-        public enum MazeObservationEnum { ONull = 0, OLeftWall = 1, OUpWall = 2, ORightWall = 4, ODownWall = 8 };
+        public enum MazeObservationEnum { OLeftWall = 1, OUpWall = 2, ORightWall = 4, ODownWall = 8 };
 
-        public enum MazeObservationEncodingEnum { CUninformative, CWalls, CCoordinates};//not implemented
+        //rewards before normalisation:
+        // bumping into wall: -10
+        // moving to free cell = -1
+        // finding cheese=10
+        enum RewardEnum { RWall = 0, REmpty= 9, RCheese = 20 };
 
         public int ALeft = (int)MazeActionEnum.ALeft;
         public int AUp = (int)MazeActionEnum.AUp;
         public int ARight = (int)MazeActionEnum.ARight;
         public int ADown = (int)MazeActionEnum.ADown;
 
-        public int ONull = (int)MazeObservationEnum.ONull;
         public int OLeftWall = (int)MazeObservationEnum.OLeftWall;
         public int OUpWall = (int)MazeObservationEnum.OUpWall;
         public int ORightWall = (int)MazeObservationEnum.ORightWall;
         public int ODownWall = (int)MazeObservationEnum.ODownWall;
 
-        //public int cUninformative = (int)maze_observation_encoding_enum.cUninformative;
-        //public int cWalls = (int)maze_observation_encoding_enum.cWalls;
-        //public int cCoordinates = (int)maze_observation_encoding_enum.cCoordinates;
 
         public char CWall = '#';
         public char CEmpty = '.';
-
-        public char CTeleportTo = '*'; //not implemented
-        public char CTeleportFrom = '!'; //not implemented
+        public char CCheese = '@';
 
         public int X;
         public int Y;
@@ -43,16 +41,21 @@ namespace AIXI
         public int Height;
 
         public char[,] Maze;
-        public int[,] Rewards;
 
-        public int MinRewardUnnormalized;
-        public int MaxRewardUnnormalized;
-
-        public int OutsideMazeReward = 0;    //this is assumed to be already normalized to 0+
-
-        public MazeEnvironment(Dictionary<string, string> options, string layout, int[,] rewardsNotNormalized)
+        public int RCheese = (int)RewardEnum.RCheese;
+        public int REmpty = (int)RewardEnum.REmpty;
+        public int RWall = (int)RewardEnum.RWall;
+        public int OutsideMazeReward = (int) RewardEnum.RWall;
+        
+        public MazeEnvironment(Dictionary<string, string> options, string layout)
             : base(options)
         {
+            //Note: numbering of rows of maze is such:
+            // 0 - {first/upper one}
+            // 1 - {second one}
+            //...
+
+
             this.ValidActions = new[] { this.ALeft, this.AUp, this.ARight, this.ADown };
             this.ValidObservations= new int[this.max_observation()+1];
             for (int i = 0; i < this.max_observation() + 1; i++)
@@ -73,27 +76,9 @@ namespace AIXI
             this.Width = rows[0].Length;
             this.Maze = new char[Height, Width];
 
-            if (rewardsNotNormalized.GetLength(0) != Height || rewardsNotNormalized.GetLength(1) != Width)
-            {
-                throw new ArgumentException("Rewards have different shape than layout");
-            }
 
-            this.Rewards = rewardsNotNormalized;
+            ValidRewards = (int[])Enum.GetValues(typeof(RewardEnum));
 
-            //normalizing rewards:
-            this.MinRewardUnnormalized=int.MaxValue;
-            this.MaxRewardUnnormalized = int.MinValue;
-            foreach (int value in rewardsNotNormalized)
-            {
-                MinRewardUnnormalized = Math.Min(MinRewardUnnormalized, value);
-                MaxRewardUnnormalized = Math.Max(MaxRewardUnnormalized, value);
-            }
-
-            this.ValidRewards = new int[(this.MaxRewardUnnormalized-this.MinRewardUnnormalized) + 1];
-            for (int i = 0; i < (this.MaxRewardUnnormalized - this.MinRewardUnnormalized) + 1; i++)
-            {
-                this.ValidRewards[i] = i;
-            }
 
             for (int y = 0; y < Height; y++)
             {
@@ -105,19 +90,14 @@ namespace AIXI
                 for (int x = 0; x < Width; x++)
                 {
                     this.Maze[y, x] = row[x];
-                    //normalizing rewards to being positive
-                    this.Rewards[y, x] = rewardsNotNormalized[y,x] - MinRewardUnnormalized;
                 }
             }
             base.fill_out_bits();
-
 
             this.place_agent();
 
             this.calculate_observation();
             this.Reward = 0;
-
-
         }
 
         public bool exists_free_space() {
@@ -137,7 +117,6 @@ namespace AIXI
                 this.X = Utils.Rnd.Next(0, Width);
                 this.Y = Utils.Rnd.Next(0, Height);
             } while (!this.Accessible(this.X,this.Y));
-            
         }
 
         public bool Accessible(int x, int y) {
@@ -178,8 +157,22 @@ namespace AIXI
         }
 
         public int GetReward(int x, int y) {
+            //TODO
             if (this.InMaze(x, y)) {
-                return this.Rewards[y, x];
+                if (this.Maze[y,x] == CWall)
+                {
+                    return this.RWall;
+                }
+                if (this.Maze[y, x] == CEmpty)
+                {
+                    return this.REmpty;
+                }
+                if (this.Maze[y, x] == CCheese)
+                {
+                    return this.RCheese;
+                }
+
+
             }
             return this.OutsideMazeReward;
         }
@@ -218,7 +211,33 @@ namespace AIXI
             this.Reward = this.GetReward(newx, newy);
             this.calculate_observation();
 
+            if (this.Reward == this.RCheese)
+            {
+                place_agent();
+            }
+
             return new Tuple<int, int>(this.Observation,this.Reward);
+        }
+
+        public void print()
+        {
+            for (int y = 0; y < this.Height; y++)
+            {
+                for (int x = 0; x < this.Width; x++)
+                {
+                    if (x == this.X && y == this.Y)
+                    {
+                        Console.Write("A");
+                    }
+                    else
+                    {
+                        Console.Write(this.Maze[y, x]);
+                    }
+                }
+                Console.WriteLine();
+            }
+
+
         }
     }
 

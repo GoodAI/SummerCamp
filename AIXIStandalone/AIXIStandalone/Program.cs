@@ -8,6 +8,9 @@ namespace AIXI
     {
         private static void Main(string[] args)
         {
+            new ConsoleEnvUI();
+            return;
+
             var options = new Dictionary<string, string>();
 
             //POSSIBLE OPTIONS:
@@ -17,15 +20,15 @@ namespace AIXI
 
             //exploration: (possible values 0.0-1.0), initial probability of exploration.
             //      exploration is probability of taking random action
-            options["exploration"] = "0.1";
+            options["exploration"] = "0.99";
             
             //explore-decay (possible values 0.0-1.0). Probability of exploration will decay exponentially.
             //      It will be multiplied by explore-decay every cycle
-            options["explore-decay"] = "0.99";
+            options["explore-decay"] = "0.9995";
             
             //ct-depth (possible values int 1+, common values are 8-100) depth of CTW tree. 
             //      That means, how many bits it will look back while deciding
-            options["ct-depth"] = "8";
+            options["ct-depth"] = "96";
 
             //agent-horizon: (values int, 1+) how far into future (in bits) we should try to predict the future.
             //      From predicted future is computed how good this future is.
@@ -38,10 +41,10 @@ namespace AIXI
             //terminate-age: (possible values int 1+)
             //      how many cycles to do, before ending. 0=run forever
             //      cycle = environment gives observation and reward and agent reacts with action
-            options["terminate-age"] = "500";
+            options["terminate-age"] = "10000";
             
 
-            var env = new CoinFlip(options);
+            var env = new RockPaperScissorsEnvironment(options);
 
             var agent = new MC_AIXI_CTW(env, options);
 

@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-using GoodAI.Core.Utils;
+//using GoodAI.Core.Utils;
 using System.Runtime.InteropServices;
 
 
@@ -44,7 +44,7 @@ namespace AIXI
         }
         
         static public int LogBase2(int value)
-        {//Copied from internet, probably stack overflow, I forgot where.
+        {//note: from stack overflow, URL forgotten. 
             int log = 31;
             while (log >= 0)
             {

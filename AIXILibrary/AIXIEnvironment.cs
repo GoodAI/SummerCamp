@@ -21,8 +21,6 @@ namespace AIXI
         public int ObservationBits;
         public int RewardBits;
 
-        //method __unicode__
-
         public AIXIEnvironment(Dictionary<string, string> options) {
             this.Options = options;
         }
@@ -32,7 +30,6 @@ namespace AIXI
             this.ObservationBits = Utils.BitsNeeded(this.ValidObservations.Max());
             this.RewardBits = Utils.BitsNeeded(this.ValidRewards.Max());
         }
-
 
         public int actionBits()
         {
@@ -105,7 +102,7 @@ namespace AIXI
         public int? minimum_action() {  //todo: put all minimum_X together
             if (this.ValidActions.Length > 0)
             {
-                return this.ValidActions[0]; //TODO? in pyaixi is valid_actions[1] ... Why?
+                return this.ValidActions[0];
             }
             else {
                 return null;

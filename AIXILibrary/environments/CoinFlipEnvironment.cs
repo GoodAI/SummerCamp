@@ -5,12 +5,12 @@ using System.Collections.Generic;
 
 namespace AIXI
 {
-    public class RockPaperScissorsEnvironment : AIXIEnvironment
+    public class CoinFlip : AIXIEnvironment
     {
         enum ActionsEnum { ATail, AHead };
         enum ObservationsEnum { OTail, OHead };
 
-        enum RewardEnum { RLose = 0, RWin = 1 };
+        enum RewardEnum { RLose=0, RWin=1 };
 
         //int aTail = (int) actions_enum.aTail;
         //int aHead = (int)actions_enum.aHead;
@@ -21,11 +21,11 @@ namespace AIXI
         public int RLose = (int)RewardEnum.RLose;
         public int RWin = (int)RewardEnum.RWin;
 
-        double _defaultProbability = 0.05;
+        double _defaultProbability = 0.1;
         double _probability;
-
+        
         Random _rnd = new Random();
-        public RockPaperScissorsEnvironment(Dictionary<string, string> options)
+        public CoinFlip(Dictionary<string, string> options)
             : base(options)
         {
             ValidActions = (int[])Enum.GetValues(typeof(ActionsEnum));
@@ -38,7 +38,7 @@ namespace AIXI
 
             Debug.Assert(this._probability >= 0 && this._probability <= 1, "probability is set outside [0,1]");
 
-            if (this._rnd.NextDouble() < this._probability)
+            if (Utils.ProbabilisticDecision(this._probability))
             {
                 this.Observation = this.OHead;
             }
@@ -52,10 +52,10 @@ namespace AIXI
 
         public override Tuple<int, int> PerformAction(int action)
         {
-            Debug.Assert(this.IsValidAction(action), "non-valid action used " + action);
+            Debug.Assert(this.IsValidAction(action), "non-valid action used "+action);
 
             this.Action = action;
-            if (this._rnd.NextDouble() < this._probability)
+            if (Utils.ProbabilisticDecision(this._probability))
             {
                 this.Observation = this.OHead;
             }
@@ -63,13 +63,14 @@ namespace AIXI
             {
                 this.Observation = this.OTail;
             }
+
+
             if (action == this.Observation)
             {
-                Reward = this.RWin;
+                this.Reward = this.RWin;
             }
-            else
-            {
-                Reward = this.RLose;
+            else {
+                this.Reward = this.RLose;
             }
 
             return new Tuple<int, int>(this.Observation, this.Reward);
