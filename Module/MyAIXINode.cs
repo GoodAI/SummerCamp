@@ -14,7 +14,6 @@ using GoodAI.Core.Task;
 using System.Threading;
 using GoodAI.Core;
 
-using ManagedCuda;
 
 
 namespace AIXIModule

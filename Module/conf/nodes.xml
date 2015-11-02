@@ -3,14 +3,8 @@
   <KnownNodes>
     <Node type="AIXIModule.MyAIXINode" CanBeAdded="true" >
     </Node>
-    <Node type="AIXIModule.TestingNode" CanBeAdded="true" >
-    </Node>
-    <Node type="AIXIModule.MyAIXICudaNode" CanBeAdded="true" >
-    </Node>
   </KnownNodes>
   <KnownWorlds>
     <World type="AIXIModule.AIXIEnvironmentWorld" CanBeAdded="true"></World>
-
-
   </KnownWorlds>
 </Configuration>
