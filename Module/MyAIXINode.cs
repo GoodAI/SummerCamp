@@ -14,15 +14,13 @@ using GoodAI.Core.Task;
 using System.Threading;
 using GoodAI.Core;
 
-
-
 namespace AIXIModule
 {
     /// <author>Jiri Nadvornik</author>
     /// <meta>jn</meta>
     /// <status>Experimental</status>
-    /// <summary>My Tic-Tac-Toe Agent</summary>
-    // <description>Uses MC-AIXI-CTW algorithm for reinforcement learning</description>
+    /// <summary>Uses MC-AIXI-CTW algorithm for reinforcement learning</summary>
+    /// <description>See tutorial for description of use</description>
     class MyAIXINode : MyWorkingNode
     {
         public MyAIXITask Play

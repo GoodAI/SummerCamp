@@ -18,11 +18,13 @@ using ManagedCuda;
 
 namespace AIXIModule
 {
-
+    /// <summary>
+    /// This task takes reward and observation from Brain Simulator and pass it to AIXILibrary and then return action - ie: response of AIXILibrary. Decision if to explore or not is done int this task.
+    /// </summary>
     [Description("MC-AIXI-CTW agent")]
     class MyAIXITask : MyTask<MyAIXINode>
     {
-        //        public int m_cursor = 0;
+
         public int i = 0;
         public AIXI.Agent agent;
         public AIXI.BS_RL_Environment env;

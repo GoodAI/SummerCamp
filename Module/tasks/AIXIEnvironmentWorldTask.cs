@@ -10,6 +10,9 @@ using GoodAI.Core.Utils;
 
 namespace AIXIModule
 {
+    /// <summary>
+    /// This task is for passing reaction of agent to environments from AIXILibrary adnd back. 
+    /// </summary>
     [Description("Get reaction of AIXIEnvironment")]
     public class AIXIEnvironmentWorldTask : MyTask<AIXIEnvironmentWorld>
     {

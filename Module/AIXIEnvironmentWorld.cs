@@ -14,7 +14,23 @@ namespace AIXIModule
     /// <author>Jiri Nadvornik</author>
     /// <meta>jn</meta>
     /// <status>Experimental</status>
-    /// <summary>Converter from AIXIEnvironment class to world</summary>
+    /// <summary>This world makes AIXIEnvironments from AIXILibrary available in Brain Simulator</summary>
+    /// <description>Reinforcement learning module using Monte Carlo AIXI CTW node
+    ///             
+    ///             For more information, see tutorial online.
+    /// 
+    ///             Inputs:
+    ///             <ul>
+    ///                 <li>Action - number of action agent pick in last round</li>
+    /// 
+    ///             </ul>
+    ///             Outputs:
+    ///             <ul>
+    ///                 <li>Observation - number representing bits of last observation</li>
+    ///                 <li>Reward - bits representing value of last action ()</li>
+    ///                 <li>EnvironmentData - (see docs for description)</li>
+    ///             </ul>
+    /// </description>
     public class AIXIEnvironmentWorld : MyWorld
     {
 
