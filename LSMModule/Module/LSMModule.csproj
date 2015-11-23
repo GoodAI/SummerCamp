@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -34,7 +34,7 @@
   <ItemGroup>
     <Reference Include="CudaRand, Version=7.0.27.0, Culture=neutral, PublicKeyToken=fe981579f4e9a066, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\Program Files\GoodAI\Brain Simulator\CudaRand.dll</HintPath>
+      <HintPath>C:\Program Files\GoodAI\Brain Simulator\CudaRand.dll</HintPath>
     </Reference>
     <Reference Include="GoodAI.Platform.Core">
       <HintPath>C:\Program Files\GoodAI\Brain Simulator\GoodAI.Platform.Core.dll</HintPath>

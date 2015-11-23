@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LSMModule</name>
+    </assembly>
+    <members>
+        <member name="T:LSMModule.BenchmarkFileSaver">
+            <author>Adr33</author>
+            <meta>ok</meta>
+            <status>Alpha release</status>
+            <summary>LSM Benchmark File Saver node</summary>
+            <description>
+            Modification of MyCsvFileWriterNode, which serves for benchmark testing of performance of LSM<br></br>
+            - the value which is tracked is whether detector was able to correctly recognize input as target<br></br>
+              - detector recognized input as target if the correct value in target has the biggest score in output<br></br>
+              - the value is calculated over the whole input block(whole file, input set) and then divided by the size of block<br></br>
+              - so the final value equal to how many percents of inputs over the block were correctly recognized<br></br>
+            - this node serves purely for testing purpose, it is not needed for the run of LSM
+            </description>
+        </member>
+        <member name="T:LSMModule.LiquidStateMachine">
+            <author>Adr33</author>
+            <meta>ok</meta>
+            <status>Alpha release</status>
+            <summary>Liquid State Machine node</summary>
+            <description>
+            Liquid State Machine node - the key node of this module<br></br>
+            - tranfers binary input into an output, which also takes into account last few elements of the sequence<br></br>
+            - edges of the network are generated randomly with constrains put by different topologies<br></br>
+            - neurons are of type integrate-and-fire(IF)<br></br>
+            - recommended connectivity of LSM is said to be between 5-10% based on used topology<br></br>
+            - LSM can be either spiking or non-spiking<br></br>
+            - inner state and output of neurons are computed used equations discribed in LSMOutputTask<br></br>
+            - as output of this LSM we take current state of all the neurons in current step
+            </description>
+        </member>
+        <member name="T:LSMModule.LSM.Tasks.LSMComputeTask">
+            <author>Adr33</author>
+            <meta>ok</meta>
+            <status>Alpha release</status>
+            <summary>Task for inner computing</summary>
+            <description>
+            Generates the inner state and internal output of neurons.<br></br>
+            The main equation for inner state of neurons X in time T is:<br></br>
+            innerState[X, T] = innerState[X, T-1] + imageInput[X, T] + sum(all edge inputs for X in T)
+            </description>
+        </member>
+        <member name="T:LSMModule.LSM.Tasks.LSMMaassInitTask">
+            <author>Adr33</author>
+            <meta>ok</meta>
+            <status>Alpha release</status>
+            <summary>Task for initialization of network with a topology according to prof. Maass</summary>
+            <description>
+            Starting initialization for LSM with topology according to prof. Maass:<br></br>
+            - 3D topology with the first depth layer used as input<br></br>
+            - neighbours generated randomly with favouring of close neighbours
+            </description>
+        </member>
+        <member name="T:LSMModule.LSM.Tasks.LSMOutputTask">
+            <author>Adr33</author>
+            <meta>ok</meta>
+            <status>Alpha release</status>
+            <summary>Task for generating of output</summary>
+            <description>
+            Generates the external output of LSM from internal output and inner state of neurons.
+            </description>
+        </member>
+        <member name="T:LSMModule.LSM.Tasks.LSMRandomInitTask">
+            <author>Adr33</author>
+            <meta>ok</meta>
+            <status>Alpha release</status>
+            <summary>Task for initialization of network with Random topology</summary>
+            <description>
+            Starting initialization for LSM with Random topology:<br></br>
+            - inputs are selected randomly<br></br>
+            - each node has c% of all output/input edges, randomly selected with random weights, where c is connectivity of the graph<br></br>
+              - whether it is output or input edges can be changed in Brain Simulator
+            </description>
+        </member>
+    </members>
+</doc>
