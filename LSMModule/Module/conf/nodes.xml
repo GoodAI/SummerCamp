@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Configuration  RootNamespace="LSMModule">
+  <KnownNodes>
+    <Node type="LSMModule.LiquidStateMachine" CanBeAdded="true" />
+    <Node type="LSMModule.BenchmarkFileSaver" CanBeAdded="true" />
+  </KnownNodes>
+</Configuration>
