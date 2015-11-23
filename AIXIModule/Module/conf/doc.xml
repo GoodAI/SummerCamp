@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AIXIModule</name>
+    </assembly>
+    <members>
+        <member name="T:AIXIModule.AIXIEnvironmentWorld">
+            <author>Jiri Nadvornik</author>
+            <meta>jn</meta>
+            <status>Experimental</status>
+            <summary>Converter from AIXIEnvironment class to world</summary>
+        </member>
+        <member name="T:AIXIModule.MyAIXINode">
+            <author>Jiri Nadvornik</author>
+            <meta>jn</meta>
+            <status>Experimental</status>
+            <summary>My Tic-Tac-Toe Agent</summary>
+        </member>
+        <member name="T:AIXIModule.MyAIXICudaNode">
+            <author>Jiri Nadvornik</author>
+            <meta>jn</meta>
+            <status>Experimental</status>
+            <summary>My MC-AIXI-CTW agent running on CUDA</summary>
+        </member>
+        <member name="T:AIXIModule.MyTestingTask">
+            <summary>
+            Task that tests various CUDA functions
+            </summary>
+        </member>
+        <member name="P:AIXIModule.MyTestingTask.Increment">
+            <summary>
+            Testing CUDA versions of functions
+            </summary>
+        </member>
+        <member name="T:AIXIModule.TestingNode">
+            <author>Jiri Nadvornik</author>
+            <meta>jn</meta>
+            <status>Experimental</status>
+            <summary>
+            Nothing useful. Just for testing internal functions of AIXI on CUDA.
+            </summary>
+        </member>
+    </members>
+</doc>
