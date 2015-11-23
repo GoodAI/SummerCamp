@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Configuration  RootNamespace="AIXIModule">
+  <KnownNodes>
+    <Node type="AIXIModule.MyAIXINode" CanBeAdded="true" >
+    </Node>
+  </KnownNodes>
+  <KnownWorlds>
+    <World type="AIXIModule.AIXIEnvironmentWorld" CanBeAdded="true"></World>
+  </KnownWorlds>
+</Configuration>
