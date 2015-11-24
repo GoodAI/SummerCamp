@@ -3,7 +3,7 @@ Liquid State Machine module (LSMModule) is a module for Brain Simulator, which a
 
 To run the project in VS you have to set BrainSimulator.exe file as the external program to start and "-m LSMModule.dll" as command line arguments.
 
-The full documentation can be found here:
+The complete documentation and tutorial can be found here:
 
 [LSM - documentation and tutorial](Doc/Guide)
 
