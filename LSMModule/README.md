@@ -5,6 +5,6 @@ To run the project in VS you have to set BrainSimulator.exe file as the external
 
 The full documentation can be found here:
 
-[LSM - documentation](Doc/Guide)
+[LSM - documentation and tutorial](Doc/Guide)
 
 This project was developed by **Ondřej Kužela** (ondrej.kuzela@fit.cvut.cz) during Datalab Summer Camp 2015 at FIT CTU in Prague. In case of any questions please feel free to contact me on the given email.
