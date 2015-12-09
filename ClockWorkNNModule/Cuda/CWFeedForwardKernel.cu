@@ -9,7 +9,7 @@
 #include <vector_functions.h>
 #include <math.h>
 
-#include "C:\Users\Alka\Disk Google\fel\SummerCamp\BrainSimulator-master\Sources\Modules\BasicNodes\Cuda\NeuralNetwork\Activation/ActivationFunction.cu"
+#include "../NeuralNetwork/Activation/ActivationFunction.cu"
 
 
 extern "C"
