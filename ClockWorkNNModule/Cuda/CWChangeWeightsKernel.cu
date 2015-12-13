@@ -52,10 +52,6 @@ extern "C"
 			&& (contextByActivations || activeGroupsShared[groupID]))
 		{
 			float gradient = 0;
-			int step = D_OUTPUT_UNITS / 2;
-			while (step != 0){
-
-			}
 			for (int i = 0; i < D_OUTPUT_UNITS; i++)
 			{
 				float sum = 0;

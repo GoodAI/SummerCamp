@@ -18,14 +18,16 @@ extern "C"
 	__constant__ int D_HIDDEN_UNITS;
 	__constant__ int D_OUTPUT_UNITS;
 	__constant__ int D_NEURONS_PER_GROUP;
-	__constant__ int D_NEURON_GROUPS;
 	__constant__ ActivationFunctionEnum D_ACTIVATION_FUNCTION;
+	__constant__ int D_NEURON_GROUPS;
+
 
 	__global__ void CWFeedforwardHiddenKernel(
-		float *input, 
+		float *input,
 		float *hiddenActivations,
-		float *hiddenActivationDerivatives, 
-		float *inputWeights, 
+		float *previousHiddenActivations,
+		float *hiddenActivationDerivatives,
+		float *inputWeights,
 		float *recurrentWeights,
 		int *activeGroups
 		)
@@ -36,15 +38,15 @@ extern "C"
 
 		extern __shared__ float activeGroupsShared[];
 
-		if (unitId < D_NEURON_GROUPS)
+		if (threadIdx.x < D_NEURON_GROUPS)
 		{
-			activeGroupsShared[unitId] = activeGroups[unitId];
+			activeGroupsShared[threadIdx.x] = activeGroups[threadIdx.x];
 		}
 		__syncthreads();
 
 		int groupID = unitId / D_NEURONS_PER_GROUP;
 
-		if (unitId < D_HIDDEN_UNITS && activeGroupsShared[groupID] == 1)
+		if ((unitId < D_HIDDEN_UNITS) && (activeGroupsShared[groupID] == 1))
 		{
 			int weightId = unitId * D_INPUT_UNITS;
 
@@ -59,11 +61,9 @@ extern "C"
 
 			for (int i = 0; i < D_HIDDEN_UNITS; i++)
 			{
-				weightedSum += recurrentWeights[weightId] * hiddenActivations[i];
+				weightedSum += recurrentWeights[weightId] * previousHiddenActivations[i];
 				weightId++;
 			}
-			
-			__syncthreads();
 
 			hiddenActivations[unitId] = Evaluate(D_ACTIVATION_FUNCTION, weightedSum);
 			hiddenActivationDerivatives[unitId] = EvaluateDerivative(D_ACTIVATION_FUNCTION, weightedSum);
@@ -78,7 +78,6 @@ extern "C"
 
 		if (unitId < D_OUTPUT_UNITS)
 		{
-			
 			int weightId = unitId * D_HIDDEN_UNITS;
 
 			float weightedSum = 0;
@@ -89,7 +88,6 @@ extern "C"
 			}
 
 			outputActivations[unitId] = Evaluate(D_ACTIVATION_FUNCTION, weightedSum);
-			
 			outputActivationDerivatives[unitId] = EvaluateDerivative(D_ACTIVATION_FUNCTION, weightedSum);
 		}
 	}

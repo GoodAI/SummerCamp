@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CudaRand">
+      <HintPath>..\..\..\..\..\..\Program Files\GoodAI\Brain Simulator\CudaRand.dll</HintPath>
+    </Reference>
     <Reference Include="GoodAI.BasicNodes">
       <HintPath>C:\Program Files\GoodAI\Brain Simulator\modules\GoodAI.BasicNodes\GoodAI.BasicNodes.dll</HintPath>
     </Reference>

@@ -42,6 +42,7 @@ namespace CWRNN.Tasks
             Owner.RecurrentWeights.SafeCopyToHost();
 
             setPeriods(Owner.Period);
+            Owner.ActiveGroups.Fill(1);
 
             Owner.Periods.SafeCopyToDevice();
 

@@ -63,6 +63,7 @@ namespace CWRNN.Tasks
             m_recurrentWeightRTRLDerivativesKernel.SetConstantVariable("D_OUTPUT_UNITS", Owner.OUTPUT_UNITS);
             m_recurrentWeightRTRLDerivativesKernel.SetConstantVariable("D_NEURONS_PER_GROUP", Owner.NeuronsPerGroup);
             m_recurrentWeightRTRLDerivativesKernel.SetConstantVariable("D_NEURON_GROUPS", Owner.NeuronGroups);
+            
 
             m_changeInputWeightsKernel = MyKernelFactory.Instance.Kernel(nGPU, @"\CWChangeWeightsKernel", "CWChangeInputWeightsKernel");
             m_changeInputWeightsKernel.SetupExecution(Owner.HIDDEN_UNITS * Owner.INPUT_UNITS);
@@ -96,12 +97,15 @@ namespace CWRNN.Tasks
 
         public override void Execute()
         {
-            
+            Owner.InputWeightRTRLDerivatives.CopyToMemoryBlock(Owner.PreviousInputWeightRTRLDerivatives, 0, 0, Owner.InputWeightRTRLDerivatives.Count);
+            Owner.RecurrentWeightRTRLDerivatives.CopyToMemoryBlock(Owner.PreviousRecurrentWeightRTRLDerivatives, 0, 0, Owner.RecurrentWeightRTRLDerivatives.Count);
+
             m_inputWeightRTRLDerivativesKernel.Run(
                 Owner.Input,
                 Owner.HiddenActivationDerivatives,
                 Owner.RecurrentWeights,
                 Owner.InputWeightRTRLDerivatives,
+                Owner.PreviousInputWeightRTRLDerivatives,
                 Owner.ActiveGroups,
                 Owner.contextByActivations
             );
@@ -111,6 +115,7 @@ namespace CWRNN.Tasks
                 Owner.HiddenActivationDerivatives,
                 Owner.RecurrentWeights,
                 Owner.RecurrentWeightRTRLDerivatives,
+                Owner.PreviousRecurrentWeightRTRLDerivatives,
                 Owner.ActiveGroups,
                 Owner.contextByActivations
             );
@@ -118,10 +123,11 @@ namespace CWRNN.Tasks
             m_outputDeltaKernel.Run(
                 Owner.OutputDeltas,
                 Owner.Target,
-                Owner.Output,
+                Owner.OutputActivations,
                 Owner.OutputActivationDerivatives
                 );
 
+            
             m_changeInputWeightsKernel.Run(
                 Owner.InputWeights,
                 Owner.InputWeightDeltas,

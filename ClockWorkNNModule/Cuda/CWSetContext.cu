@@ -30,7 +30,7 @@ extern "C"
 		int unitID = id % D_HIDDEN_UNITS;
 		int groupID = unitID / D_NEURONS_PER_GROUP;
 
-		if (id < D_HIDDEN_UNITS * D_NEURON_GROUPS && activeGroups[groupID] == 1)
+		if (id < D_HIDDEN_UNITS * D_NEURON_GROUPS && activeGroups[groupID] != 0)
 		{
 			int unitPeriod = unitID / D_NEURONS_PER_GROUP + 1;
 			int groupPeriod = id / D_HIDDEN_UNITS;

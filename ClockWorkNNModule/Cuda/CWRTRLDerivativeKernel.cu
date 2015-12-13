@@ -18,11 +18,13 @@ extern "C"
 	__constant__ int D_NEURONS_PER_GROUP;
 	__constant__ int D_NEURON_GROUPS;
 
+
 	__global__ void CWInputWeightsRTRLDerivativesKernel(
 		float *input,
 		float *hiddenActivationDerivatives,
 		float *recurrentWeights,
 		float *inputWeightRTRLDerivatives,
+		float *previousInputWeightRTRLDerivatives,
 		int *activeGroups,
 		int contextByActivations
 		)
@@ -30,20 +32,18 @@ extern "C"
 		int partialId = blockDim.x*blockIdx.y*gridDim.x	//rows preceeding current row in grid
 			+ blockDim.x*blockIdx.x				//blocks preceeding current block
 			+ threadIdx.x;
-		
+
 		extern __shared__ float activeGroupsShared[];
 
-		if (partialId < D_NEURON_GROUPS)
+		if (threadIdx.x < D_NEURON_GROUPS)
 		{
-			activeGroupsShared[partialId] = activeGroups[partialId];
+			activeGroupsShared[threadIdx.x] = activeGroups[threadIdx.x];
 		}
-
 		__syncthreads();
 
 		int unitId = partialId / (D_HIDDEN_UNITS * D_INPUT_UNITS);
 		int groupID = unitId / D_NEURONS_PER_GROUP;
-		if (partialId < D_HIDDEN_UNITS * D_HIDDEN_UNITS * D_INPUT_UNITS 
-			&& (contextByActivations || activeGroupsShared[groupID] == 1))
+		if (partialId < D_HIDDEN_UNITS * D_HIDDEN_UNITS * D_INPUT_UNITS && (contextByActivations || (activeGroupsShared[groupID] == 1)))
 		{
 			int weightId = partialId % (D_HIDDEN_UNITS * D_INPUT_UNITS);
 			int to = weightId / D_INPUT_UNITS;
@@ -52,10 +52,8 @@ extern "C"
 			float sum = 0;
 			for (int i = 0; i < D_HIDDEN_UNITS; i++)
 			{
-				sum += recurrentWeights[unitId * D_HIDDEN_UNITS + i] * inputWeightRTRLDerivatives[i * (D_HIDDEN_UNITS * D_INPUT_UNITS) + weightId];
+				sum += recurrentWeights[unitId * D_HIDDEN_UNITS + i] * previousInputWeightRTRLDerivatives[i * (D_HIDDEN_UNITS * D_INPUT_UNITS) + weightId];
 			}
-
-			__syncthreads();
 
 			inputWeightRTRLDerivatives[partialId] = hiddenActivationDerivatives[unitId] * ((unitId == to) * input[from] + sum);
 		}
@@ -66,6 +64,7 @@ extern "C"
 		float *hiddenActivationDerivatives,
 		float *recurrentWeights,
 		float *recurrentWeightRTRLDerivatives,
+		float *previousRecurrentWeightRTRLDerivatives,
 		int *activeGroups,
 		int contextByActivations
 		)
@@ -73,20 +72,18 @@ extern "C"
 		int partialId = blockDim.x*blockIdx.y*gridDim.x	//rows preceeding current row in grid
 			+ blockDim.x*blockIdx.x				//blocks preceeding current block
 			+ threadIdx.x;
-		
+
 		extern __shared__ float activeGroupsShared[];
 
-		if (partialId < D_NEURON_GROUPS)
+		if (threadIdx.x < D_NEURON_GROUPS)
 		{
-			activeGroupsShared[partialId] = activeGroups[partialId];
+			activeGroupsShared[threadIdx.x] = activeGroups[threadIdx.x];
 		}
-
 		__syncthreads();
 
 		int unitId = partialId / (D_HIDDEN_UNITS * D_HIDDEN_UNITS);
 		int groupID = unitId / D_NEURONS_PER_GROUP;
-		if (partialId < D_HIDDEN_UNITS * D_HIDDEN_UNITS * D_HIDDEN_UNITS 
-			&& (contextByActivations || activeGroupsShared[groupID] == 1))
+		if (partialId < D_HIDDEN_UNITS * D_HIDDEN_UNITS * D_HIDDEN_UNITS && (contextByActivations || (activeGroupsShared[groupID] == 1)))
 		{
 			int weightId = partialId % (D_HIDDEN_UNITS * D_HIDDEN_UNITS);
 			int to = weightId / D_HIDDEN_UNITS;
@@ -95,10 +92,8 @@ extern "C"
 			float sum = 0;
 			for (int i = 0; i < D_HIDDEN_UNITS; i++)
 			{
-				sum += recurrentWeights[unitId * D_HIDDEN_UNITS + i] * recurrentWeightRTRLDerivatives[i * (D_HIDDEN_UNITS * D_HIDDEN_UNITS) + weightId];
+				sum += recurrentWeights[unitId * D_HIDDEN_UNITS + i] * previousRecurrentWeightRTRLDerivatives[i * (D_HIDDEN_UNITS * D_HIDDEN_UNITS) + weightId];
 			}
-
-			__syncthreads();
 
 			recurrentWeightRTRLDerivatives[partialId] = hiddenActivationDerivatives[unitId] * ((unitId == to) * previousHiddenActivations[from] + sum);
 		}

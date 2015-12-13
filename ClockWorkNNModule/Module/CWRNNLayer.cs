@@ -102,7 +102,7 @@ namespace CWRNN
 
         [MyBrowsable, Category("Observers")]
         [YAXSerializableField(DefaultValue = 5), YAXElementFor("Observers")]
-        public int ColumnHint { get; protected set; }
+        public int ColumnHint { get; set; }
 
         [MyPersistable]
         public MyMemoryBlock<float> InputWeights { get; protected set; }

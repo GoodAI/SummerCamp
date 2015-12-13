@@ -52,6 +52,8 @@ namespace CWRNN.Tasks
         public override void Execute()
         {
 
+            Owner.HiddenActivations.CopyToMemoryBlock(Owner.PreviousHiddenActivations, 0, 0, Owner.HiddenActivations.Count);
+
             for (int i = 0; i < Owner.NeuronGroups; i++)
             {
                 if ((SimulationStep % Owner.Periods.Host[i]) == 0)
@@ -69,6 +71,7 @@ namespace CWRNN.Tasks
             m_feedForwardHiddenKernel.Run(
                  Owner.Input,
                  Owner.HiddenActivations,
+                 Owner.PreviousHiddenActivations,
                  Owner.HiddenActivationDerivatives,
                  Owner.InputWeights,
                  Owner.RecurrentWeights,
@@ -77,10 +80,12 @@ namespace CWRNN.Tasks
 
             m_feedForwardOutputKernel.Run(
                 Owner.HiddenActivations,
-                Owner.Output,
+                Owner.OutputActivations,
                 Owner.OutputActivationDerivatives,
                 Owner.OutputWeights
                 );
+
+            Owner.OutputActivations.CopyToMemoryBlock(Owner.Output, 0, 0, Owner.OUTPUT_UNITS);
         }
     }
 }
