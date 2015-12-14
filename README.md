@@ -5,7 +5,7 @@ This repository contains three BrainSimulator modules which were developed durin
 
 * [AIXI](AIXIModule/README.md)
 * [Clockwork reccurrent neural networks](ClockWorkNNModule/README.md)
-* [Luquid state machines](LSMModule/README.md)
+* [Liquid state machines](LSMModule/README.md)
 
 Modules are standalone VS2013 solutions. For testing them, clone the repository and build a corresponding solution.
 By default, solutions are configured to execute a standalone (binary) version of [BrainSimulator](http://www.goodai.com/#!brain-simulator/c81c)
