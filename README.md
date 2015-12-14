@@ -9,7 +9,7 @@ This repository contains three BrainSimulator modules which were developed durin
 
 Modules are standalone VS2013 solutions. For testing them, clone the repository and build corresponding solution.
 By default solutions are configured to execute standalone (binary) version of [BrainSimulator](http://www.goodai.com/#!brain-simulator/c81c)
-but you can also link directly to sources of BrainSimulator available at [github](../BrainSimulator).
+but you can also link directly to sources of BrainSimulator available at [github](https://github.com/GoodAI/BrainSimulator.
 
 System requirements are same as for BrainSimulator, i.e. 64-bit Windows operating system, NVIDIA CUDA-enabled graphic card.
 
