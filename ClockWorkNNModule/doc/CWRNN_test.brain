@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Name="test" xmlns:yaxlib="http://www.sinairv.com/yaxlib/">
+  <Network Sequential="False" LoadOnStart="False" SaveOnStop="False" Id="0" Name="Network">
+    <Children>
+      <Clockwork_RecurrentNetwork LoadOnStart="False" SaveOnStop="False" Id="42" Name="Node_42" yaxlib:realtype="CWRNN.CWRNNLayer">
+        <NeuronGroups>8</NeuronGroups>
+        <NeuronsPerGroup>8</NeuronsPerGroup>
+        <contextByActivations>0</contextByActivations>
+        <Period>FIBONACCI</Period>
+        <ACTIVATION_FUNCTION>SIGMOID</ACTIVATION_FUNCTION>
+        <Structure>
+          <INPUT_UNITS>144</INPUT_UNITS>
+          <HIDDEN_UNITS>64</HIDDEN_UNITS>
+          <OUTPUT_UNITS>144</OUTPUT_UNITS>
+        </Structure>
+        <Observers>
+          <ColumnHint>12</ColumnHint>
+        </Observers>
+        <DataFolder></DataFolder>
+        <Location X="672" Y="303" />
+        <Tasks>
+          <Task Enabled="True" PropertyName="InitNetwork" yaxlib:realtype="CWRNN.Tasks.CWInitLayerTask" />
+          <Task Enabled="True" PropertyName="Feedforward" yaxlib:realtype="CWRNN.Tasks.CWFeedForwardTask" />
+          <Task Enabled="True" PropertyName="RTRL" yaxlib:realtype="CWRNN.Tasks.CWRTRLTask">
+            <Structure>
+              <LEARNING_RATE>0.01</LEARNING_RATE>
+              <MOMENTUM_RATE>0</MOMENTUM_RATE>
+            </Structure>
+          </Task>
+          <Task Enabled="False" PropertyName="SetContext" yaxlib:realtype="CWRNN.Tasks.SetContextTask" />
+        </Tasks>
+      </Clockwork_RecurrentNetwork>
+      <Accumulator LoadOnStart="False" SaveOnStop="False" Id="43" Name="Node_43" yaxlib:realtype="GoodAI.Modules.Transforms.MyAccumulator">
+        <DelayMemorySize>15</DelayMemorySize>
+        <DataFolder></DataFolder>
+        <Location X="653" Y="163" />
+        <Tasks>
+          <Task Enabled="True" PropertyName="ShiftData" yaxlib:realtype="GoodAI.Modules.Transforms.MyAccumulator+MyShiftDataTask">
+            <UseFirstInput>True</UseFirstInput>
+            <InitialValue>0</InitialValue>
+          </Task>
+          <Task Enabled="False" PropertyName="ApproachValue" yaxlib:realtype="GoodAI.Modules.Transforms.MyAccumulator+MyApproachValueTask">
+            <ApproachMethod>Geometric</ApproachMethod>
+            <Factor>0.9</Factor>
+            <Delta>0.1</Delta>
+            <Target>0</Target>
+          </Task>
+          <Task Enabled="False" PropertyName="CopyInput" yaxlib:realtype="GoodAI.Modules.Transforms.MyAccumulator+MyQuantizedCopyTask">
+            <TimePeriod>10</TimePeriod>
+            <TimeOffset>0</TimeOffset>
+          </Task>
+        </Tasks>
+      </Accumulator>
+      <My2DCropNode LoadOnStart="False" SaveOnStop="False" Id="44" Name="Node_44" yaxlib:realtype="GoodAI.Modules.Transforms.My2DCropNode">
+        <LeftMargin>-2</LeftMargin>
+        <RightMargin>-2</RightMargin>
+        <TopMargin>-2</TopMargin>
+        <BottomMargin>-2</BottomMargin>
+        <DataFolder></DataFolder>
+        <Location X="347" Y="242" />
+        <Tasks>
+          <Task Enabled="True" PropertyName="ImageCrop" yaxlib:realtype="GoodAI.Modules.Transforms.My2DCropNode+MyImageCropTask">
+            <FillValue>0</FillValue>
+          </Task>
+        </Tasks>
+      </My2DCropNode>
+      <Resize2D LoadOnStart="False" SaveOnStop="False" Id="45" Name="Node_45" yaxlib:realtype="GoodAI.Modules.Transforms.MyResize2D">
+        <Factor>0.5</Factor>
+        <FactorHeight>0</FactorHeight>
+        <DataFolder></DataFolder>
+        <Location X="481" Y="243" />
+        <Tasks>
+          <Task Enabled="True" PropertyName="ImageScale" yaxlib:realtype="GoodAI.Modules.Transforms.MyResize2D+MyImageScaleTask" />
+        </Tasks>
+      </Resize2D>
+    </Children>
+    <LayoutProperties Zoom="0.9012501">
+      <Translation X="-227" Y="21" />
+    </LayoutProperties>
+    <GroupInputNodes>
+      <MyParentInput ParentInputIndex="0" Id="1" Name="Bitmap">
+        <Location X="202" Y="237" />
+      </MyParentInput>
+      <MyParentInput ParentInputIndex="1" Id="4" Name="Label">
+        <Location X="50" Y="250" />
+      </MyParentInput>
+    </GroupInputNodes>
+    <GroupOutputNodes />
+    <DataFolder></DataFolder>
+    <Location />
+    <Connections>
+      <Connection From="43" To="42" FromIndex="0" ToIndex="0" />
+      <Connection From="45" To="42" FromIndex="0" ToIndex="1" />
+      <Connection From="45" To="43" FromIndex="0" ToIndex="0" />
+      <Connection From="1" To="44" FromIndex="0" ToIndex="0" />
+      <Connection From="44" To="45" FromIndex="0" ToIndex="0" />
+    </Connections>
+    <Tasks />
+  </Network>
+  <World LoadOnStart="False" SaveOnStop="False" Id="51" Name="World" yaxlib:realtype="MNIST.MyMNISTWorld">
+    <Binary>False</Binary>
+    <BinaryPixels>False</BinaryPixels>
+    <DataFolder></DataFolder>
+    <Location />
+    <Tasks>
+      <Task Enabled="True" PropertyName="InitMNIST" yaxlib:realtype="MNIST.MyInitMNISTTask">
+        <AfterLastImage>ResetToStart</AfterLastImage>
+        <ImagesCnt>200</ImagesCnt>
+      </Task>
+      <Task Enabled="True" PropertyName="SendMNISTData" yaxlib:realtype="MNIST.MySendMNISTTask">
+        <ExpositionTime>1</ExpositionTime>
+        <ExpositionTimeOffset>0</ExpositionTimeOffset>
+        <SendNumbers>All</SendNumbers>
+        <SequenceOrdered>True</SequenceOrdered>
+        <RandomEnumerate>False</RandomEnumerate>
+      </Task>
+    </Tasks>
+  </World>
+  <Dashboard>
+    <Properties yaxlib:realtype="System.Collections.Generic.List`1[[GoodAI.Core.Dashboard.DashboardNodeProperty, GoodAI.Platform.Core, Version=0.4.0.0, Culture=neutral, PublicKeyToken=null]]" />
+  </Dashboard>
+  <GroupedDashboard>
+    <Properties yaxlib:realtype="System.Collections.Generic.List`1[[GoodAI.Core.Dashboard.DashboardPropertyGroup, GoodAI.Platform.Core, Version=0.4.0.0, Culture=neutral, PublicKeyToken=null]]" />
+  </GroupedDashboard>
+  <Observers>
+    <MemoryBlockObserver yaxlib:realtype="GoodAI.Core.Observers.MyMemoryBlockObserver">
+      <Method>RedGreenScale</Method>
+      <Scale>Linear</Scale>
+      <Elements>2</Elements>
+      <TimeStep>0</TimeStep>
+      <ViewMode>Fit_2D</ViewMode>
+      <KeepRatio>True</KeepRatio>
+      <Window>
+        <Location X="957" Y="334" />
+        <Size Width="300" Height="300" />
+        <CameraData />
+      </Window>
+      <AutosaveSnapshop>False</AutosaveSnapshop>
+      <BilinearFiltering>False</BilinearFiltering>
+      <TargetIdentifier>42#Output</TargetIdentifier>
+      <m_boundPolicy>MANUAL</m_boundPolicy>
+      <m_minValue>0</m_minValue>
+      <m_maxValue>1</m_maxValue>
+    </MemoryBlockObserver>
+    <MemoryBlockObserver yaxlib:realtype="GoodAI.Core.Observers.MyMemoryBlockObserver">
+      <Method>RedGreenScale</Method>
+      <Scale>Linear</Scale>
+      <Elements>2</Elements>
+      <TimeStep>0</TimeStep>
+      <ViewMode>Fit_2D</ViewMode>
+      <KeepRatio>True</KeepRatio>
+      <Window>
+        <Location X="426" Y="548" />
+        <Size Width="300" Height="300" />
+        <CameraData />
+      </Window>
+      <AutosaveSnapshop>False</AutosaveSnapshop>
+      <BilinearFiltering>False</BilinearFiltering>
+      <TargetIdentifier>45#Output</TargetIdentifier>
+      <m_boundPolicy>MANUAL</m_boundPolicy>
+      <m_minValue>0</m_minValue>
+      <m_maxValue>1</m_maxValue>
+    </MemoryBlockObserver>
+  </Observers>
+  <MemoryBlockAttributes />
+  <UsedModules>
+    <Module Name="CWRNN.dll" Version="1" />
+    <Module Name="GoodAI.BasicNodes.dll" Version="14" />
+    <Module Name="GoodAI.Platform.Core.dll" Version="10" />
+    <Module Name="GoodAI.MNIST.dll" Version="1" />
+  </UsedModules>
+</Project>
