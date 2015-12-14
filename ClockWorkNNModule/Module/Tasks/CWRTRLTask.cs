@@ -15,7 +15,7 @@ namespace CWRNN.Tasks
     /// Task that computes RTRL partial derivatives
     /// </summary>
     [Description("RTRL task"), MyTaskInfo(OneShot = false)]
-    public class CWRTRLTask : MyTask<CWRNNLayer>
+    public class CWRTRLTask : MyTask<CWRNNNode>
     {
         /// <summary>
         /// Computing RTRL partial derivatives at each step and updating weights in the network.

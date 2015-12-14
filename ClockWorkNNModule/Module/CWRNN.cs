@@ -52,7 +52,7 @@ namespace CWRNN
     ///              
     /// </description>
     [YAXSerializeAs("Clockwork RecurrentNetwork")]
-    public class CWRNNLayer : MyWorkingNode
+    public class CWRNNNode : MyWorkingNode
     {
         [MyInputBlock(0)]
         public MyMemoryBlock<float> Input { get { return GetInput(0); } }

@@ -15,7 +15,7 @@ namespace CWRNN.Tasks
     /// Task that increments all data items by a constant calculated as node's IncrementBase + task's Increment
     /// </summary>
     [Description("Initialization of network"), MyTaskInfo(OneShot = true)]
-    public class CWInitLayerTask : MyTask<CWRNNLayer>
+    public class CWInitLayerTask : MyTask<CWRNNNode>
     {
         /// <summary>
         /// Initialization of weights with random values.

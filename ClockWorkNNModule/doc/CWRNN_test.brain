@@ -2,7 +2,7 @@
 <Project Name="test" xmlns:yaxlib="http://www.sinairv.com/yaxlib/">
   <Network Sequential="False" LoadOnStart="False" SaveOnStop="False" Id="0" Name="Network">
     <Children>
-      <Clockwork_RecurrentNetwork LoadOnStart="False" SaveOnStop="False" Id="42" Name="Node_42" yaxlib:realtype="CWRNN.CWRNNLayer">
+      <Clockwork_RecurrentNetwork LoadOnStart="False" SaveOnStop="False" Id="42" Name="Node_42" yaxlib:realtype="CWRNN.CWRNNNode">
         <NeuronGroups>8</NeuronGroups>
         <NeuronsPerGroup>8</NeuronsPerGroup>
         <contextByActivations>0</contextByActivations>

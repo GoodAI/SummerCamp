@@ -88,7 +88,7 @@
     <Compile Include="Tasks\CWFeedForwardTask.cs" />
     <Compile Include="Tasks\CWInitLayerTask.cs" />
     <Compile Include="Versioning\MyConversion.cs" />
-    <Compile Include="CWRNNLayer.cs" />
+    <Compile Include="CWRNN.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -44,7 +44,7 @@
             in the given direction.
             </summary>
         </member>
-        <member name="T:CWRNN.CWRNNLayer">
+        <member name="T:CWRNN.CWRNNNode">
             <author>Alena Moravova</author>
             <meta>am</meta>
             <status>Working</status>

@@ -15,7 +15,7 @@ namespace CWRNN.Tasks
     /// Task that prepares context for the not newly activated neurons.
     /// </summary>
     [Description("Activation context task"), MyTaskInfo(OneShot = false)]
-    public class SetContextTask : MyTask<CWRNNLayer>
+    public class SetContextTask : MyTask<CWRNNNode>
     {
 
         private MyCudaKernel m_setContextKernel;

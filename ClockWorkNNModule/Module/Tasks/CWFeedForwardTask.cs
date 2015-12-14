@@ -15,7 +15,7 @@ namespace CWRNN.Tasks
     /// Task that calculate outputs.
     /// </summary>
     [Description("Feedforward task"), MyTaskInfo(OneShot = false)]
-    public class CWFeedForwardTask : MyTask<CWRNNLayer>
+    public class CWFeedForwardTask : MyTask<CWRNNNode>
     {
         /// <summary>
         /// Output vector is calculated according to the memory and input
