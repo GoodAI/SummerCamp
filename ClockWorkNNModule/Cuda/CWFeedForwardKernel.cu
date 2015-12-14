@@ -9,7 +9,8 @@
 #include <vector_functions.h>
 #include <math.h>
 
-#include "../NeuralNetwork/Activation/ActivationFunction.cu"
+// local copy from main repo of BrainSimulator's BasicNodes/Cuda/NeuralNetwork/Activation/
+#include "ActivationFunction.cu"
 
 
 extern "C"
